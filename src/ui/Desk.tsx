@@ -29,6 +29,7 @@ interface Props {
   onDispatch: (id: string, a: Action) => void
   onNew: () => void
   onImport: () => void
+  onExportAll: () => void
   onDelete: (id: string) => void
   onTodayChanged: () => void
 }
@@ -76,7 +77,14 @@ export function Desk(p: Props) {
         )}
         <div className="row">
           <button onClick={p.onNew}>+ New campaign</button>
-          <button onClick={p.onImport}>Import</button>
+          {p.slots.length > 0 && (
+            <button onClick={p.onExportAll} title="Download one file with every campaign (import it on another device or browser)">
+              Export all
+            </button>
+          )}
+          <button onClick={p.onImport} title="Load a single-campaign or Export all file">
+            Import
+          </button>
         </div>
       </nav>
 

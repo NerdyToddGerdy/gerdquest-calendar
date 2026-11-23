@@ -135,19 +135,57 @@ export function migrateLegacySave(today: ISODate): string | null {
   return id
 }
 
-export function exportSave(s: GameState) {
-  const blob = new Blob([JSON.stringify(s, null, 2)], { type: 'application/json' })
+function download(data: unknown, filename: string) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
   const a = document.createElement('a')
   a.href = URL.createObjectURL(blob)
-  a.download = `questender-${s.campaignId}-${s.startDate}-page${s.dayIndex + 1}.json`
+  a.download = filename
   a.click()
   URL.revokeObjectURL(a.href)
 }
 
-export async function importSave(file: File, today: ISODate): Promise<GameState> {
-  const s = JSON.parse(await file.text()) as GameState
-  if (!validState(s)) throw new Error('Not a Questender save file.')
-  const n = normalizeState(s, today)
-  campaign(n.campaignId) // throws for unknown campaigns
-  return n
+export function exportSave(s: GameState) {
+  download(s, `questender-${s.campaignId}-${s.startDate}-page${s.dayIndex + 1}.json`)
+}
+
+/** One file holding every campaign on the desk. */
+export interface SaveBundle {
+  format: 'questender.bundle'
+  version: 1
+  exportedOn: ISODate
+  campaigns: GameState[]
+}
+
+export function bundleSaves(states: GameState[], exportedOn: ISODate): SaveBundle {
+  return { format: 'questender.bundle', version: 1, exportedOn, campaigns: states }
+}
+
+export function exportAll(states: GameState[], today: ISODate) {
+  download(bundleSaves(states, today), `questender-all-${today}.json`)
+}
+
+/**
+ * Parse an export: either a single campaign or an all-campaigns bundle.
+ * Throws if the file (or any campaign in it) isn't a valid save.
+ */
+export function parseSaves(text: string, today: ISODate): GameState[] {
+  let raw: unknown
+  try {
+    raw = JSON.parse(text)
+  } catch {
+    throw new Error('Not a Questender save file.')
+  }
+  const bundle = raw as Partial<SaveBundle> | null
+  const list = bundle?.format === 'questender.bundle' && Array.isArray(bundle.campaigns) ? bundle.campaigns : [raw as GameState]
+  if (!list.length) throw new Error('This export has no campaigns in it.')
+  return list.map((s) => {
+    if (!validState(s)) throw new Error('Not a Questender save file.')
+    const n = normalizeState(s, today)
+    campaign(n.campaignId) // throws for unknown campaigns
+    return n
+  })
+}
+
+export async function importSaves(file: File, today: ISODate): Promise<GameState[]> {
+  return parseSaves(await file.text(), today)
 }

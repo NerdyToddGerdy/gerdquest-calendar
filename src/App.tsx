@@ -3,7 +3,7 @@ import { addDays, type ISODate } from './engine/calendar'
 import { pickTab, startingDate, turnPast } from './engine/desk'
 import { newSeed } from './engine/rng'
 import { initialState, reduce, type Action } from './engine/state'
-import { deleteSlot, importSave, listSlots, loadSlot, migrateLegacySave, saveSlot, slotIdFor } from './save'
+import { deleteSlot, exportAll, importSaves, listSlots, loadSlot, migrateLegacySave, saveSlot, slotIdFor } from './save'
 import { Desk, type DeskSlot } from './ui/Desk'
 import { NewCampaign } from './ui/NewCampaign'
 import { useToday } from './ui/today'
@@ -80,24 +80,31 @@ export default function App() {
     if (tab) select(tab)
   }
 
-  const add = (state: DeskSlot['state'], replacing: string[] = []) => {
-    const id = slotIdFor(state.campaignId, state.startDate)
-    saveSlot(state)
-    setSlots((prev) => [...prev.filter((s) => s.id !== id && !replacing.includes(s.id)), { id, state }].sort(byStart))
-    select(id)
-    setViewDate(startingDate([state], today))
+  /** Put campaigns on the desk (replacing any slots listed), then show the first one. */
+  const addAll = (states: DeskSlot['state'][], replacing: string[] = []) => {
+    const added = states.map((state) => ({ id: slotIdFor(state.campaignId, state.startDate), state }))
+    if (!added.length) return
+    added.forEach((s) => saveSlot(s.state))
+    const ids = new Set([...added.map((s) => s.id), ...replacing])
+    setSlots((prev) => [...prev.filter((s) => !ids.has(s.id)), ...added].sort(byStart))
+    select(added[0].id)
+    setViewDate(startingDate(states, today))
     setScreen('desk')
   }
 
   const onImport = async (file: File | undefined) => {
     if (!file) return
     try {
-      const s = await importSave(file, today)
-      const existing = listSlots().filter((m) => m.slotId === slotIdFor(s.campaignId, s.startDate))
-      if (existing.length && !confirm(`Replace your existing ${s.campaignId} run from ${s.startDate} with this file?`)) return
+      const states = await importSaves(file, today)
+      const incoming = new Set(states.map((s) => slotIdFor(s.campaignId, s.startDate)))
+      const existing = listSlots().filter((m) => incoming.has(m.slotId))
+      if (existing.length) {
+        const names = existing.map((m) => `${m.campaignId} from ${m.startDate}`).join(', ')
+        if (!confirm(`Replace your existing run${existing.length > 1 ? 's' : ''} (${names}) with this file?`)) return
+      }
       existing.forEach((m) => deleteSlot(m.slotId))
-      add(
-        s,
+      addAll(
+        states,
         existing.map((m) => m.slotId),
       )
       setError(null)
@@ -124,7 +131,7 @@ export default function App() {
           today={today}
           onCancel={() => setScreen('desk')}
           onStart={(campaignId, startDate, heroId) =>
-            add(reduce(initialState(), { type: 'NEW_GAME', heroId, seed: newSeed(), campaignId, startDate }))
+            addAll([reduce(initialState(), { type: 'NEW_GAME', heroId, seed: newSeed(), campaignId, startDate })])
           }
         />
       ) : (
@@ -139,6 +146,7 @@ export default function App() {
           onDispatch={dispatch}
           onNew={() => setScreen('new')}
           onImport={() => fileRef.current?.click()}
+          onExportAll={() => exportAll(slots.map((s) => s.state), today)}
           onDelete={(id) => {
             deleteSlot(id)
             setSlots((prev) => prev.filter((s) => s.id !== id))
