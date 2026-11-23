@@ -349,8 +349,13 @@ function Figure({ s }: { s: FigureSpec }) {
       {showHair && s.hairStyle === 'bun' && <circle cx="48" cy="33" r="5.5" fill={s.hair} />}
       <rect x="56" y="47" width="8" height="10" fill={shade(s.skin, -0.12)} />
       <circle cx="60" cy="40" r="11" fill={s.skin} />
-      <circle cx="65" cy="39.5" r={s.ghost ? 1.8 : 1.3} fill={eye} />
-      {s.ghost && <circle cx="65" cy="39.5" r="4" fill={s.ghost} opacity="0.35" />}
+      {/* Heads face the viewer (turned slightly right), so both eyes show. */}
+      {[56, 64.5].map((x) => (
+        <g key={x}>
+          <circle cx={x} cy="39.5" r={s.ghost ? 1.8 : 1.3} fill={eye} />
+          {s.ghost && <circle cx={x} cy="39.5" r="4" fill={s.ghost} opacity="0.35" />}
+        </g>
+      ))}
       {showHair && s.hairStyle !== 'bald' && (
         <path
           d={
