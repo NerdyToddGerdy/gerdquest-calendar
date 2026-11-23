@@ -3,9 +3,9 @@
 // Run: npx vitest run spikes/save-size.test.ts   (prints a table)
 import { gzipSync } from 'node:zlib'
 import { describe, expect, it } from 'vitest'
-import { CAMPAIGNS } from '../src/content/campaigns'
-import { canAdvance, initialState, reduce, type Action } from '../src/engine/state'
-import type { GameState } from '../src/engine/types'
+import { CAMPAIGNS } from '@questender/engine/content/campaigns'
+import { canAdvance, initialState, reduce, type Action } from '@questender/engine/state'
+import type { GameState } from '@questender/engine/types'
 
 const DDB_LIMIT = 400 * 1024
 

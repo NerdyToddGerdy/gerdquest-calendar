@@ -4,8 +4,8 @@
 // cloud implementation (DynamoDB or Postgres behind an API) can slot in beside the
 // localStorage one. App.tsx still calls save.ts directly; nothing is wired in yet.
 // Engine logic stays synchronous: only the load/save edges become async.
-import type { ISODate } from './engine/calendar'
-import type { GameState } from './engine/types'
+import type { ISODate } from '@questender/engine/calendar'
+import type { GameState } from '@questender/engine/types'
 import { loadEntries, saveEntries, type CalendarEntry } from './calendarNotes'
 import { deleteSlot, listSlots, loadSlot, saveSlot, type SlotMeta } from './save'
 
