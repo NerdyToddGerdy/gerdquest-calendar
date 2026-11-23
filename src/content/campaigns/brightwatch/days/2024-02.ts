@@ -1,0 +1,112 @@
+// Late February — The New Rope. The second bell's rope is fraying; Brightwatch
+// learns there were once seven bells, and weaves a rope to keep the second one ringing.
+import type { Day } from '../../../../engine/types'
+import { act, battle, chk, dmg, fight, gl, heal, itm, loot, pg, purse, step, travel, vir, week, weekend, buff } from './dsl'
+
+const MARKET = [
+  { id: 'ration', price: 1 },
+  { id: 'mendwater', price: 5 },
+  { id: 'emberflask', price: 4 },
+  { id: 'ironbrew', price: 3 },
+  { id: 'wardsalve', price: 3 },
+  { id: 'gullhelm', price: 10 },
+  { id: 'saltboots', price: 8 },
+]
+
+export const FEB: Day[] = [
+  ...week('2024-02-19', [
+    pg('f19-homecoming', 'Homecoming', 'harbor',
+      'The Marrow Gull limps into harbor with a cracked plank and a crew that will not stop telling the story. Captain Hale meets you on the quay. She has already heard; she wants the parts the crew left out.',
+      [
+        step('1. Report', act('Tell Hale everything', 'She listens without interrupting, which is how you know it matters.', vir(1))),
+        step('2. The chart', chk('Unroll the chart you took from the drowned lighthouse', 'int', ['lore'], 11,
+          'Salt has eaten most of it. You can make out seven small marks around the Marches, and nothing else.',
+          ['Seven marks, each a tiny bell, scattered around the Marches. Two are ours. Hale goes very quiet.', gl(2)])),
+      ]),
+    pg('f20-seven', 'The Sevenfold Peal', 'tower',
+      'Archivist Penwick, a small man buried in a large scarf, spreads the chart beside a crumbling hymnal. “Seven bells,” he says. “Rung together once a year, to sing the Pale Tide to sleep. We lost five of them. We forgot the song. And the Tide has been waking ever since.”',
+      [
+        step('1. Study the hymnal', chk('Piece together the old verses', 'int', ['lore'], 12,
+          'The verses are beautiful and make no sense.',
+          ['You find it: the bells must ring together on the longest night of the year.', buff('roll', 1)])),
+        step('2. The rope', act('Ask how long the second bell has', '“A month,” Penwick says. “Perhaps less. Ropes were woven at Hollowmere, once. Ask Granny Teasel.”')),
+      ]),
+    pg('f21-ropewalk', 'The Old Ropewalk', 'cellar',
+      'Hollowmere’s ropewalk is a long shed by the marsh, cold and smelling of tar. Granny Teasel is ninety, sharp as a gaff, and remembers the bell-rope. “Silk from the cliff spiders for strength,” she says, “and kelp-hemp from the Saltmarket so it won’t rot. Bring me both and I’ll spin you a rope that’ll outlive you.”',
+      [
+        step(undefined,
+          chk('A) Offer to help her clear the shed first', 'str', ['physical'], 11,
+            ['You strain something hauling a spool.', dmg(1)],
+            ['Teasel is impressed. She gives you a coil of old cord “for practice.”', itm('ration', 2), vir(1)]),
+          chk('B) Charm the old recipe out of her', 'cha', ['social'], 12,
+            'She tells you the recipe twice and calls you a fool both times.',
+            ['She laughs and slips you a little purse for the road.', gl(3)])),
+      ],
+      { icons: [loot(18, 66)] }),
+    pg('f22-saltmarket-hemp', 'Kelp-Hemp', 'harbor',
+      'The kelp-hemp traders of the Saltmarket know exactly how badly you need their product, and price it accordingly.',
+      [
+        step(undefined,
+          chk('A) Haggle hard', 'cha', ['social'], 12,
+            ['You pay the full price and a bit more.', gl(-3)],
+            ['You walk away with a bundle at a fair price.', gl(-1)]),
+          chk('B) Cut it yourself at low tide', 'con', ['physical'], 12,
+            ['Cold water, sharp rocks, a long day.', dmg(2)],
+            'You come back soaked, cold, and with plenty of hemp.')),
+      ],
+      { icons: [purse(72, 60)] }),
+    battle('f23-gullspire', 'Gullspire Silk', 'tower',
+      'The cliff spiders nest in the cracks of Gullspire, where the gulls will not go. Their silk shines in the cracks like frost. So do their eyes.',
+      fight(['bw-cliffSpider', 'bw-cliffSpider'], 3, 'Two pale spiders unfold from the rock.',
+        'You cut their web loose: a whole bundle of silk, light as breath and strong as chain.',
+        'You grab what silk you can and climb down fast, bitten twice.', [gl(3)], [dmg(1)]),
+      [step('Climb', chk('Climb to the nests', 'dex', ['physical'], 11, ['A ledge crumbles under your boot.', dmg(1)], 'You reach the nests quietly.'))]),
+    weekend('f24-spinning', 'The Spinning', 'inn',
+      'Granny Teasel spins all weekend, singing under her breath, and will not let anyone touch the wheel. By the second evening there is a rope on the floor of the ropewalk the color of moonlight.',
+      [step(undefined, act('Keep her company and listen to her songs', 'She sings the old bell-songs. One of them sounds like the hymnal.', vir(1), heal(2)))],
+      MARKET),
+  ]),
+
+  ...week('2024-02-26', [
+    pg('f26-crossing', 'Back Across the Glass Sea', 'harbor',
+      'The Marrow Gull sails again, the new rope coiled in the hold like something sleeping.',
+      [
+        step('1. The crossing', act('Sail for the drowned lighthouse', 'A day and a night at sea.', travel(1))),
+        step('2. The weather', chk('Read the sky', 'wis', ['perception'], 12,
+          ['A squall catches you broadside.', dmg(1)],
+          'You steer around the worst of it.')),
+      ]),
+    pg('f27-stair', 'Down the Spiral Stair', 'depths',
+      'The drowned lighthouse is as you left it, cold and dripping. The Bell-Warden kneels where it fell. Below it, the bell swings slower than before.',
+      [
+        step(undefined,
+          chk('A) Pay your respects to the fallen guardian', 'cha', [], 10, 'It does not move.', ['You feel, oddly, that it approves.', vir(1), buff('roll', 1)]),
+          chk('B) Search the cave for anything you missed', 'wis', ['perception'], 12, 'Only cold water.', ['Wedged in the rocks: a pouch of old coins and a lens of fogglass.', gl(4)])),
+      ]),
+    pg('f28-hanging', 'Hanging the Rope', 'seacave',
+      'The old rope is a single strand of fiber now. You have to climb the bell-frame and change them without letting the bell stop.',
+      [
+        step('1. Climb the frame', chk('Climb up to the yoke', 'dex', ['physical'], 12, ['You slip and catch yourself on the frame, painfully.', dmg(2)], 'You make it up to the yoke.')),
+        step('2. Swap the rope', chk('Tie the new rope on between two tolls', 'str', ['physical'], 12,
+          ['The bell lurches, and the toll nearly deafens you. But the rope holds.', dmg(1)],
+          ['A perfect knot. The bell swings strong and steady again.', vir(1)])),
+      ]),
+    pg('f29-leap', 'Leap Day', 'harbor',
+      'An extra day, the old sailors say, belongs to the sea. On the way home the crew drops a coin overboard for luck and asks you to do the same.',
+      [
+        step(undefined,
+          act('A) Toss a coin to the sea', 'It sinks with a wink of light. The crew cheers.', gl(-1), vir(1), buff('roll', 1)),
+          act('B) Keep your coin; you’ve earned your own luck', 'The crew mutters, but laughs.', gl(1))),
+      ]),
+    battle('m01-gnawer', 'The Rope-Gnawer', 'seacave',
+      'Back in Brightwatch, someone has been chewing through the first bell’s rope from below. In the flooded cellar beneath the tower you find the culprit: a reef louse the size of a rowboat, fat on hemp.',
+      fight(['bw-ropeGnawer'], 4, 'The Rope-Gnawer rears up, plates clattering.',
+        'The louse curls up and dies. Both bells are safe — for now. Hale stands you a drink.',
+        'You drive it off into the deep cellars. It will be back, but the rope is safe tonight.',
+        [gl(6), itm('mendwater')], [dmg(2)])),
+    weekend('m02-two-bells', 'Two Bells Ringing', 'inn',
+      'For the first time in years both bells ring true, and the fog keeps a respectful distance from the harbor. Penwick spends the weekend at the Lamplighter’s Rest with the chart, drawing circles around the next mark: the Hollowmere Fens.',
+      [step(undefined, act('Raise a glass with the crew', 'They sing your name badly and often.', vir(1)))],
+      MARKET),
+  ]),
+]
