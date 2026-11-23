@@ -1,6 +1,7 @@
 import { daysBetween, formatLong, formatShort, formatSpan, parseISO } from '../engine/calendar'
 import { campaign, isLotteryPage, pageDate, pageEndDate } from '../engine/campaign'
 import { dayLabel, enemy } from '../engine/content'
+import { rules } from '../engine/ruleset'
 import { nextPageLockedUntil } from '../engine/status'
 import { bandLabel } from '../engine/dice'
 import { canAdvance, maxRounds, stepAvailable, stepLocked, stepsDone, type Action } from '../engine/state'
@@ -57,7 +58,9 @@ export function DayView({ state, day, dispatch, today }: Props) {
       {pend?.type === 'pickpocket' && (
         <div className="callout">
           <p>
-            You spot an unattended purse holding <b>{pend.amount} glint</b>.
+            You spot an unattended purse holding <b>
+              {pend.amount} {rules(state).currencyName}
+            </b>.
             {pend.amount === 4 && ' Taking this much will weigh on your conscience (−1 Virtue).'}
           </p>
           <div className="row">
@@ -170,7 +173,7 @@ export function DayView({ state, day, dispatch, today }: Props) {
               </button>
             )}
             {lotteryToday && (
-              <button disabled={p.lottery || !!pend} onClick={() => dispatch({ type: 'LOTTERY' })} title="d6: −2, −1, +1, +2, +3, +4 glint">
+              <button disabled={p.lottery || !!pend} onClick={() => dispatch({ type: 'LOTTERY' })} title={`d6: −2, −1, +1, +2, +3, +4 ${rules(state).currencyName}`}>
                 {p.lottery ? 'Lottery played' : 'Play the lottery (d6)'}
               </button>
             )}
