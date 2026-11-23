@@ -1,10 +1,10 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { item } from '../src/engine/content'
-import { ITEMS } from '../src/content/items'
+import { item } from '@questender/engine/content'
+import { ITEMS } from '@questender/engine/content/items'
 import { ItemTip } from '../src/ui/ItemTip'
 import { itemEffect } from '../src/ui/itemEffect'
-import { CAMPAIGNS } from '../src/content/campaigns'
+import { CAMPAIGNS } from '@questender/engine/content/campaigns'
 
 const allIds = [...ITEMS.map((i) => i.id), ...CAMPAIGNS.flatMap((c) => c.content?.items?.map((i) => i.id) ?? [])]
 

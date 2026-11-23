@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { APP_VERSION, CHANGELOG } from '../changelog'
-import { formatLong } from '../engine/calendar'
+import { formatLong } from '@questender/engine/calendar'
 import type { ThemePref } from '../theme'
 
 interface Props {

@@ -1,8 +1,8 @@
 // The desk treats a weekend page as one stop: › goes Saturday → Monday.
 import { describe, expect, it } from 'vitest'
-import { deskSpanEnd, nextDeskDate, prevDeskDate, turnThrough } from '../src/engine/desk'
-import { canAdvance, initialState, reduce } from '../src/engine/state'
-import type { GameState } from '../src/engine/types'
+import { deskSpanEnd, nextDeskDate, prevDeskDate, turnThrough } from '@questender/engine/desk'
+import { canAdvance, initialState, reduce } from '@questender/engine/state'
+import type { GameState } from '@questender/engine/types'
 
 function finishPage(s: GameState): GameState {
   for (let guard = 0; guard < 50 && !canAdvance(s); guard++) {

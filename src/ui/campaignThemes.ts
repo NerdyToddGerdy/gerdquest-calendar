@@ -1,4 +1,4 @@
-import type { Scene } from '../engine/types'
+import type { Scene } from '@questender/engine/types'
 
 /** Look and feel for a campaign's card on the New Campaign screen. */
 export interface CampaignTheme {

@@ -1,11 +1,11 @@
 // The Ember Road across the whole year: calendar shape, content integrity,
 // and a seeded playthrough with every hero.
 import { describe, expect, it } from 'vitest'
-import { addDays, weekday } from '../src/engine/calendar'
-import { authoredDate, campaign, pageSpan } from '../src/engine/campaign'
-import { ability, enemy, heroDef, item, member } from '../src/engine/content'
-import { canAdvance, initialState, reduce } from '../src/engine/state'
-import type { Day, Effect } from '../src/engine/types'
+import { addDays, weekday } from '@questender/engine/calendar'
+import { authoredDate, campaign, pageSpan } from '@questender/engine/campaign'
+import { ability, enemy, heroDef, item, member } from '@questender/engine/content'
+import { canAdvance, initialState, reduce } from '@questender/engine/state'
+import type { Day, Effect } from '@questender/engine/types'
 
 const er = campaign('emberroad')
 const MUSTER = 3 // page where the hero is chosen

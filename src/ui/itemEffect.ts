@@ -1,4 +1,4 @@
-import { TRAIT_NAMES, type ItemDef, type StatKey } from '../engine/types'
+import { TRAIT_NAMES, type ItemDef, type StatKey } from '@questender/engine/types'
 
 const STAT_LABELS: Record<StatKey, string> = {
   ...TRAIT_NAMES,

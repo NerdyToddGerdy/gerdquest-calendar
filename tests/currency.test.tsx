@@ -1,8 +1,8 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { campaign, defaultStartDate } from '../src/engine/campaign'
-import { initialState, reduce } from '../src/engine/state'
-import { rules } from '../src/engine/ruleset'
+import { campaign, defaultStartDate } from '@questender/engine/campaign'
+import { initialState, reduce } from '@questender/engine/state'
+import { rules } from '@questender/engine/ruleset'
 import { DayView } from '../src/ui/DayView'
 
 const today = '2026-11-23'

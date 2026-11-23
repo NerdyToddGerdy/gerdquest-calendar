@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { daysBetween, weekday } from '../src/engine/calendar'
-import { authoredDate, campaign, pageEndDate, pageSpan } from '../src/engine/campaign'
-import { ability, enemy, heroDef, item } from '../src/engine/content'
-import { craftDef, crewDef, shipDef, upgradeDef } from '../src/engine/vehicle'
-import type { Effect } from '../src/engine/types'
+import { daysBetween, weekday } from '@questender/engine/calendar'
+import { authoredDate, campaign, pageEndDate, pageSpan } from '@questender/engine/campaign'
+import { ability, enemy, heroDef, item } from '@questender/engine/content'
+import { craftDef, crewDef, shipDef, upgradeDef } from '@questender/engine/vehicle'
+import type { Effect } from '@questender/engine/types'
 
 const hd = campaign('halcyon')
 const WEEKDAYS = /\b(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday)s?\b/

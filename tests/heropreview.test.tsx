@@ -1,8 +1,8 @@
 // @vitest-environment node
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { campaign } from '../src/engine/campaign'
-import { ability, campaignHeroes, heroDef } from '../src/engine/content'
+import { campaign } from '@questender/engine/campaign'
+import { ability, campaignHeroes, heroDef } from '@questender/engine/content'
 import { HeroPreview } from '../src/ui/HeroPreview'
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;')

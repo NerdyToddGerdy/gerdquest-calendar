@@ -2,9 +2,9 @@
 //   questender.slots          → SlotMeta[] index
 //   questender.slot.<slotId>  → GameState
 // The single-save format from v1 (questender.save.v1) is migrated on first load.
-import { toISO, type ISODate } from './engine/calendar'
-import { alignedOnOrBefore, campaign, DEFAULT_CAMPAIGN, defaultStartDate, pageDate } from './engine/campaign'
-import type { GameState, JournalEntry } from './engine/types'
+import { toISO, type ISODate } from '@questender/engine/calendar'
+import { alignedOnOrBefore, campaign, DEFAULT_CAMPAIGN, defaultStartDate, pageDate } from '@questender/engine/campaign'
+import type { GameState, JournalEntry } from '@questender/engine/types'
 import { loadEntries, sanitizeEntries, type CalendarEntry } from './calendarNotes'
 
 const INDEX_KEY = 'questender.slots'

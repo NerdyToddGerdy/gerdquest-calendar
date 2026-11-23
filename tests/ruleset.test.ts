@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { heroDef } from '../src/engine/content'
-import { combatRounds, resolveRound, startCombat } from '../src/engine/combat'
-import { resolveDeath } from '../src/engine/death'
-import { createHero, maxHp } from '../src/engine/hero'
-import { scriptedRng } from '../src/engine/rng'
-import { CLASSIC, FRONTIER, MODERN, RULESETS, rules } from '../src/engine/ruleset'
-import { canChangeGear, initialState, reduce, type Action } from '../src/engine/state'
-import type { GameState, RollSlot, RulesetId } from '../src/engine/types'
+import { heroDef } from '@questender/engine/content'
+import { combatRounds, resolveRound, startCombat } from '@questender/engine/combat'
+import { resolveDeath } from '@questender/engine/death'
+import { createHero, maxHp } from '@questender/engine/hero'
+import { scriptedRng } from '@questender/engine/rng'
+import { CLASSIC, FRONTIER, MODERN, RULESETS, rules } from '@questender/engine/ruleset'
+import { canChangeGear, initialState, reduce, type Action } from '@questender/engine/state'
+import type { GameState, RollSlot, RulesetId } from '@questender/engine/types'
 
 const wren = () => createHero(heroDef('wren'))
 

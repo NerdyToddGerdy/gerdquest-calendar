@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { EmberScene } from '../../engine/types'
+import type { EmberScene } from '@questender/engine/types'
 
 // Backgrounds for the Ember Road: a frozen north road, its waystones, and the
 // places along it. Same style as Scene.tsx (400x200 viewBox, layered SVG);
