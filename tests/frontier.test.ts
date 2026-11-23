@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { weekday } from '../src/engine/calendar'
-import { authoredDate, campaign, isLotteryPage, pageDate, pageSpan } from '../src/engine/campaign'
-import { heroDef, item } from '../src/engine/content'
-import { scriptedRng } from '../src/engine/rng'
-import { canAdvance, initialState, reduce, type Action } from '../src/engine/state'
-import type { GameState, RollSlot, Ship } from '../src/engine/types'
+import { weekday } from '@questender/engine/calendar'
+import { authoredDate, campaign, isLotteryPage, pageDate, pageSpan } from '@questender/engine/campaign'
+import { heroDef, item } from '@questender/engine/content'
+import { scriptedRng } from '@questender/engine/rng'
+import { canAdvance, initialState, reduce, type Action } from '@questender/engine/state'
+import type { GameState, RollSlot, Ship } from '@questender/engine/types'
 import {
   assignCrew,
   createShip,
@@ -18,7 +18,7 @@ import {
   shipDef,
   shipStat,
   startDogfight,
-} from '../src/engine/vehicle'
+} from '@questender/engine/vehicle'
 
 const hd = campaign('halcyon')
 const FAR_FUTURE = '2099-12-31'

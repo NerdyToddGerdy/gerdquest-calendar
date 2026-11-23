@@ -1,10 +1,10 @@
-import { ability, item, member } from '../engine/content'
-import { sellPrice } from '../engine/economy'
-import { itemCount } from '../engine/hero'
-import { canHire } from '../engine/party'
-import { rules } from '../engine/ruleset'
-import type { Action } from '../engine/state'
-import type { Day, GameState } from '../engine/types'
+import { ability, item, member } from '@questender/engine/content'
+import { sellPrice } from '@questender/engine/economy'
+import { itemCount } from '@questender/engine/hero'
+import { canHire } from '@questender/engine/party'
+import { rules } from '@questender/engine/ruleset'
+import type { Action } from '@questender/engine/state'
+import type { Day, GameState } from '@questender/engine/types'
 
 interface Props {
   state: GameState

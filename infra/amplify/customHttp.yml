@@ -1,0 +1,49 @@
+# DRAFT, not wired in. Amplify Hosting reads this from the repo root (or the
+# app's "Custom headers" setting). Copy to ./customHttp.yml when migrating.
+# Start the CSP as Content-Security-Policy-Report-Only for a week, then enforce.
+#
+# Today the app makes NO runtime network requests beyond Google Fonts
+# (index.html). React components use inline style="" attributes, hence
+# style-src-attr 'unsafe-inline'. Vite's build emits no inline scripts.
+#
+# Later additions to the CSP (one PR per feature):
+#   connect-src  + https://api.<domain> https://auth.<domain>
+#                  https://cognito-idp.<region>.amazonaws.com
+#   script-src   + https://js.stripe.com   (only if Stripe.js is embedded)
+#   frame-src      https://js.stripe.com https://hooks.stripe.com
+#   form-action  + https://checkout.stripe.com
+#   Google sign-in through the Cognito hosted UI is a top-level redirect and
+#   needs no CSP entry; add accounts.google.com only if using in-page GIS.
+customHeaders:
+  - pattern: '**/*'
+    headers:
+      - key: Strict-Transport-Security
+        value: 'max-age=31536000; includeSubDomains'
+      - key: X-Content-Type-Options
+        value: nosniff
+      - key: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - key: Permissions-Policy
+        value: 'camera=(), microphone=(), geolocation=()'
+      - key: Content-Security-Policy
+        value: >-
+          default-src 'self';
+          script-src 'self';
+          style-src 'self' https://fonts.googleapis.com;
+          style-src-attr 'unsafe-inline';
+          font-src 'self' https://fonts.gstatic.com;
+          img-src 'self' data:;
+          connect-src 'self';
+          base-uri 'self';
+          form-action 'self';
+          frame-ancestors 'none';
+          object-src 'none';
+          upgrade-insecure-requests
+  - pattern: '/assets/**'
+    headers:
+      - key: Cache-Control
+        value: 'public, max-age=31536000, immutable'
+  - pattern: '/index.html'
+    headers:
+      - key: Cache-Control
+        value: 'no-cache'

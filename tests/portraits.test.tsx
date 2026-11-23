@@ -2,8 +2,8 @@
 // sheets and scenes.
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { listCampaigns } from '../src/engine/campaign'
-import { campaignHeroes, enemy, heroDef } from '../src/engine/content'
+import { listCampaigns } from '@questender/engine/campaign'
+import { campaignHeroes, enemy, heroDef } from '@questender/engine/content'
 import { hasPortrait } from '../src/ui/portraits/art'
 import { PORTRAITS } from '../src/ui/portraits/specs'
 import { Portrait } from '../src/ui/Portrait'

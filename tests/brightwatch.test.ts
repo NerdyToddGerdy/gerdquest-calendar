@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { TRIAL_HEROES } from '../src/content/campaigns/brightwatch/content'
-import { addDays, weekday, WEEKDAY_NAMES } from '../src/engine/calendar'
-import { authoredDate, campaign, pageEndDate, pageSpan } from '../src/engine/campaign'
-import { ability, campaignHeroes, enemy, heroDef, item, member } from '../src/engine/content'
-import { turnPast } from '../src/engine/desk'
-import { canAdvance, currentDay, initialState, reduce } from '../src/engine/state'
-import type { Effect, GameState } from '../src/engine/types'
+import { TRIAL_HEROES } from '@questender/engine/content/campaigns/brightwatch/content'
+import { addDays, weekday, WEEKDAY_NAMES } from '@questender/engine/calendar'
+import { authoredDate, campaign, pageEndDate, pageSpan } from '@questender/engine/campaign'
+import { ability, campaignHeroes, enemy, heroDef, item, member } from '@questender/engine/content'
+import { turnPast } from '@questender/engine/desk'
+import { canAdvance, currentDay, initialState, reduce } from '@questender/engine/state'
+import type { Effect, GameState } from '@questender/engine/types'
 
 const bw = campaign('brightwatch')
 const START = '2026-01-05' // a Monday, like Jan 1, 2024

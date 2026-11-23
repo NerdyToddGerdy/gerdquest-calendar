@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { formatLong, formatShort, formatSpan, parseISO, type ISODate } from '../engine/calendar'
-import { campaign } from '../engine/campaign'
-import { canGoForward, deskSpanEnd, earliestDate, prevDeskDate, startingDate, tabDone, tabView, type TabView } from '../engine/desk'
-import { canAdvance, currentDay, type Action } from '../engine/state'
-import type { GameState } from '../engine/types'
+import { formatLong, formatShort, formatSpan, parseISO, type ISODate } from '@questender/engine/calendar'
+import { campaign } from '@questender/engine/campaign'
+import { canGoForward, deskSpanEnd, earliestDate, prevDeskDate, startingDate, tabDone, tabView, type TabView } from '@questender/engine/desk'
+import { canAdvance, currentDay, type Action } from '@questender/engine/state'
+import type { GameState } from '@questender/engine/types'
 import { exportSave } from '../save'
 import { markSeen, seenLatest } from '../changelog'
-import { CAL_VIEWS, shortDate, type CalView } from '../engine/calview'
+import { CAL_VIEWS, shortDate, type CalView } from '@questender/engine/calview'
 import type { ThemePref } from '../theme'
 import { CalendarView } from './CalendarView'
 import { campColor } from './colors'
@@ -16,6 +16,7 @@ import { HeroSheet } from './HeroSheet'
 import { Journal } from './Journal'
 import { Log } from './Log'
 import { Notes } from './Notes'
+import { revealTab } from './revealTab'
 import { Settings } from './Settings'
 import { readDevOverride, writeDevOverride } from './today'
 
@@ -244,6 +245,7 @@ export function Desk(p: Props) {
                   title={v.kind === 'notStarted' ? `${c.title} begins ${formatLong(v.begins)}` : undefined}
                   style={{ ['--camp' as string]: campColor(p.slots, s) }}
                   onClick={() => p.onSelect(s.id)}
+                  ref={s.id === active.id ? revealTab : undefined}
                 >
                   <TabMark view={v} state={s.state} />
                   {v.kind === 'notStarted' && <span className="tab-when">starts {shortDate(v.begins)}</span>}

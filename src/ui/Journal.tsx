@@ -1,6 +1,6 @@
-import { formatLong } from '../engine/calendar'
-import { campaign } from '../engine/campaign'
-import type { GameState } from '../engine/types'
+import { formatLong } from '@questender/engine/calendar'
+import { campaign } from '@questender/engine/campaign'
+import type { GameState } from '@questender/engine/types'
 
 /** Read-only record of completed pages. Only past pages ever appear here. */
 export function Journal({ state, onBack }: { state: GameState; onBack?: () => void }) {

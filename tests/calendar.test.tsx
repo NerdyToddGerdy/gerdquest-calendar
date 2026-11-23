@@ -1,6 +1,6 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import { addDays, daysBetween, formatLong, formatSpan, weekday } from '../src/engine/calendar'
+import { addDays, daysBetween, formatLong, formatSpan, weekday } from '@questender/engine/calendar'
 import {
   alignedOnOrBefore,
   authoredDate,
@@ -13,12 +13,12 @@ import {
   pageEndDate,
   startDateOptions,
   unlockedThrough,
-} from '../src/engine/campaign'
-import { canTurnPage, nextPageLockedUntil, pagesBehind, slotStatus } from '../src/engine/status'
-import { canAdvance, initialState, reduce } from '../src/engine/state'
-import type { Campaign, Day, GameState } from '../src/engine/types'
+} from '@questender/engine/campaign'
+import { canTurnPage, nextPageLockedUntil, pagesBehind, slotStatus } from '@questender/engine/status'
+import { canAdvance, initialState, reduce } from '@questender/engine/state'
+import type { Campaign, Day, GameState } from '@questender/engine/types'
 import { normalizeState } from '../src/save'
-import { canGoForward, dayComplete, dayStatus, startingDate, tabView, turnPast } from '../src/engine/desk'
+import { canGoForward, dayComplete, dayStatus, startingDate, tabView, turnPast } from '@questender/engine/desk'
 import { CalendarView } from '../src/ui/CalendarView'
 import { Desk } from '../src/ui/Desk'
 

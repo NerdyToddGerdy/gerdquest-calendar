@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { ability, heroDef } from '../engine/content'
-import { POOL_NAMES, costLabel } from '../engine/pools'
-import { TRAITS, type HeroDef, type PoolId } from '../engine/types'
+import { ability, heroDef } from '@questender/engine/content'
+import { POOL_NAMES, costLabel } from '@questender/engine/pools'
+import { TRAITS, type HeroDef, type PoolId } from '@questender/engine/types'
 import { Portrait } from './Portrait'
 
 const sign = (n: number) => (n >= 0 ? `+${n}` : `${n}`)

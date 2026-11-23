@@ -1,8 +1,8 @@
 import { useState, type FormEvent } from 'react'
-import { formatLong, type ISODate } from '../engine/calendar'
-import { holidaysOn, moonOn, MOON_GLYPH, MOON_NAME } from '../engine/almanac'
+import { formatLong, type ISODate } from '@questender/engine/calendar'
+import { holidaysOn, moonOn, MOON_GLYPH, MOON_NAME } from '@questender/engine/almanac'
 import { newEntryId, type CalendarEntry } from '../calendarNotes'
-import type { DayStatus } from '../engine/desk'
+import type { DayStatus } from '@questender/engine/desk'
 
 export interface PanelCampaign {
   id: string

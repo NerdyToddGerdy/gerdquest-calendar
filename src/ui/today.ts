@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { localISO, type ISODate } from '../engine/calendar'
+import { localISO, type ISODate } from '@questender/engine/calendar'
 
 const OVERRIDE_KEY = 'questender.devToday'
 

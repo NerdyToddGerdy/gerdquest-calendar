@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { StarwakeScene } from '../../engine/types'
+import type { StarwakeScene } from '@questender/engine/types'
 
 // Backgrounds for The Starwake: a sea of scattered isles under drifting stars.
 // Same style as Scene.tsx (400x200 viewBox, layered SVG); every shape here is
