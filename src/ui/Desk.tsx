@@ -16,6 +16,7 @@ import { HeroSheet } from './HeroSheet'
 import { Journal } from './Journal'
 import { Log } from './Log'
 import { Notes } from './Notes'
+import { revealTab } from './revealTab'
 import { Settings } from './Settings'
 import { readDevOverride, writeDevOverride } from './today'
 
@@ -244,6 +245,7 @@ export function Desk(p: Props) {
                   title={v.kind === 'notStarted' ? `${c.title} begins ${formatLong(v.begins)}` : undefined}
                   style={{ ['--camp' as string]: campColor(p.slots, s) }}
                   onClick={() => p.onSelect(s.id)}
+                  ref={s.id === active.id ? revealTab : undefined}
                 >
                   <TabMark view={v} state={s.state} />
                   {v.kind === 'notStarted' && <span className="tab-when">starts {shortDate(v.begins)}</span>}
