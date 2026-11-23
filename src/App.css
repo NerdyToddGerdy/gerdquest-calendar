@@ -1139,3 +1139,86 @@ button:disabled { opacity: 1; color: var(--muted); background: transparent; bord
 .slots:has(.slot:nth-child(2)) .total { font-size: 1.7rem; }
 .slots:has(.slot:nth-child(2)) .total::before { font-size: 1.1rem; }
 @media (max-width: 640px) { .slots:has(.slot:nth-child(2)) { grid-template-columns: 1fr 1fr; } }
+
+/* ---------- Mobile pass (issue #13) ---------- */
+
+/* Safe areas: notches and home indicators (viewport-fit=cover in index.html). */
+:root { --safe-top: env(safe-area-inset-top, 0px); }
+body {
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.topbar { padding-top: calc(6px + var(--safe-top)); min-height: calc(var(--topbar-h) + var(--safe-top)); }
+.desk-head { top: calc(var(--topbar-h) + 1px + var(--safe-top)); }
+#root > .title-screen { padding-top: calc(40px + var(--safe-top)); }
+.day-panel { padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+.hero-modal-backdrop {
+  padding-top: max(12px, var(--safe-top));
+  padding-left: max(12px, env(safe-area-inset-left, 0px));
+  padding-right: max(12px, env(safe-area-inset-right, 0px));
+}
+@media (max-width: 600px) {
+  .topbar { height: calc(var(--topbar-h) + var(--safe-top)); }
+  .topbar:has(.view-switch .segmented + .segmented) { height: auto; }
+  .tabs { top: calc(var(--topbar-h) + var(--safe-top)); }
+  .hero-modal-backdrop { padding-left: 0; padding-right: 0; }
+  .hero-modal { padding-left: max(10px, env(safe-area-inset-left, 0px)); padding-right: max(10px, env(safe-area-inset-right, 0px)); }
+}
+
+/* Long hero, item and campaign names wrap instead of pushing the layout wider. */
+.sheet, .sheet-head > *, .journal, .day, .hero-preview, .release, .day-panel, .notes, .enemy, .campaign-pick, .hero-pick, .slot-card, .compartments li {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.tab-hero { max-width: 12ch; overflow: hidden; text-overflow: ellipsis; }
+.tabs { scroll-snap-type: x proximity; scroll-padding: 0 16px; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+.tab { scroll-snap-align: start; flex: none; }
+
+/* Phones and tablets: 16px form controls so iOS never zooms on focus. */
+@media (max-width: 900px), (pointer: coarse) {
+  input:not([type='checkbox']):not([type='radio']):not([type='file']),
+  select,
+  .dock select,
+  textarea,
+  .notes-text { font-size: 16px; }
+}
+
+/* Touch: every control is at least 44 x 44 px. */
+@media (pointer: coarse) {
+  button:not(.linkish):not(.hidden-icon),
+  summary,
+  select,
+  input:not([type='checkbox']):not([type='radio']):not([type='file']) { min-height: 44px; }
+  button:not(.linkish):not(.hidden-icon):not(.tab):not(.cal-cell):not(.mini-title) { min-width: 44px; }
+  .topbar { --ctl: 44px; }
+  .icon-btn { width: 44px; }
+  .arrow, .dp-head .arrow { width: 44px; height: 44px; }
+  .linkish { padding: 14px 6px; margin: -14px -6px; }
+  .hidden-icon { width: 44px; height: 44px; padding: 9px; }
+  .start-pick, label.toggle, .dp-form label { min-height: 44px; }
+  .start-pick input, label.toggle input { width: 20px; height: 20px; flex: none; }
+  .start-pick, label.toggle { align-items: center; }
+  summary { display: flex; align-items: center; }
+}
+@media (pointer: coarse) {
+  :root { --topbar-h: 58px; }
+  .topbar .segmented button { min-height: 44px; }
+}
+@media (pointer: coarse) and (max-width: 600px) {
+  .new-btn { width: 44px; padding: 0 !important; }
+}
+
+/* Phone landscape: little height, so nothing sticks and the page is not squeezed. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .topbar, .desk-head, .tabs { position: static; }
+  .scene { max-height: 45vh; }
+  .layout { padding-top: 8px; }
+  .datebar { margin-top: 8px; }
+  .desk-head .datebar { padding-top: 6px; }
+  .datebar-date h2 { font-size: 1.5rem; }
+  .hero-modal { max-height: 100vh; }
+  .hero-modal-backdrop { align-items: stretch; padding-top: 0; padding-bottom: 0; }
+  .day-panel { max-height: 85vh; }
+  .calendar.with-panel { padding-bottom: 85vh; }
+}
