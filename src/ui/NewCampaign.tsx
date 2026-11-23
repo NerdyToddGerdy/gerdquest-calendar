@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { daysBetween, formatLong, WEEKDAY_NAMES, type ISODate } from '../engine/calendar'
 import { anchorWeekday, defaultStartDate, listCampaigns, startDateOptions, unlockedThrough } from '../engine/campaign'
 import { ability, campaignHeroes, heroDef } from '../engine/content'
+import { HeroPreviewButton, HeroPreviewModal } from './HeroPreview'
 import { TRAITS } from '../engine/types'
 import { slotExists } from '../save'
 
@@ -24,6 +25,7 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
   const [picked, setPicked] = useState<ISODate | null>(null)
   const startDate = picked && options.includes(picked) ? picked : defaultStartDate(camp, today)
   const taken = slotExists(campaignId, startDate)
+  const [previewId, setPreviewId] = useState<string | null>(null)
 
   return (
     <main className="title-screen">
@@ -82,6 +84,7 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
               ? 'Each week hands the story to a different hero; after the last one, you choose who carries on.'
               : "You'll meet the other heroes as the story goes on."}
           </p>
+          <HeroPreviewButton heroId={camp.startHero} label={`Preview ${heroDef(camp.startHero).name.split(' ')[0]}`} />{' '}
           <button className="primary big" disabled={taken} onClick={() => onStart(campaignId, startDate)}>
             Begin
           </button>
@@ -91,13 +94,7 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
       <h2>Choose your hero</h2>
       <div className="hero-picks">
         {campaignHeroes(camp).map((h) => (
-          <button
-            key={h.id}
-            className="hero-pick"
-            disabled={taken}
-            style={{ ['--hero' as string]: h.color }}
-            onClick={() => onStart(campaignId, startDate, h.id)}
-          >
+          <div key={h.id} className="hero-pick" style={{ ['--hero' as string]: h.color }}>
             <h3>{h.name}</h3>
             <div className="muted">{h.title}</div>
             <p>{h.blurb}</p>
@@ -122,9 +119,23 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
                 </li>
               ))}
             </ul>
-          </button>
+            <div className="hero-pick-actions">
+              <button className="primary" disabled={taken} onClick={() => onStart(campaignId, startDate, h.id)}>
+                Choose {h.name.split(' ')[0]}
+              </button>
+              <button onClick={() => setPreviewId(h.id)}>Preview</button>
+            </div>
+          </div>
         ))}
       </div>
+      {previewId && (
+        <HeroPreviewModal
+          heroId={previewId}
+          onClose={() => setPreviewId(null)}
+          chooseDisabled={taken}
+          onChoose={() => onStart(campaignId, startDate, previewId)}
+        />
+      )}
       </>
       )}
       <button onClick={onCancel}>Back</button>

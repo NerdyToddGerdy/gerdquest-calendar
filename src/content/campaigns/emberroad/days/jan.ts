@@ -13,7 +13,7 @@ export const SHOP_BASIC = [
 export const JAN: Day[] = [
   // ---------------- Prologue: Tamsin Reed ----------------
   {
-    id: 'er-01', month: 1, day: 1, span: 2, title: 'The Light Goes Out', scene: 'tower',
+    id: 'er-01', month: 1, day: 1, span: 2, title: 'The Light Goes Out', scene: 'er_stone',
     text: 'Snow hisses against the glass of the ninth waystone as Tamsin Reed climbs to trim its wick. For three hundred years the Ember Road has been lit end to end by these stones; travelers steer by them through the blizzards. Tonight, while she watches, the flame in the eighth stone down the valley shrinks to a blue bead and dies.',
     note: 'Prologue. You play Tamsin for the first few pages; then the story passes to the hero you choose.',
     steps: [
@@ -40,7 +40,7 @@ export const JAN: Day[] = [
     ],
   },
   {
-    id: 'er-02', month: 1, day: 3, title: 'Tracks in the Snow', scene: 'harbor',
+    id: 'er-02', month: 1, day: 3, title: 'Tracks in the Snow', scene: 'er_road',
     text: 'At first light Tamsin goes down to the eighth stone. Its glass is unbroken, its oil untouched. Frost has grown over the lamp from the inside, like breath on a window. A trail of footprints leads away — and beside them, paw prints far too large for any dog.',
     steps: [{
       title: 'Choose one',
@@ -63,7 +63,7 @@ export const JAN: Day[] = [
     }],
   },
   {
-    id: 'er-03', month: 1, day: 4, title: 'Hounds Without Breath', scene: 'depths',
+    id: 'er-03', month: 1, day: 4, title: 'Hounds Without Breath', scene: 'er_pines',
     text: 'Halfway to Cinderford, the howling starts. Two grey shapes lope out of the snowfall with ice crusted in their fur — and no steam on their breath at all.',
     note: 'Fight for one round per hound. Under these rules there is no Defense roll: your Defense score (10 + Defense) is compared to each enemy’s attack.',
     steps: [],
@@ -77,7 +77,7 @@ export const JAN: Day[] = [
     },
   },
   {
-    id: 'er-04', month: 1, day: 5, title: 'The Muster at Cinderford', scene: 'inn',
+    id: 'er-04', month: 1, day: 5, title: 'The Muster at Cinderford', scene: 'er_tavern',
     text: 'Tamsin tells her story to Reeve Halloran in the smoky common room of the Copper Kettle. By noon the reeve has rung the muster bell: the Ember Road needs keepers who can fight. Six answer. Tamsin, bandaged and furious about it, can only watch — and choose who carries her lantern down the road.',
     note: 'Choose the hero you will play for the rest of the campaign.',
     steps: [{
@@ -95,7 +95,7 @@ export const JAN: Day[] = [
 
   // ---------------- Week 1: up the road ----------------
   {
-    id: 'er-05', month: 1, day: 6, title: 'The Reeve’s Charge', scene: 'inn',
+    id: 'er-05', month: 1, day: 6, title: 'The Reeve’s Charge', scene: 'er_tavern',
     text: '“Seven stones between here and the Fourth Light at Greyfold,” Reeve Halloran says, spreading a stained map. “If the Fourth goes dark, the whole north road goes with it. Relight what you can. Find who’s snuffing them. Come back.”',
     note: 'Do both tasks, then stock up before you leave. You can’t come back to a shop once you’ve moved on.',
     steps: [
@@ -123,7 +123,7 @@ export const JAN: Day[] = [
     shop: { items: SHOP_BASIC },
   },
   {
-    id: 'er-06', month: 1, day: 7, title: 'The Road North', scene: 'harbor',
+    id: 'er-06', month: 1, day: 7, title: 'The Road North', scene: 'er_road',
     text: 'The Ember Road climbs out of Cinderford between walls of snow taller than you. Every mile there should be a waystone glowing. Two miles out, the first one is dark.',
     steps: [{
       title: 'Push through the drifts',
@@ -137,7 +137,7 @@ export const JAN: Day[] = [
     }],
   },
   {
-    id: 'er-07', month: 1, day: 8, span: 2, title: 'Thornwick Inn', scene: 'inn', rest: true,
+    id: 'er-07', month: 1, day: 8, span: 2, title: 'Thornwick Inn', scene: 'er_tavern', rest: true,
     text: 'Thornwick Inn sits under the sixth stone, which still burns. Travelers have packed in from both directions; nobody wants to sleep on the road. Among them are a few souls who might be persuaded to walk with you — for a price, and a share of the pot every time you rest.',
     note: 'Rest here. Followers cost a hiring fee now and upkeep every time you Rest; unpaid followers leave.',
     steps: [{
@@ -156,7 +156,7 @@ export const JAN: Day[] = [
 
   // ---------------- Week 2: the Second Stone ----------------
   {
-    id: 'er-08', month: 1, day: 10, title: 'The Second Stone', scene: 'tower',
+    id: 'er-08', month: 1, day: 10, title: 'The Second Stone', scene: 'er_stone',
     text: 'The second waystone is dark and furred with frost from the inside out. Someone has scratched a symbol into the stone: a closed mouth, stitched shut.',
     steps: [
       {
@@ -182,7 +182,7 @@ export const JAN: Day[] = [
     ],
   },
   {
-    id: 'er-09', month: 1, day: 11, title: 'The White Robes', scene: 'depths',
+    id: 'er-09', month: 1, day: 11, title: 'The White Robes', scene: 'er_pines',
     text: 'They come at dusk, silent as falling snow: two figures in white with their lips sewn shut, carrying snuffer-poles sharpened to spear points.',
     steps: [],
     combat: {
@@ -196,7 +196,7 @@ export const JAN: Day[] = [
     },
   },
   {
-    id: 'er-10', month: 1, day: 12, title: 'A Locked Reliquary', scene: 'cellar',
+    id: 'er-10', month: 1, day: 12, title: 'A Locked Reliquary', scene: 'er_cave',
     text: 'In a roadside shrine you find an iron reliquary bound with three locks. The shrine-keeper is long gone; a note in the dust says only: “For the keepers. When the lights fail.”',
     steps: [{
       title: 'Choose one',
@@ -220,7 +220,7 @@ export const JAN: Day[] = [
     }],
   },
   {
-    id: 'er-11', month: 1, day: 13, title: 'The Frozen Ford', scene: 'seacave',
+    id: 'er-11', month: 1, day: 13, title: 'The Frozen Ford', scene: 'er_river',
     text: 'The Ember Road crosses the Tallow River at a ford that should be knee-deep. Today it is a sheet of black ice with water moving underneath.',
     steps: [{
       title: 'Cross the ford',
@@ -235,7 +235,7 @@ export const JAN: Day[] = [
     }],
   },
   {
-    id: 'er-12', month: 1, day: 14, title: 'Wisps over the Marsh', scene: 'seacave',
+    id: 'er-12', month: 1, day: 14, title: 'Wisps over the Marsh', scene: 'er_mere',
     text: 'Past the ford, the road runs through a frozen marsh. Lights drift between the reeds — not waystone gold, but a cold blue that leaves frost wherever it passes. Three of them turn toward you.',
     steps: [],
     combat: {
@@ -249,7 +249,7 @@ export const JAN: Day[] = [
     },
   },
   {
-    id: 'er-13', month: 1, day: 15, span: 2, title: 'Mossgate Market', scene: 'inn', rest: true,
+    id: 'er-13', month: 1, day: 15, span: 2, title: 'Mossgate Market', scene: 'er_village', rest: true,
     text: 'Mossgate is a trading village where three roads meet, and its winter market is still running out of stubbornness. Traders sell steel, mules, and charms against the cold. You take a room and sleep for twelve hours.',
     note: 'Rest. The market has upgrades that stack (sharpened edges, tempered grips) and travel gear.',
     steps: [{
@@ -281,7 +281,7 @@ export const JAN: Day[] = [
 
   // ---------------- Week 3: the Third Stone ----------------
   {
-    id: 'er-14', month: 1, day: 17, title: 'The Hermit of Mossgate Wood', scene: 'cellar',
+    id: 'er-14', month: 1, day: 17, title: 'The Hermit of Mossgate Wood', scene: 'er_pines',
     text: 'The villagers say an old hermit in the wood knows more about the Hush than he should. You find him splitting logs, as if he’d been expecting you.',
     steps: [{
       title: 'Choose one',
@@ -304,7 +304,7 @@ export const JAN: Day[] = [
     }],
   },
   {
-    id: 'er-15', month: 1, day: 18, title: 'The Third Stone', scene: 'tower',
+    id: 'er-15', month: 1, day: 18, title: 'The Third Stone', scene: 'er_stone',
     text: 'The third waystone has been sealed with a ring of carved runes that drink the warmth out of the air. A flame won’t catch until the ring is broken — and breaking the wrong rune will feed it.',
     steps: [{
       title: 'Break the ring',
@@ -318,7 +318,7 @@ export const JAN: Day[] = [
     }],
   },
   {
-    id: 'er-16', month: 1, day: 19, title: 'Ambush in the Pines', scene: 'depths',
+    id: 'er-16', month: 1, day: 19, title: 'Ambush in the Pines', scene: 'er_pines',
     text: 'Not every danger on the road wears white. Two bandits step out from behind the pines, bows drawn. “The lights are out, friend. Toll’s gone up.”',
     steps: [{
       title: 'Choose one',
@@ -345,7 +345,7 @@ export const JAN: Day[] = [
     },
   },
   {
-    id: 'er-17', month: 1, day: 20, title: 'Snowblind', scene: 'harbor',
+    id: 'er-17', month: 1, day: 20, title: 'Snowblind', scene: 'er_blizzard',
     text: 'A whiteout swallows the road. The waystones are your only guide, and too many of them are dark.',
     steps: [{
       title: 'Find the way',
@@ -359,7 +359,7 @@ export const JAN: Day[] = [
     }],
   },
   {
-    id: 'er-18', month: 1, day: 21, title: 'The Hollow Barrow', scene: 'cellar',
+    id: 'er-18', month: 1, day: 21, title: 'The Hollow Barrow', scene: 'er_cave',
     text: 'The storm drives you into an old barrow-mound beside the road. It isn’t empty: someone has been using it as a waystation. White robes hang drying by a cold hearth.',
     note: 'Search the barrow in any order.',
     anyOrder: true,
@@ -397,7 +397,7 @@ export const JAN: Day[] = [
     ],
   },
   {
-    id: 'er-19', month: 1, day: 22, span: 2, title: 'Shelter in the Barrow-Keep', scene: 'cellar', rest: true,
+    id: 'er-19', month: 1, day: 22, span: 2, title: 'Shelter in the Barrow-Keep', scene: 'er_cave', rest: true,
     text: 'You hold the barrow through the weekend while the storm blows itself out, sleeping in shifts by the fire you lit. Nobody comes back for the robes.',
     note: 'Rest. There’s no market here — make do with what you carry.',
     steps: [{
@@ -414,7 +414,7 @@ export const JAN: Day[] = [
 
   // ---------------- Week 4: the Fourth Light ----------------
   {
-    id: 'er-20', month: 1, day: 24, title: 'Greyfold in Sight', scene: 'tower',
+    id: 'er-20', month: 1, day: 24, title: 'Greyfold in Sight', scene: 'er_road',
     text: 'Below you, Greyfold huddles at the head of the valley. Above it, on a crag, the Fourth Light still burns — barely. Its glow is the color of a bruise.',
     steps: [{
       title: 'Choose one',
@@ -437,7 +437,7 @@ export const JAN: Day[] = [
     }],
   },
   {
-    id: 'er-21', month: 1, day: 25, title: 'Kennels of the Hush', scene: 'depths',
+    id: 'er-21', month: 1, day: 25, title: 'Kennels of the Hush', scene: 'er_pines',
     text: 'The Hush keeps its frost hounds in a ruined sheepfold under the crag. Two hounds and their handler stand between you and the tower stair.',
     steps: [],
     combat: {
@@ -451,7 +451,7 @@ export const JAN: Day[] = [
     },
   },
   {
-    id: 'er-22', month: 1, day: 26, title: 'The Warden’s Riddle', scene: 'tower',
+    id: 'er-22', month: 1, day: 26, title: 'The Warden’s Riddle', scene: 'er_stone',
     text: 'A door of black ice blocks the stair, carved with the road-wardens’ oath. Words are missing from it, scraped away. The ice is waiting for you to say them.',
     steps: [{
       title: 'Speak the oath',
@@ -465,7 +465,7 @@ export const JAN: Day[] = [
     }],
   },
   {
-    id: 'er-23', month: 1, day: 27, title: 'Before the Last Stair', scene: 'tower',
+    id: 'er-23', month: 1, day: 27, title: 'Before the Last Stair', scene: 'er_stone',
     text: 'A tinker has followed you up from Greyfold — “where there’s heroes, there’s custom” — and set out a blanket of wares at the foot of the stair. Above, something heavy walks back and forth, back and forth.',
     note: 'Last chance to prepare before the Warden.',
     steps: [{
@@ -481,7 +481,7 @@ export const JAN: Day[] = [
     shop: { items: [{ id: 'er_draught', price: 6 }, { id: 'er_firepot', price: 5 }, { id: 'er_tonic', price: 4 }, { id: 'er_linen', price: 7 }] },
   },
   {
-    id: 'er-24', month: 1, day: 28, title: 'The Hollow Warden', scene: 'depths',
+    id: 'er-24', month: 1, day: 28, title: 'The Hollow Warden', scene: 'er_cave',
     text: 'At the top of the tower stands the last road-warden of the Ember Road, armored in frost, its face a hollow helm. It holds the Fourth Light’s great lantern in one gauntlet — and with the other, it is slowly closing the shutter.',
     note: 'A single foe: under these rules it can only be destroyed in the final round. A strong hit before then Stuns it, so it can’t hurt you that round.',
     steps: [],
@@ -496,7 +496,7 @@ export const JAN: Day[] = [
     },
   },
   {
-    id: 'er-25', month: 1, day: 29, span: 2, title: 'The Fourth Light Rekindled', scene: 'inn', rest: true,
+    id: 'er-25', month: 1, day: 29, span: 2, title: 'The Fourth Light Rekindled', scene: 'er_stonelit', rest: true,
     text: 'Greyfold throws a feast in the tower’s shadow. Tamsin arrives on the supply sledge, still limping, and climbs straight up to look at the light. When she comes down, she says only: “There are thirty more stones beyond this one. Some of them are already dark.”',
     note: 'Rest, report, and prepare for the road ahead.',
     steps: [{

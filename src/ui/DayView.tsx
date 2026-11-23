@@ -6,6 +6,7 @@ import { bandLabel } from '../engine/dice'
 import { canAdvance, maxRounds, stepAvailable, stepLocked, stepsDone, type Action } from '../engine/state'
 import { TRAIT_NAMES } from '../engine/types'
 import type { Day, GameState } from '../engine/types'
+import { HeroPreviewButton } from './HeroPreview'
 import { RollPanel } from './RollPanel'
 import { Scene } from './Scene'
 import { Shop } from './Shop'
@@ -96,6 +97,8 @@ export function DayView({ state, day, dispatch, today }: Props) {
                         </span>
                       )}
                     </button>
+                    {chosen === null &&
+                      opt.effects?.map((e, ei) => e.type === 'setHero' && <HeroPreviewButton key={ei} heroId={e.heroId} />)}
                     {opt.bands && chosen === null && !isRolling && (
                       <div className="bands">
                         {opt.bands.map((b, bi) => (

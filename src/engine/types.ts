@@ -210,7 +210,16 @@ export interface Step {
   options: Option[]
 }
 
-export type Scene = 'harbor' | 'tower' | 'cellar' | 'depths' | 'seacave' | 'inn' | 'station' | 'bridge' | 'space' | 'wreck'
+export type ClassicScene = 'harbor' | 'tower' | 'cellar' | 'depths' | 'seacave' | 'inn' | 'station' | 'bridge' | 'space' | 'wreck'
+
+/** Backgrounds drawn for the Ember Road campaign (see src/ui/scenes/emberroad.tsx). */
+export const EMBER_SCENES = [
+  'er_road', 'er_stone', 'er_stonelit', 'er_pines', 'er_river', 'er_mere', 'er_pass', 'er_village', 'er_tavern',
+  'er_tourney', 'er_abbey', 'er_siege', 'er_camp', 'er_cave', 'er_crown', 'er_blizzard', 'er_forge', 'er_ashflats',
+] as const
+export type EmberScene = (typeof EMBER_SCENES)[number]
+
+export type Scene = ClassicScene | EmberScene
 
 export interface HiddenIcon {
   kind: 'pickpocket' | 'loot'
