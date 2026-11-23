@@ -3,7 +3,7 @@
 - Status: Proposed
 - Date: 2026-11-23
 - Issue: #28. Related: #1 (Discord bot), #2 (accounts), #3 (paid campaigns), #4 (404), #9 (robots.txt), #10 (sitemap), #22 (contact address), #31 (security)
-- Numbering note: 0001 does not exist in this branch; renumber if it lands elsewhere.
+- Reconciled with ADR 0004: the backend is built with CDK (Cognito + API Gateway + Lambda + DynamoDB), not Amplify Gen 2. Amplify is used for **hosting only**. Read "Gen 2" backend references below as "the CDK backend from ADR 0004"; per-branch backends and `amplify_outputs.json` are replaced by CDK stacks per environment whose outputs (API URL, user pool ids) are passed to the build as `VITE_*` variables.
 
 All prices below are approximate, in USD, deliberately conservative, and not looked up. Check current AWS/registrar pricing before committing.
 
@@ -67,7 +67,7 @@ Best free tier and excellent previews and headers. Rejected as the primary host 
 
 ## Decision
 
-**Move to a custom root domain on AWS Amplify Hosting, with Route 53 for DNS, and keep GitHub Pages only until cutover.** Use Amplify Gen 2 for the backend when #2 starts, in the same Amplify app.
+**Move to a custom root domain on AWS Amplify Hosting, with Route 53 for DNS, and keep GitHub Pages only until cutover.** The backend is a separate CDK app (ADR 0004); Amplify Hosting only serves the frontend.
 
 Reasons: it is the only option that gives headers, redirects, previews, staging branches and rollback with near-zero ops, while matching the stated AWS backend. The one significant trade-off (no wildcard Cognito previews) is shared by every option.
 

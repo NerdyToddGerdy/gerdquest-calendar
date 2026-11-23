@@ -3,6 +3,7 @@
 - Status: Accepted (engine extraction implemented; the rest are decisions for follow-up issues)
 - Issue: #24 (Evaluate: Frontend). Related: #1 (Discord bot), #2 (accounts), #3 (store), #5 #6 #7 #8 #18 #19 (SEO, landing, legal)
 - Date: 2026-11-23
+- Note: ADR 0002 moves the site to a custom root domain. Until that cutover the `/questender/` sub-path rules below apply; afterwards `base` becomes `'/'` and `BASE_URL`-based paths keep working unchanged.
 
 ## Context
 

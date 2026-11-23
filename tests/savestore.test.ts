@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { campaign, defaultStartDate } from '../src/engine/campaign'
-import { initialState, reduce } from '../src/engine/state'
+import { campaign, defaultStartDate } from '@questender/engine/campaign'
+import { initialState, reduce } from '@questender/engine/state'
 import { localSaveStore } from '../src/saveStore'
 
 const today = '2026-11-23'
