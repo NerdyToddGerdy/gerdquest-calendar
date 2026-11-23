@@ -5,6 +5,7 @@
 import { toISO, type ISODate } from './engine/calendar'
 import { alignedOnOrBefore, campaign, DEFAULT_CAMPAIGN, defaultStartDate, pageDate } from './engine/campaign'
 import type { GameState, JournalEntry } from './engine/types'
+import { loadEntries, sanitizeEntries, type CalendarEntry } from './calendarNotes'
 
 const INDEX_KEY = 'questender.slots'
 const SLOT_PREFIX = 'questender.slot.'
@@ -154,14 +155,28 @@ export interface SaveBundle {
   version: 1
   exportedOn: ISODate
   campaigns: GameState[]
+  /** The player's desk-wide calendar entries (optional; older bundles lack it). */
+  calendar?: CalendarEntry[]
 }
 
-export function bundleSaves(states: GameState[], exportedOn: ISODate): SaveBundle {
-  return { format: 'questender.bundle', version: 1, exportedOn, campaigns: states }
+export function bundleSaves(states: GameState[], exportedOn: ISODate, calendar: CalendarEntry[] = []): SaveBundle {
+  const bundle: SaveBundle = { format: 'questender.bundle', version: 1, exportedOn, campaigns: states }
+  if (calendar.length) bundle.calendar = calendar
+  return bundle
 }
 
 export function exportAll(states: GameState[], today: ISODate) {
-  download(bundleSaves(states, today), `questender-all-${today}.json`)
+  download(bundleSaves(states, today, loadEntries()), `questender-all-${today}.json`)
+}
+
+/** Calendar entries carried by an export file (none for single-campaign files). */
+export function parseCalendar(text: string): CalendarEntry[] {
+  try {
+    const raw = JSON.parse(text) as Partial<SaveBundle> | null
+    return raw?.format === 'questender.bundle' ? sanitizeEntries(raw.calendar) : []
+  } catch {
+    return []
+  }
 }
 
 /**
@@ -188,4 +203,10 @@ export function parseSaves(text: string, today: ISODate): GameState[] {
 
 export async function importSaves(file: File, today: ISODate): Promise<GameState[]> {
   return parseSaves(await file.text(), today)
+}
+
+/** Read an export file: its campaigns plus any calendar entries. */
+export async function importFile(file: File, today: ISODate): Promise<{ states: GameState[]; calendar: CalendarEntry[] }> {
+  const text = await file.text()
+  return { states: parseSaves(text, today), calendar: parseCalendar(text) }
 }

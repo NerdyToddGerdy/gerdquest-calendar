@@ -3,7 +3,8 @@ import { addDays, type ISODate } from './engine/calendar'
 import { pickTab, startingDate, turnPast } from './engine/desk'
 import { newSeed } from './engine/rng'
 import { initialState, reduce, type Action } from './engine/state'
-import { deleteSlot, exportAll, importSaves, listSlots, loadSlot, migrateLegacySave, saveSlot, slotIdFor } from './save'
+import { importEntries } from './calendarNotes'
+import { deleteSlot, exportAll, importFile, listSlots, loadSlot, migrateLegacySave, saveSlot, slotIdFor } from './save'
 import { Desk, type DeskSlot } from './ui/Desk'
 import { NewCampaign } from './ui/NewCampaign'
 import { useToday } from './ui/today'
@@ -95,7 +96,7 @@ export default function App() {
   const onImport = async (file: File | undefined) => {
     if (!file) return
     try {
-      const states = await importSaves(file, today)
+      const { states, calendar } = await importFile(file, today)
       const incoming = new Set(states.map((s) => slotIdFor(s.campaignId, s.startDate)))
       const existing = listSlots().filter((m) => incoming.has(m.slotId))
       if (existing.length) {
@@ -103,6 +104,7 @@ export default function App() {
         if (!confirm(`Replace your existing run${existing.length > 1 ? 's' : ''} (${names}) with this file?`)) return
       }
       existing.forEach((m) => deleteSlot(m.slotId))
+      if (calendar.length) importEntries(calendar)
       addAll(
         states,
         existing.map((m) => m.slotId),

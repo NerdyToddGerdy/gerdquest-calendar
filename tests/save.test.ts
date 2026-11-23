@@ -40,3 +40,13 @@ describe('campaign notes', () => {
     expect(back[0].notes).toBe('Ask the dock boss about the core.')
   })
 })
+
+describe('note dates', () => {
+  it('records each date notes were written on, once', () => {
+    let s = start('brightwatch')
+    s = reduce(s, { type: 'SET_NOTES', text: 'a', date: '2026-11-20' })
+    s = reduce(s, { type: 'SET_NOTES', text: 'ab', date: '2026-11-20' })
+    s = reduce(s, { type: 'SET_NOTES', text: 'abc', date: '2026-11-18' })
+    expect(s.noteDates).toEqual(['2026-11-18', '2026-11-20'])
+  })
+})

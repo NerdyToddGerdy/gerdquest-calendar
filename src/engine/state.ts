@@ -63,7 +63,7 @@ export type Action =
   | { type: 'TOGGLE_PARTY_DICE' }
   | { type: 'LOAD'; state: GameState }
   | { type: 'QUIT' }
-  | { type: 'SET_NOTES'; text: string }
+  | { type: 'SET_NOTES'; text: string; date?: string }
   | VehicleAction
 
 export function newProgress(day: Day | undefined): DayProgress {
@@ -283,7 +283,11 @@ export function reduce(state: GameState, action: Action, injected?: Rng): GameSt
   if (action.type === 'LOAD') return action.state
   if (action.type === 'QUIT') return initialState(state.rng)
   // Notes are the player's own and can be edited on any date, so skip the page rules.
-  if (action.type === 'SET_NOTES') return { ...state, notes: action.text }
+  if (action.type === 'SET_NOTES') {
+    const dates = state.noteDates ?? []
+    const noteDates = action.date && !dates.includes(action.date) ? [...dates, action.date].sort() : dates
+    return { ...state, notes: action.text, noteDates }
+  }
 
   const rng = injected ?? makeRng(state.rng)
   const s = structuredClone(state)

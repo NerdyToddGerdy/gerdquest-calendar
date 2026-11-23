@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { daysBetween, formatLong, WEEKDAY_NAMES, type ISODate } from '../engine/calendar'
+import { CAMPAIGN_THEMES } from './campaignThemes'
+import { Scene } from './Scene'
 import { anchorWeekday, defaultStartDate, listCampaigns, startDateOptions, unlockedThrough } from '../engine/campaign'
 import { ability, campaignHeroes, heroDef } from '../engine/content'
 import { HeroPreviewButton, HeroPreviewModal } from './HeroPreview'
@@ -32,22 +34,42 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
       <h1>New campaign</h1>
 
       <div className="campaign-picks">
-        {campaigns.map((c) => (
-          <button
-            key={c.id}
-            className={`campaign-pick ${c.id === campaignId ? 'selected' : ''}`}
-            onClick={() => {
-              setCampaignId(c.id)
-              setPicked(null)
-            }}
-          >
-            <h3>{c.title}</h3>
-            <p className="small">{c.blurb}</p>
-            <span className="muted small">
-              {c.pages.length} pages · {c.rulesetId} rules
-            </span>
-          </button>
-        ))}
+        {campaigns.map((c) => {
+          const theme = CAMPAIGN_THEMES[c.id]
+          return (
+            <button
+              key={c.id}
+              className={`campaign-pick ${theme?.className ?? ''} ${c.id === campaignId ? 'selected' : ''}`}
+              aria-pressed={c.id === campaignId}
+              onClick={() => {
+                setCampaignId(c.id)
+                setPicked(null)
+              }}
+            >
+              {theme && (
+                <div className="campaign-banner" aria-hidden="true">
+                  <Scene scene={theme.scene} icons={[]} found={[]} disabled onFind={() => {}} />
+                  <span className="campaign-ambient" />
+                  <span className="campaign-mood">{theme.mood}</span>
+                </div>
+              )}
+              <div className="campaign-body">
+                <h3>{c.title}</h3>
+                {theme && (
+                  <div className="campaign-tags">
+                    {theme.tags.map((t) => (
+                      <span key={t}>{t}</span>
+                    ))}
+                  </div>
+                )}
+                <p className="small">{c.blurb}</p>
+                <span className="muted small">
+                  {c.pages.length} pages · {c.rulesetId} rules
+                </span>
+              </div>
+            </button>
+          )
+        })}
       </div>
 
       <fieldset className="start-picks">

@@ -222,7 +222,7 @@ export function CampaignPanel({ slot, viewDate, today, dispatch, onDate, onDelet
   if (panel === 'journal') {
     main = <Journal state={state} />
   } else if (panel === 'notes') {
-    main = <Notes key={slot.id} title={c.title} text={state.notes ?? ''} onSave={(text) => dispatch({ type: 'SET_NOTES', text })} />
+    main = <Notes key={slot.id} title={c.title} text={state.notes ?? ''} onSave={(text) => dispatch({ type: 'SET_NOTES', text, date: viewDate })} />
   } else if (view.kind === 'play') {
     const day = currentDay(state)!
     main = (

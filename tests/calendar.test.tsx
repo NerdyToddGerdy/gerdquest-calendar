@@ -362,3 +362,79 @@ describe('calendar view statuses', () => {
     expect(out).toContain('Locked')
   })
 })
+
+describe('calendar views never reveal non-completed pages', () => {
+  const today = '2026-01-08'
+  const s = finishPage(newGame()) // page 0 completed; pages 1+ available/locked
+  const render = (view: 'month' | 'wall' | 'week' | 'year', selected: string | null = null, date = '2026-01-05') =>
+    renderToStaticMarkup(
+      <CalendarView
+        slots={[{ id: 'a', state: s }]}
+        viewDate={date}
+        today={today}
+        onPick={() => {}}
+        initialView={view}
+        initialSelected={selected}
+        initialEntries={[{ id: 'e1', date: '2026-01-09', text: 'Pay rent', time: '08:00' }]}
+      />,
+    )
+  const hidden = bw.pages.filter((p) => !bw.title.includes(p.title) && p !== bw.pages[0])
+
+  for (const view of ['month', 'wall', 'week', 'year'] as const) {
+    it(`${view} view hides titles and text of pages not yet completed`, () => {
+      const out = render(view)
+      for (const p of hidden) expect(out).not.toContain(p.title)
+      for (const p of bw.pages) expect(out).not.toContain(p.text.slice(0, 30))
+    })
+  }
+
+  it('wall shows the title of completed pages only', () => {
+    const out = render('wall')
+    expect(out).toContain(`>${bw.pages[0].title}<`)
+    for (const p of hidden) expect(out).not.toContain(p.title)
+    expect(render('month')).not.toContain(`>${bw.pages[0].title}<`)
+  })
+
+  it('the day panel shows a completed title, but nothing for available or locked days', () => {
+    expect(render('month', '2026-01-05')).toContain(bw.pages[0].title)
+    for (const day of ['2026-01-06', '2026-01-08', '2026-01-09', '2026-01-11']) {
+      const out = render('wall', day)
+      for (const p of hidden) expect(out).not.toContain(p.title)
+    }
+  })
+
+  it('entries render in cells and the panel; future dates allow entries but not opening', () => {
+    expect(render('week')).toContain('Pay rent')
+    const future = render('month', '2026-01-09')
+    expect(future).toContain('Pay rent')
+    expect(future).toContain('Add entry')
+    expect(future).not.toContain('Open this day')
+    expect(render('month', '2026-01-06')).toContain('Open this day')
+  })
+
+  it('week view shows holidays and moon phases; year view has twelve months', () => {
+    const wk = renderToStaticMarkup(<CalendarView slots={[{ id: 'a', state: s }]} viewDate="2026-01-19" today={today} onPick={() => {}} initialView="week" initialEntries={[]} />)
+    expect(wk).toContain('Martin Luther King Jr. Day')
+    const yr = render('year')
+    for (const m of ['January', 'June', 'December']) expect(yr).toContain(`>${m}<`)
+    expect(yr.match(/class="mini-month"/g)).toHaveLength(12)
+  })
+
+  it('marks note-taken dates per campaign (names only, never the notes text) and respects the layout', () => {
+    const noted = { ...s, notes: 'SECRET NOTE TEXT', noteDates: ['2026-01-06'] }
+    for (const view of ['month', 'wall', 'week', 'year'] as const) {
+      const out = renderToStaticMarkup(
+        <CalendarView slots={[{ id: 'a', state: noted }]} viewDate="2026-01-05" today={today} onPick={() => {}} initialView={view} initialEntries={[]} />,
+      )
+      expect(out).toContain('Note taken')
+      expect(out).not.toContain('SECRET NOTE TEXT')
+    }
+    const panel = renderToStaticMarkup(
+      <CalendarView slots={[{ id: 'a', state: noted }]} viewDate="2026-01-05" today={today} onPick={() => {}} initialSelected="2026-01-06" initialEntries={[]} />,
+    )
+    expect(panel).toContain('Notes taken that day')
+    expect(panel).not.toContain('SECRET NOTE TEXT')
+    const none = renderToStaticMarkup(<CalendarView slots={[{ id: 'a', state: s }]} viewDate="2026-01-05" today={today} onPick={() => {}} initialSelected="2026-01-06" initialEntries={[]} />)
+    expect(none).not.toContain('Notes taken that day')
+  })
+})

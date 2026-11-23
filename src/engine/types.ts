@@ -570,4 +570,6 @@ export interface PartyMember {
 export interface GameState {
   /** The player's own free-text notes for this campaign run (saved and exported with it). */
   notes?: string
+  /** Dates (the desk date being viewed) on which the player wrote or edited notes. */
+  noteDates?: string[]
 }
