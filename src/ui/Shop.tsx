@@ -16,6 +16,7 @@ export function Shop({ state, shop, dispatch }: Props) {
   const hero = state.hero!
   const busy = !!state.pending
   const rate = rules(state).shop.sellRate
+  const cur = rules(state).currencyName
   return (
     <section className="step shop">
       <h3>Market</h3>
@@ -24,24 +25,30 @@ export function Shop({ state, shop, dispatch }: Props) {
           {shop.items.map(({ id, price }) => {
             const it = item(id)
             const have = itemCount(hero, id)
+            const sell = sellPrice(price, rate)
             return (
               <tr key={id}>
                 <td>
                   <b>{it.name}</b>
                   <div className="muted small">{it.text}</div>
                 </td>
-                <td className="num">{price}g</td>
                 <td className="actions">
-                  <button disabled={busy || hero.glint < price} onClick={() => dispatch({ type: 'BUY', item: id })}>
-                    Buy
-                  </button>
                   <button
-                    disabled={busy || have <= 0}
-                    onClick={() => dispatch({ type: 'SELL', item: id })}
-                    title={`Sell for ${sellPrice(price, rate)} ${rules(state).currencyName}`}
+                    disabled={busy || hero.glint < price}
+                    title={hero.glint < price ? `Not enough ${cur}` : `Buy for ${price} ${cur}`}
+                    onClick={() => dispatch({ type: 'BUY', item: id })}
                   >
-                    Sell {sellPrice(price, rate)}g
+                    Buy {price}g
                   </button>
+                  {sell > 0 && (
+                    <button
+                      disabled={busy || have <= 0}
+                      onClick={() => dispatch({ type: 'SELL', item: id })}
+                      title={have <= 0 ? 'You have none to sell' : `Sell for ${sell} ${cur}`}
+                    >
+                      Sell {sell}g
+                    </button>
+                  )}
                 </td>
               </tr>
             )
@@ -60,7 +67,7 @@ export function Shop({ state, shop, dispatch }: Props) {
                   <div>
                     <b>{def.name}</b>{' '}
                     <span className="muted small">
-                      {def.follower ? `(follower · upkeep ${def.follower.upkeep} per Rest)` : `(${def.kind}, ${def.maxHp} hp)`}
+                      {def.follower ? `(follower, upkeep ${def.follower.upkeep} per Rest)` : `(${def.kind}, ${def.maxHp} hp)`}
                     </span>
                     <div className="small">{def.text}</div>
                     {def.follower && (
@@ -86,6 +93,7 @@ export function Shop({ state, shop, dispatch }: Props) {
                   </div>
                   <button
                     disabled={busy || hired || hero.glint < def.fee || !canHire(state.party, def)}
+                    title={hired ? 'Already in your party' : hero.glint < def.fee ? `Not enough ${cur}` : undefined}
                     onClick={() => dispatch({ type: 'HIRE', member: id })}
                   >
                     {hired ? 'In party' : `Hire ${def.fee} ${rules(state).currencyName}`}

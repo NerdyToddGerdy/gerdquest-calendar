@@ -3,13 +3,18 @@ import { campaign } from '../engine/campaign'
 import type { GameState } from '../engine/types'
 
 /** Read-only record of completed pages. Only past pages ever appear here. */
-export function Journal({ state }: { state: GameState }) {
+export function Journal({ state, onBack }: { state: GameState; onBack?: () => void }) {
   const c = campaign(state.campaignId)
   const entries = [...state.journal].reverse()
   return (
     <section className="journal">
       <h2>Journal</h2>
-      {entries.length === 0 && <p className="muted">Finished pages will be recorded here.</p>}
+      {entries.length === 0 && (
+        <div className="journal-empty">
+          <p>Nothing written yet. Each page you finish is recorded here.</p>
+          {onBack && <button className="primary" onClick={onBack}>Back to today’s page</button>}
+        </div>
+      )}
       {entries.map((e) => {
         const page = c.pages[e.page]
         return (

@@ -7,6 +7,7 @@ import { ability, campaignHeroes, heroDef } from '../engine/content'
 import { HeroPreviewButton, HeroPreviewModal } from './HeroPreview'
 import { TRAITS } from '../engine/types'
 import { slotExists } from '../save'
+import { Portrait } from './Portrait'
 
 interface Props {
   today: ISODate
@@ -100,6 +101,7 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
         <div className="prologue-start">
           {/* A start hero who is also on the roster is a hero-trial week, not a separate prologue character. */}
           <h2>{camp.heroIds?.includes(camp.startHero) ? 'Your first hero' : 'Prologue'}</h2>
+          <Portrait id={camp.startHero} name={heroDef(camp.startHero).name} className="pick-portrait" />
           <p>
             This campaign opens with <b>{heroDef(camp.startHero).name}</b>, {heroDef(camp.startHero).title}.{' '}
             {camp.heroIds?.includes(camp.startHero)
@@ -117,6 +119,7 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
       <div className="hero-picks">
         {campaignHeroes(camp).map((h) => (
           <div key={h.id} className="hero-pick" style={{ ['--hero' as string]: h.color }}>
+            <Portrait id={h.id} name={h.name} className="pick-portrait" />
             <h3>{h.name}</h3>
             <div className="muted">{h.title}</div>
             <p>{h.blurb}</p>

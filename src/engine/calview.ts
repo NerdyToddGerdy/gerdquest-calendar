@@ -58,3 +58,17 @@ export function viewTitle(cursor: ISODate, view: CalView): string {
 
 /** The unit's name for button labels. */
 export const UNIT: Record<CalView, string> = { month: 'month', wall: 'month', week: 'week', year: 'year' }
+
+/** Calendar layouts, shown as a switch in the header (see Desk). */
+export const CAL_VIEWS: { id: CalView; label: string }[] = [
+  { id: 'month', label: 'Month' },
+  { id: 'wall', label: 'Wall' },
+  { id: 'week', label: 'Week' },
+  { id: 'year', label: 'Year' },
+]
+
+/** "Nov 16": a short date for tabs and tight labels. */
+export function shortDate(d: ISODate): string {
+  const { month, day } = parseISO(d)
+  return `${MONTHS[month - 1].slice(0, 3)} ${day}`
+}

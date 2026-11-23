@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import type { HiddenIcon, Scene as SceneKind } from '../engine/types'
 import { EMBER_SKIES, EMBER_ART } from './scenes/emberroad'
+import { STARWAKE_SKIES, STARWAKE_ART } from './scenes/starwake'
+import { SceneActor } from './Portrait'
 
 interface Props {
   scene: SceneKind
@@ -8,10 +10,13 @@ interface Props {
   found: boolean[]
   disabled: boolean
   onFind: (index: number) => void
+  /** Characters standing in the scene: the hero on the left, a boss facing them on the right. */
+  actors?: { hero?: string; foe?: string }
 }
 
 const SKIES: Record<SceneKind, [string, string]> = {
   ...EMBER_SKIES,
+  ...STARWAKE_SKIES,
   harbor: ['#1d3149', '#7b6a62'],
   tower: ['#22324a', '#c08a52'],
   cellar: ['#14110f', '#3a2d24'],
@@ -25,7 +30,7 @@ const SKIES: Record<SceneKind, [string, string]> = {
 }
 
 /** Procedural scene art, drawn in SVG so the game ships with no image assets. */
-export function Scene({ scene, icons, found, disabled, onFind }: Props) {
+export function Scene({ scene, icons, found, disabled, onFind, actors }: Props) {
   const [top, bottom] = SKIES[scene]
   return (
     <div className="scene">
@@ -42,6 +47,8 @@ export function Scene({ scene, icons, found, disabled, onFind }: Props) {
         </defs>
         <rect width="400" height="200" fill={`url(#sky-${scene})`} />
         {SCENES[scene]}
+        {actors?.foe && <SceneActor id={actors.foe} x={300} y={197} height={150} flip />}
+        {actors?.hero && <SceneActor id={actors.hero} x={96} y={197} height={112} />}
       </svg>
       {icons.map((icon, i) =>
         found[i] ? null : (
@@ -102,6 +109,7 @@ const lighthouse = (x: number, base: number, scale = 1) => (
 
 const SCENES: Record<SceneKind, ReactNode> = {
   ...EMBER_ART,
+  ...STARWAKE_ART,
   harbor: (
     <>
       <path d="M0 120 L60 105 L110 115 L150 100 L190 118 L400 112 V200 H0 Z" fill="#2c3440" opacity="0.6" />

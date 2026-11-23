@@ -1,17 +1,22 @@
 import { useState } from 'react'
-import { addDays, formatLong, formatShort, type ISODate } from '../engine/calendar'
+import { formatLong, formatShort, formatSpan, parseISO, type ISODate } from '../engine/calendar'
 import { campaign } from '../engine/campaign'
-import { canGoForward, earliestDate, startingDate, tabDone, tabView, type TabView } from '../engine/desk'
+import { canGoForward, deskSpanEnd, earliestDate, prevDeskDate, startingDate, tabDone, tabView, type TabView } from '../engine/desk'
 import { canAdvance, currentDay, type Action } from '../engine/state'
 import type { GameState } from '../engine/types'
 import { exportSave } from '../save'
+import { markSeen, seenLatest } from '../changelog'
+import { CAL_VIEWS, shortDate, type CalView } from '../engine/calview'
+import type { ThemePref } from '../theme'
 import { CalendarView } from './CalendarView'
 import { campColor } from './colors'
 import { DayView } from './DayView'
+import { turnPage } from './pageTurn'
 import { HeroSheet } from './HeroSheet'
 import { Journal } from './Journal'
 import { Log } from './Log'
 import { Notes } from './Notes'
+import { Settings } from './Settings'
 import { readDevOverride, writeDevOverride } from './today'
 
 export interface DeskSlot {
@@ -31,6 +36,8 @@ interface Props {
   onNew: () => void
   onImport: () => void
   onExportAll: () => void
+  theme: ThemePref
+  onTheme: (t: ThemePref) => void
   sound: boolean
   onToggleSound: () => void
   onDelete: (id: string) => void
@@ -44,15 +51,26 @@ interface Props {
  */
 export function Desk(p: Props) {
   const [mode, setMode] = useState<'day' | 'calendar'>('day')
+  const [calView, setCalView] = useState<CalView>('month')
+  const [settings, setSettings] = useState(false)
+  const [news, setNews] = useState(() => !seenLatest())
+  const openSettings = () => {
+    setSettings(true)
+    markSeen()
+    setNews(false)
+  }
   const states = p.slots.map((s) => s.state)
   const active = p.slots.find((s) => s.id === p.selected) ?? p.slots[0]
   const earliest = earliestDate(states, p.today)
-  const forward = canGoForward(states, p.viewDate, p.today)
+  // A weekend page shows as one date range (Sat – Sun) rather than two stops.
+  const spanEnd = deskSpanEnd(states, p.viewDate)
+  // Nothing new until the day after the range, so › waits until then.
+  const forward = canGoForward(states, p.viewDate, p.today) && spanEnd < p.today
   const catchUp = startingDate(states, p.today)
 
   let forwardHint = ''
   if (!forward) {
-    if (p.viewDate >= p.today) forwardHint = 'Tomorrow’s pages unlock at midnight.'
+    if (spanEnd >= p.today) forwardHint = 'Tomorrow’s pages unlock at midnight.'
     else {
       const open = p.slots.filter((s) => !tabDone(s.state, p.viewDate)).map((s) => campaign(s.state.campaignId).title)
       forwardHint = `Finish today’s page in: ${open.join(', ')}`
@@ -64,48 +82,93 @@ export function Desk(p: Props) {
       <nav className="topbar">
         <span className="brand">Questender</span>
         {p.slots.length > 0 && (
-          <div className="segmented" role="tablist" aria-label="View">
-            <button role="tab" aria-selected={mode === 'day'} className={mode === 'day' ? 'active' : ''} onClick={() => setMode('day')}>
-              Day
-            </button>
-            <button
-              role="tab"
-              aria-selected={mode === 'calendar'}
-              className={mode === 'calendar' ? 'active' : ''}
-              onClick={() => setMode('calendar')}
-            >
-              Calendar
-            </button>
+          <div className="view-switch">
+            <div className="segmented" role="tablist" aria-label="View">
+              <button role="tab" aria-selected={mode === 'day'} className={mode === 'day' ? 'active' : ''} onClick={() => setMode('day')}>
+                Day
+              </button>
+              <button role="tab" aria-selected={mode === 'calendar'} className={mode === 'calendar' ? 'active' : ''} onClick={() => setMode('calendar')}>
+                Calendar
+              </button>
+            </div>
+            {mode === 'calendar' && (
+              <div className="segmented" role="tablist" aria-label="Calendar layout">
+                {CAL_VIEWS.map((v) => (
+                  <button key={v.id} role="tab" aria-selected={calView === v.id} className={calView === v.id ? 'active' : ''} onClick={() => setCalView(v.id)}>
+                    {v.label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
         <div className="row">
           <button
-            className="sound-toggle"
+            className="icon-btn sound-toggle"
             aria-pressed={p.sound}
             aria-label={p.sound ? 'Dice sounds on' : 'Dice sounds off'}
             title={p.sound ? 'Dice sounds on (click to mute)' : 'Dice sounds off (click to unmute)'}
             onClick={p.onToggleSound}
           >
-            {p.sound ? '🔊' : '🔇'}
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" />
+              {p.sound ? (
+                <>
+                  <path d="M15.5 9.2a4 4 0 0 1 0 5.6" />
+                  <path d="M18 6.8a7.5 7.5 0 0 1 0 10.4" />
+                </>
+              ) : (
+                <path d="M16 9.5l5 5M21 9.5l-5 5" />
+              )}
+            </svg>
           </button>
-          <button onClick={p.onNew}>+ New campaign</button>
-          {p.slots.length > 0 && (
-            <button onClick={p.onExportAll} title="Download one file with every campaign (import it on another device or browser)">
-              Export all
-            </button>
-          )}
-          <button onClick={p.onImport} title="Load a single-campaign or Export all file">
-            Import
+          <button className="new-btn" onClick={p.onNew} aria-label="New campaign" title="New campaign">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            <span className="new-label">New campaign</span>
+          </button>
+          <button className="icon-btn settings-toggle" aria-label={news ? 'Settings (new updates)' : 'Settings'} title={news ? 'Settings · see what’s new' : 'Settings'} onClick={openSettings}>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="8.6" strokeWidth="3" strokeDasharray="3 3.67" />
+              <circle cx="12" cy="12" r="6.6" />
+              <circle cx="12" cy="12" r="2.6" />
+            </svg>
+            {news && <span className="news-dot" aria-hidden="true" />}
           </button>
         </div>
       </nav>
 
+      {settings && (
+        <Settings
+          theme={p.theme}
+          onTheme={p.onTheme}
+          campaigns={p.slots.length}
+          onImport={() => {
+            setSettings(false)
+            p.onImport()
+          }}
+          onExportAll={p.onExportAll}
+          onClose={() => setSettings(false)}
+        />
+      )}
+
       {p.slots.length === 0 ? (
         <main className="title-screen">
+          <div className="sealed-page" role="img" aria-label={`A calendar page for ${formatLong(p.today)}, not yet opened`}>
+            <div className="sp-rings" aria-hidden="true"><i /><i /><i /></div>
+            <div className="sp-month">{formatLong(p.today).split(', ')[1].split(' ')[0]}</div>
+            <div className="sp-day">{formatLong(p.today).split(', ')[1].split(' ')[1]}</div>
+            <div className="sp-week">{formatLong(p.today).split(',')[0]}</div>
+            <div className="sp-seal" aria-hidden="true">Page one is waiting</div>
+          </div>
           <h1>Questender</h1>
-          <p className="tagline">A solo adventure, one page at a time.</p>
+          <p className="tagline">One page of adventure for every day on the calendar. Tear off today’s, play it, and the next stays sealed until tomorrow.</p>
           <button className="primary big" onClick={p.onNew}>
             Start your first campaign
+          </button>
+          <button className="linkish" onClick={p.onImport}>
+            or import a saved file
           </button>
         </main>
       ) : mode === 'calendar' ? (
@@ -113,6 +176,8 @@ export function Desk(p: Props) {
           slots={p.slots}
           viewDate={p.viewDate}
           today={p.today}
+          view={calView}
+          onView={setCalView}
           onPick={(d) => {
             p.onDate(d)
             setMode('day')
@@ -126,12 +191,12 @@ export function Desk(p: Props) {
               className="arrow"
               aria-label="Previous day"
               disabled={p.viewDate <= earliest}
-              onClick={() => p.onDate(addDays(p.viewDate, -1))}
+              onClick={() => p.onDate(prevDeskDate(states, p.viewDate, earliest))}
             >
               ‹
             </button>
             <div className="datebar-date">
-              <h2>{formatLong(p.viewDate)}</h2>
+              <h2>{spanEnd === p.viewDate ? formatLong(p.viewDate) : `${formatSpan(p.viewDate, spanEnd)}, ${parseISO(spanEnd).year}`}</h2>
               <div className="small muted">
                 {p.viewDate === p.today ? 'Today' : p.viewDate < p.today ? 'Earlier day' : ''}
                 {catchUp < p.viewDate && (
@@ -157,7 +222,10 @@ export function Desk(p: Props) {
               aria-label="Next day"
               disabled={!forward}
               title={forward ? 'Next day' : forwardHint}
-              onClick={p.onForward}
+              onClick={() => {
+                turnPage()
+                p.onForward()
+              }}
             >
               ›
             </button>
@@ -172,11 +240,13 @@ export function Desk(p: Props) {
                   key={s.id}
                   role="tab"
                   aria-selected={s.id === active.id}
-                  className={`tab ${s.id === active.id ? 'selected' : ''}`}
-                  style={{ ['--camp' as string]: campColor(p.slots.indexOf(s)) }}
+                  className={`tab ${s.id === active.id ? 'selected' : ''} ${v.kind === 'notStarted' ? 'not-started' : ''}`}
+                  title={v.kind === 'notStarted' ? `${c.title} begins ${formatLong(v.begins)}` : undefined}
+                  style={{ ['--camp' as string]: campColor(p.slots, s) }}
                   onClick={() => p.onSelect(s.id)}
                 >
                   <TabMark view={v} state={s.state} />
+                  {v.kind === 'notStarted' && <span className="tab-when">starts {shortDate(v.begins)}</span>}
                   <span>{c.title}</span>
                   <span className="tab-hero">{s.state.hero?.name.split(' ')[0]}</span>
                 </button>
@@ -202,15 +272,20 @@ export function Desk(p: Props) {
   )
 }
 
-/** Small status mark on each tab. */
+/** Small status mark on each tab; the words live in the title and aria-label. */
 function TabMark({ view, state }: { view: TabView; state: GameState }) {
+  const mark = (cls: string, glyph: string, label: string) => (
+    <span className={`mark ${cls}`} role="img" aria-label={label} title={label}>
+      {glyph}
+    </span>
+  )
   if (view.kind === 'play') {
-    return canAdvance(state) ? <span className="mark done" title="Done for this day">✓</span> : <span className="mark todo" title="Ready to play">●</span>
+    return canAdvance(state) ? mark('done', '✓', 'Done for this day') : mark('todo', '●', 'Ready to play')
   }
-  if (view.kind === 'blocked') return <span className="mark behind" title="Earlier pages unfinished">!</span>
-  if (view.kind === 'past') return <span className="mark done" title="Completed">✓</span>
-  if (view.kind === 'finished') return <span className="mark done" title="Campaign complete">★</span>
-  return <span className="mark none" title="Not started yet">–</span>
+  if (view.kind === 'blocked') return mark('behind', '!', 'Behind: earlier pages are unfinished')
+  if (view.kind === 'past') return mark('done', '✓', 'Completed')
+  if (view.kind === 'finished') return mark('done', '★', 'Campaign finished')
+  return mark('none', '○', `Not started: begins ${formatLong(view.begins)}`)
 }
 
 interface PanelProps {
@@ -231,7 +306,7 @@ export function CampaignPanel({ slot, viewDate, today, dispatch, onDate, onDelet
 
   let main
   if (panel === 'journal') {
-    main = <Journal state={state} />
+    main = <Journal state={state} onBack={() => setPanel('page')} />
   } else if (panel === 'notes') {
     main = <Notes key={slot.id} title={c.title} text={state.notes ?? ''} onSave={(text) => dispatch({ type: 'SET_NOTES', text, date: viewDate })} />
   } else if (view.kind === 'play') {
@@ -278,7 +353,7 @@ export function CampaignPanel({ slot, viewDate, today, dispatch, onDate, onDelet
       <div className="main-col">
         <div className="panel-tools row">
           <span className="muted small">
-            {state.hero!.name} · began {formatShort(state.startDate)} · page {Math.min(state.dayIndex + 1, c.pages.length)} of {c.pages.length}
+            {state.hero!.name}: page {Math.min(state.dayIndex + 1, c.pages.length)} of {c.pages.length}, begun {formatLong(state.startDate).replace(/, \d{4}$/, '')}
           </span>
           <span className="spacer" />
           {panel !== 'page' && <button onClick={() => setPanel('page')}>Back to page</button>}

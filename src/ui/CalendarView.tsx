@@ -11,13 +11,7 @@ import type { DeskSlot } from './Desk'
 
 const DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const LABEL: Record<DayStatus, string> = { none: '', completed: 'Completed', available: 'Available', locked: 'Locked' }
-const GLYPH: Record<DayStatus, string> = { none: '', completed: '✓', available: '●', locked: '🔒' }
-const VIEWS: { id: CalView; label: string }[] = [
-  { id: 'month', label: 'Month' },
-  { id: 'wall', label: 'Wall' },
-  { id: 'week', label: 'Week' },
-  { id: 'year', label: 'Year' },
-]
+const GLYPH: Record<DayStatus, string> = { none: '', completed: '✓', available: '', locked: '' }
 
 interface Props {
   slots: DeskSlot[]
@@ -25,6 +19,9 @@ interface Props {
   today: ISODate
   /** Open the day view on this date. */
   onPick: (d: ISODate) => void
+  /** Layout, when the parent controls it (the header switch); otherwise kept here. */
+  view?: CalView
+  onView?: (v: CalView) => void
   /** Starting layout / selected date (used by tests). */
   initialView?: CalView
   initialSelected?: ISODate | null
@@ -38,8 +35,10 @@ interface Props {
  * pages (wall view and the day panel); available/locked pages show status
  * only, so nothing about future pages leaks.
  */
-export function CalendarView({ slots, viewDate, today, onPick, initialView = 'month', initialSelected = null, initialEntries }: Props) {
-  const [view, setView] = useState<CalView>(initialView)
+export function CalendarView({ slots, viewDate, today, onPick, view: viewProp, onView, initialView = 'month', initialSelected = null, initialEntries }: Props) {
+  const [ownView, setOwnView] = useState<CalView>(initialView)
+  const view = viewProp ?? ownView
+  const setView = (v: CalView) => (onView ? onView(v) : setOwnView(v))
   const [cursor, setCursor] = useState<ISODate>(viewDate)
   const [only, setOnly] = useState<string | null>(null)
   const [selected, setSelected] = useState<ISODate | null>(initialSelected)
@@ -86,12 +85,12 @@ export function CalendarView({ slots, viewDate, today, onPick, initialView = 'mo
 
   const panelCampaigns = (d: ISODate): PanelCampaign[] =>
     slots
-      .map((s, i) => {
+      .map((s) => {
         const status = dayStatus(s.state, d, today)
         const idx = pageIndexOn(s.state, d)
         // Titles only for completed pages.
         const title = status === 'completed' ? campaign(s.state.campaignId).pages[idx]?.title : undefined
-        return { id: s.id, color: campColor(i), label: campName(s), status, title }
+        return { id: s.id, color: campColor(slots, s), label: campName(s), status, title }
       })
       .filter((c) => c.status !== 'none')
 
@@ -141,7 +140,7 @@ export function CalendarView({ slots, viewDate, today, onPick, initialView = 'mo
         )}
         <span className="cal-marks">
           {statuses.map(({ s, st }) => (
-            <span key={s.id} className={`cal-mark ${st}`} style={{ ['--camp' as string]: campColor(slots.indexOf(s)) }} aria-hidden="true">
+            <span key={s.id} className={`cal-mark ${st}`} style={{ ['--camp' as string]: campColor(slots, s) }} aria-hidden="true">
               {GLYPH[st]}
             </span>
           ))}
@@ -151,7 +150,7 @@ export function CalendarView({ slots, viewDate, today, onPick, initialView = 'mo
             if (st !== 'completed') return null
             const title = campaign(s.state.campaignId).pages[pageIndexOn(s.state, d)]?.title
             return title ? (
-              <span key={s.id} className="cal-page" style={{ ['--camp' as string]: campColor(slots.indexOf(s)) }}>
+              <span key={s.id} className="cal-page" style={{ ['--camp' as string]: campColor(slots, s) }}>
                 {title}
               </span>
             ) : null
@@ -162,7 +161,7 @@ export function CalendarView({ slots, viewDate, today, onPick, initialView = 'mo
               <span
                 key={s.id}
                 className="cal-note"
-                style={{ ['--camp' as string]: campColor(slots.indexOf(s)) }}
+                style={{ ['--camp' as string]: campColor(slots, s) }}
                 title={`Note taken: ${campaign(s.state.campaignId).title}`}
                 aria-hidden="true"
               >
@@ -202,13 +201,6 @@ export function CalendarView({ slots, viewDate, today, onPick, initialView = 'mo
         </header>
 
         <div className="cal-tools row center">
-          <div className="segmented" role="tablist" aria-label="Calendar layout">
-            {VIEWS.map((v) => (
-              <button key={v.id} role="tab" aria-selected={view === v.id} className={view === v.id ? 'active' : ''} onClick={() => setView(v.id)}>
-                {v.label}
-              </button>
-            ))}
-          </div>
           <button onClick={() => setCursor(today)}>Today</button>
         </div>
 
@@ -216,11 +208,11 @@ export function CalendarView({ slots, viewDate, today, onPick, initialView = 'mo
           <button className={only === null ? 'active' : ''} onClick={() => setOnly(null)}>
             All campaigns
           </button>
-          {slots.map((s, i) => (
+          {slots.map((s) => (
             <button
               key={s.id}
               className={only === s.id ? 'active' : ''}
-              style={{ ['--camp' as string]: campColor(i) }}
+              style={{ ['--camp' as string]: campColor(slots, s) }}
               onClick={() => setOnly(only === s.id ? null : s.id)}
             >
               <span className="swatch" /> {campaign(s.state.campaignId).title} · {s.state.hero?.name.split(' ')[0]}
@@ -229,10 +221,12 @@ export function CalendarView({ slots, viewDate, today, onPick, initialView = 'mo
         </div>
 
         <div className="cal-legend row center small">
-          <span className="legend-item completed">✓ Completed ({totals.completed})</span>
-          <span className="legend-item available">● Available ({totals.available})</span>
-          <span className="legend-item locked">🔒 Locked ({totals.locked})</span>
+          <span className="legend-item"><i className="cal-mark completed legend-mark" aria-hidden="true">✓</i>Completed ({totals.completed})</span>
+          <span className="legend-item"><i className="cal-mark available legend-mark" aria-hidden="true" />Available now ({totals.available})</span>
+          <span className="legend-item"><i className="cal-mark locked legend-mark" aria-hidden="true" />Locked until its day ({totals.locked})</span>
           <span className="legend-item noted">✎ Note taken</span>
+          <span className="legend-item"><i className="legend-today" aria-hidden="true">{parseISO(today).day}</i>Today</span>
+          <span className="legend-item"><i className="legend-viewing" aria-hidden="true">{parseISO(viewDate).day}</i>Date you are viewing</span>
         </div>
 
         {view === 'year' ? (
@@ -255,12 +249,12 @@ export function CalendarView({ slots, viewDate, today, onPick, initialView = 'mo
                       if (!inMonth) return <span key={d} />
                       const dot = dots(d)
                       return (
-                        <span key={d} className={`mini-day ${d === today ? 'today' : ''}`}>
+                        <span key={d} className={`mini-day ${d === today ? 'today' : ''} ${d === viewDate ? 'viewing' : ''}`}>
                           {parseISO(d).day}
                           {dot && <i className={`dot ${dot}`} />}
                           {entriesOn(entries, d).length > 0 && <i className="dot note" />}
                           {notesOn(d).map((sl) => (
-                            <b key={sl.id} className="mini-note" style={{ ['--camp' as string]: campColor(slots.indexOf(sl)) }} title={`Note taken: ${campaign(sl.state.campaignId).title}`}>
+                            <b key={sl.id} className="mini-note" style={{ ['--camp' as string]: campColor(slots, sl) }} title={`Note taken: ${campaign(sl.state.campaignId).title}`}>
                               ✎
                             </b>
                           ))}
@@ -300,7 +294,7 @@ export function CalendarView({ slots, viewDate, today, onPick, initialView = 'mo
           date={selected}
           entries={entriesOn(entries, selected)}
           campaigns={panelCampaigns(selected)}
-          notedBy={notesOn(selected).map((s) => ({ id: s.id, color: campColor(slots.indexOf(s)), name: campName(s) }))}
+          notedBy={notesOn(selected).map((s) => ({ id: s.id, color: campColor(slots, s), name: campName(s) }))}
           canOpen={selected <= today && selected >= earliest}
           onOpen={() => onPick(selected)}
           onClose={() => setSelected(null)}

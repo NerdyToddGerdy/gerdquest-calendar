@@ -8,6 +8,7 @@ import { TRAITS, TRAIT_NAMES } from '../engine/types'
 import { ItemTip } from './ItemTip'
 import type { GameState, GearSlot } from '../engine/types'
 import { ShipSheet } from './ShipSheet'
+import { Portrait } from './Portrait'
 
 const SLOTS: GearSlot[] = ['head', 'body', 'hands', 'feet', 'trinket']
 const sign = (n: number) => (n >= 0 ? `+${n}` : `−${-n}`)
@@ -23,15 +24,18 @@ export function HeroSheet({ state, dispatch }: { state: GameState; dispatch: (a:
   return (
     <aside className="sheet">
       <div className="sheet-head">
-        <h2>{hero.name}</h2>
-        <div className="muted">
-          {hero.title} · Level {hero.level} · {hero.weapon}
+        <Portrait id={hero.defId} name={hero.name} className="sheet-portrait" />
+        <div>
+          <h2>{hero.name}</h2>
+          <div className="muted">
+            Level {hero.level} {hero.title}, wielding {/^[aeiou]/i.test(hero.weapon) ? 'an' : 'a'} {hero.weapon.toLowerCase()}
+          </div>
         </div>
       </div>
 
-      <div className="hp">
-        <div className="hp-bar">
-          <div style={{ width: `${(hero.hp / max) * 100}%` }} />
+      <div className={`hp ${hero.hp / max <= 0.25 ? 'low' : hero.hp / max < 0.5 ? 'mid' : 'high'}`}>
+        <div className="hp-bar" role="progressbar" aria-valuemin={0} aria-valuemax={max} aria-valuenow={hero.hp} aria-label="Health">
+          <div style={{ width: `${Math.max(0, Math.min(100, (hero.hp / max) * 100))}%` }} />
         </div>
         <span>
           {hero.hp} / {max} health
@@ -48,7 +52,7 @@ export function HeroSheet({ state, dispatch }: { state: GameState; dispatch: (a:
       <div className="traits">
         {TRAITS.map((t) => (
           <div key={t} title={TRAIT_NAMES[t]}>
-            <small>{t.toUpperCase()}</small>
+            <small>{t.toUpperCase().slice(0, 1) + t.slice(1)}</small>
             <b>{sign(stat(hero, t))}</b>
           </div>
         ))}

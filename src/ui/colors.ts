@@ -1,4 +1,20 @@
-/** A stable accent per campaign tab, so calendar markers and tabs can be told apart. */
-export function campColor(i: number): string {
-  return ['#e8b25a', '#4fa3c7', '#b86fc4', '#6cc48f', '#e07a5a', '#9aa7ff'][i % 6]
+/**
+ * Each campaign owns a colour (defined as CSS variables in App.css, with a
+ * light and a dark value). A second run of the same campaign on the desk gets
+ * a lighter variant so the two can still be told apart.
+ */
+const KNOWN = new Set(['brightwatch', 'emberroad', 'halcyon', 'starwake'])
+
+interface SlotLike {
+  id: string
+  state: { campaignId: string }
+}
+
+export function campColor(slots: SlotLike[], slot: SlotLike): string {
+  const cid = slot.state.campaignId
+  const base = KNOWN.has(cid) ? `var(--camp-${cid})` : 'var(--accent)'
+  const run = slots.filter((s) => s.state.campaignId === cid).indexOf(slot)
+  if (run <= 0) return base
+  // Later runs: a lighter wash of the same hue, a bit lighter each time.
+  return `color-mix(in srgb, ${base} ${Math.max(35, 62 - (run - 1) * 14)}%, var(--camp-wash))`
 }

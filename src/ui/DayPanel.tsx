@@ -82,7 +82,12 @@ export function DayPanel({ date, entries, campaigns, notedBy, canOpen, onOpen, o
           {campaigns.map((c) => (
             <li key={c.id} style={{ ['--camp' as string]: c.color }}>
               <span className="swatch" /> <span className="small">{c.label}</span>
-              <span className={`cal-mark ${c.status}`}>{STATUS_TEXT[c.status]}</span>
+              <span className="dp-status">
+                <i className={`cal-mark ${c.status} legend-mark`} aria-hidden="true">
+                  {c.status === 'completed' ? '✓' : ''}
+                </i>
+                {STATUS_TEXT[c.status]}
+              </span>
               {c.title && <em className="dp-title"> {c.title}</em>}
             </li>
           ))}

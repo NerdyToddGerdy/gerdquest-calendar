@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { playDiceSound, setSoundEnabled, soundEnabled } from './sound/audio'
 import { diceSoundFor } from './sound/diceEvents'
-import { addDays, type ISODate } from './engine/calendar'
-import { pickTab, startingDate, turnPast } from './engine/desk'
+import type { ISODate } from './engine/calendar'
+import { nextDeskDate, pickTab, startingDate, turnThrough } from './engine/desk'
 import { newSeed } from './engine/rng'
 import { initialState, reduce, type Action } from './engine/state'
 import { importEntries } from './calendarNotes'
@@ -10,6 +10,7 @@ import { deleteSlot, exportAll, importFile, listSlots, loadSlot, migrateLegacySa
 import { Desk, type DeskSlot } from './ui/Desk'
 import { NewCampaign } from './ui/NewCampaign'
 import { useToday } from './ui/today'
+import { readTheme, writeTheme, type ThemePref } from './theme'
 import './App.css'
 
 const TAB_KEY = 'questender.selectedTab'
@@ -71,6 +72,12 @@ export default function App() {
       return next
     })
 
+  const [theme, setTheme] = useState<ThemePref>(readTheme)
+  const changeTheme = (t: ThemePref) => {
+    writeTheme(t)
+    setTheme(t)
+  }
+
   const [sound, setSound] = useState(soundEnabled)
   const toggleSound = () => {
     setSoundEnabled(!sound)
@@ -94,10 +101,18 @@ export default function App() {
     update((prev) => prev.map((s) => (s.id === id ? { ...s, state: reduce(s.state, a) } : s)))
   }
 
-  /** The › arrow: turn the page in every campaign whose page ends today, then move on a day. */
+  /**
+   * The › arrow: move to the next date that shows something new (Saturday
+   * goes straight to Monday when every campaign is on a weekend page),
+   * turning the page in every campaign whose page ends on a date passed.
+   */
   const forward = () => {
-    const next = addDays(viewDate, 1)
-    const turned = slots.map((s) => ({ ...s, state: turnPast(s.state, viewDate) }))
+    const next = nextDeskDate(
+      slots.map((s) => s.state),
+      viewDate,
+      today,
+    )
+    const turned = slots.map((s) => ({ ...s, state: turnThrough(s.state, viewDate, next) }))
     update(() => turned)
     setViewDate(next)
     const tab = pickTab(turned, next, selected)
@@ -171,6 +186,8 @@ export default function App() {
           onDispatch={dispatch}
           onNew={() => setScreen('new')}
           onImport={() => fileRef.current?.click()}
+          theme={theme}
+          onTheme={changeTheme}
           sound={sound}
           onToggleSound={toggleSound}
           onExportAll={() => exportAll(slots.map((s) => s.state), today)}

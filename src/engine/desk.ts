@@ -59,6 +59,36 @@ export function canGoForward(states: GameState[], date: ISODate, today: ISODate)
   return date < today && dayComplete(states, date)
 }
 
+/** Every campaign shows the same page on both dates (e.g. Saturday and Sunday of a weekend page). */
+function samePages(states: GameState[], a: ISODate, b: ISODate): boolean {
+  return states.every((s) => pageIndexOn(s, a) === pageIndexOn(s, b))
+}
+
+/**
+ * The date the › arrow moves to: the next day, skipping days that only
+ * continue a page already showing in every campaign (the Sunday half of a
+ * weekend page). Never past `today`.
+ */
+export function nextDeskDate(states: GameState[], date: ISODate, today: ISODate): ISODate {
+  let d = addDays(date, 1)
+  while (d < today && samePages(states, d, addDays(d, -1))) d = addDays(d, 1)
+  return d
+}
+
+/** The last date the page(s) showing on `date` cover, across every campaign (a weekend page runs to Sunday). */
+export function deskSpanEnd(states: GameState[], date: ISODate): ISODate {
+  let d = date
+  while (states.length && samePages(states, addDays(d, 1), d)) d = addDays(d, 1)
+  return d
+}
+
+/** The date the ‹ arrow moves to: the previous day, landing on the first day of a multi-day page. Never before `earliest`. */
+export function prevDeskDate(states: GameState[], date: ISODate, earliest: ISODate): ISODate {
+  let d = addDays(date, -1)
+  while (d > earliest && samePages(states, d, addDays(d, -1))) d = addDays(d, -1)
+  return d
+}
+
 /** Earliest date a campaign still needs played, or null when it's caught up / finished. */
 export function firstOpenDate(s: GameState): ISODate | null {
   if (s.finished) return null
@@ -98,6 +128,12 @@ export function turnPast(s: GameState, date: ISODate): GameState {
   const c = campaign(s.campaignId)
   if (pageEndDate(c, v.page, s.startDate) !== date) return s
   return reduce(s, { type: 'NEXT_DAY', today: addDays(date, 1) })
+}
+
+/** Turn pages for every date from `from` up to (not including) `to`, as the › arrow passes them. */
+export function turnThrough(s: GameState, from: ISODate, to: ISODate): GameState {
+  for (let d = from; d < to; d = addDays(d, 1)) s = turnPast(s, d)
+  return s
 }
 
 /** Does this campaign have something to play on `date`? */

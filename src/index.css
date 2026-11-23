@@ -13,7 +13,48 @@
   --radius: 10px;
   --display: 'Cormorant Garamond', Georgia, serif;
   --body: 'Inter', system-ui, -apple-system, sans-serif;
+  --accent-hover: #f3c372;
+  --inset: #121a22;
+  --shadow: rgba(0, 0, 0, 0.45);
   color-scheme: dark;
+}
+
+/* Light theme: chosen in Settings, or "system" on a device set to light. */
+:root[data-theme='light'] {
+  --bg: #f3eee4;
+  --panel: #fffdf8;
+  --panel-2: #ece4d6;
+  --line: #d6cab6;
+  --text: #2a2520;
+  --muted: #6b6257;
+  --accent: #a8691a;
+  --accent-ink: #fffaf0;
+  --accent-hover: #bd7a24;
+  --good: #2f7d4f;
+  --bad: #b23f2c;
+  --sea: #2a7397;
+  --inset: #f6f0e5;
+  --shadow: rgba(60, 40, 10, 0.18);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: light) {
+  :root[data-theme='system'] {
+    --bg: #f3eee4;
+    --panel: #fffdf8;
+    --panel-2: #ece4d6;
+    --line: #d6cab6;
+    --text: #2a2520;
+    --muted: #6b6257;
+    --accent: #a8691a;
+    --accent-ink: #fffaf0;
+    --accent-hover: #bd7a24;
+    --good: #2f7d4f;
+    --bad: #b23f2c;
+    --sea: #2a7397;
+    --inset: #f6f0e5;
+    --shadow: rgba(60, 40, 10, 0.18);
+    color-scheme: light;
+  }
 }
 
 * {
@@ -64,7 +105,7 @@ button.primary {
   font-weight: 600;
 }
 button.primary:hover:not(:disabled) {
-  background: #f3c372;
+  background: var(--accent-hover);
 }
 button.big {
   padding: 10px 22px;

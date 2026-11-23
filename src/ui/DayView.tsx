@@ -1,18 +1,35 @@
-import { daysBetween, formatLong, formatShort, formatSpan, parseISO } from '../engine/calendar'
+import { WEEKDAY_NAMES, daysBetween, formatShort, parseISO, weekday } from '../engine/calendar'
+import type { ISODate } from '../engine/calendar'
 import { campaign, isLotteryPage, pageDate, pageEndDate } from '../engine/campaign'
 import { dayLabel, enemy } from '../engine/content'
 import { rules } from '../engine/ruleset'
 import { nextPageLockedUntil } from '../engine/status'
-import { bandLabel } from '../engine/dice'
 import { canAdvance, maxRounds, stepAvailable, stepLocked, stepsDone, type Action } from '../engine/state'
 import { TRAIT_NAMES } from '../engine/types'
 import type { Day, GameState } from '../engine/types'
 import { HeroPreviewButton } from './HeroPreview'
+import { BandScale } from './BandScale'
 import { RollPanel } from './RollPanel'
 import { Scene } from './Scene'
+import { hasPortrait } from './portraits/art'
 import { Shop } from './Shop'
 import { DockView } from './DockView'
 import { DogfightView } from './DogfightView'
+
+/** Month and weekday parts for the sheet header; weekend pages span Sat to Sun. */
+function sheetParts(first: ISODate, last: ISODate) {
+  const a = parseISO(first)
+  const b = parseISO(last)
+  const month = (d: { year: number; month: number; day: number }) =>
+    new Date(d.year, d.month - 1, d.day).toLocaleString('en', { month: 'long' })
+  const same = first === last
+  return {
+    num: same ? `${a.day}` : `${a.day}–${b.day}`,
+    month: a.month === b.month ? month(a) : `${month(a)} – ${month(b)}`,
+    weekday: same ? WEEKDAY_NAMES[weekday(first)] : `${WEEKDAY_NAMES[weekday(first)]}–${WEEKDAY_NAMES[weekday(last)]}`,
+    year: b.year,
+  }
+}
 
 interface Props {
   state: GameState
@@ -31,6 +48,7 @@ export function DayView({ state, day, dispatch, today }: Props) {
   const lockedUntil = nextPageLockedUntil(state, today)
   const p = state.progress
   const pend = state.pending
+  const sheet = sheetParts(realDate, realEnd)
   const letters = 'ABCDEFG'
 
   return (
@@ -41,14 +59,25 @@ export function DayView({ state, day, dispatch, today }: Props) {
         found={p.icons}
         disabled={!!pend}
         onFind={(index) => dispatch({ type: 'ICON', index })}
+        actors={{
+          hero: state.hero?.defId,
+          // A lone foe with a portrait (a boss) faces the hero.
+          foe: day.combat?.enemies.length === 1 && hasPortrait(day.combat.enemies[0]) ? day.combat.enemies[0] : undefined,
+        }}
       />
-      <header className="day-header">
-        <div>
-          <div className="date">{realEnd === realDate ? formatLong(realDate) : `${formatSpan(realDate, realEnd)}, ${parseISO(realEnd).year}`}</div>
-          <h2>{day.title}</h2>
+      <header className="day-header sheet-head">
+        <div className="sheet-date" aria-label={`${sheet.weekday}, ${sheet.month} ${sheet.num}, ${sheet.year}`}>
+          <span className="sheet-num" aria-hidden="true">{sheet.num}</span>
+          <span className="sheet-meta" aria-hidden="true">
+            <span className="sheet-month">{sheet.month}</span>
+            <span className="sheet-weekday">{sheet.weekday}, {sheet.year}</span>
+          </span>
         </div>
-        <div className="day-num" title="In-world date">
-          {inWorld}
+        <div className="sheet-title">
+          <h2>{day.title}</h2>
+          <div className="day-num" title="In-world date">
+            {inWorld}
+          </div>
         </div>
       </header>
 
@@ -77,7 +106,7 @@ export function DayView({ state, day, dispatch, today }: Props) {
         const available = stepAvailable(state, si)
         const pickOne = step.options.length > 1
         return (
-          <section key={si} className={`step ${chosen !== null ? 'done' : ''} ${stepLocked(state, si) && chosen === null ? 'locked' : ''}`}>
+          <section key={si} className={`step ${pickOne && chosen !== null ? 'picked' : ''} ${chosen !== null ? 'done' : ''} ${stepLocked(state, si) && chosen === null ? 'locked' : ''}`}>
             {step.title && <h3>{step.title}</h3>}
             {pickOne && chosen === null && <div className="muted small">Choose one:</div>}
             <div className="options">
@@ -86,7 +115,7 @@ export function DayView({ state, day, dispatch, today }: Props) {
                 const isRolling = pend?.type === 'check' && pend.step === si && pend.option === oi
                 if (chosen !== null && !isChosen) return null
                 return (
-                  <div key={oi} className="option">
+                  <div key={oi} className={`option ${isChosen ? 'chosen' : ''}`}>
                     <button
                       className="option-btn"
                       disabled={!available}
@@ -102,21 +131,22 @@ export function DayView({ state, day, dispatch, today }: Props) {
                     </button>
                     {chosen === null &&
                       opt.effects?.map((e, ei) => e.type === 'setHero' && <HeroPreviewButton key={ei} heroId={e.heroId} />)}
-                    {opt.bands && chosen === null && !isRolling && (
-                      <div className="bands">
-                        {opt.bands.map((b, bi) => (
-                          <span key={bi}>{bandLabel(b)}</span>
-                        ))}
-                      </div>
-                    )}
+                    {opt.bands && chosen === null && !isRolling && <BandScale bands={opt.bands} />}
                     {isRolling && (
-                      <RollPanel state={state} slots={[pend.slot]} dispatch={dispatch} confirmLabel="Accept result" />
+                      <RollPanel
+                        state={state}
+                        slots={[pend.slot]}
+                        dispatch={dispatch}
+                        confirmLabel="Accept result"
+                        bands={opt.bands}
+                      />
                     )}
+                    {isChosen && p.results[si] && <p className="result">{p.results[si]}</p>}
                   </div>
                 )
               })}
             </div>
-            {p.results[si] && <p className="result">{p.results[si]}</p>}
+            {p.results[si] && chosen === null && <p className="result">{p.results[si]}</p>}
           </section>
         )
       })}

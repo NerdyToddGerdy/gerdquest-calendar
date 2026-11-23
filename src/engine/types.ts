@@ -219,7 +219,14 @@ export const EMBER_SCENES = [
 ] as const
 export type EmberScene = (typeof EMBER_SCENES)[number]
 
-export type Scene = ClassicScene | EmberScene
+/** Backgrounds drawn for The Starwake (see src/ui/scenes/starwake.tsx). */
+export const STARWAKE_SCENES = [
+  'sw_quay', 'sw_observatory', 'sw_deck', 'sw_storm', 'sw_saltpan', 'sw_hanging', 'sw_marsh', 'sw_calm',
+  'sw_monastery', 'sw_deep', 'sw_orrery', 'sw_rim', 'sw_tavern', 'sw_isle', 'sw_cave',
+] as const
+export type StarwakeScene = (typeof STARWAKE_SCENES)[number]
+
+export type Scene = ClassicScene | EmberScene | StarwakeScene
 
 export interface HiddenIcon {
   kind: 'pickpocket' | 'loot'

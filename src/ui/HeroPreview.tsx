@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ability, heroDef } from '../engine/content'
 import { POOL_NAMES, costLabel } from '../engine/pools'
 import { TRAITS, type HeroDef, type PoolId } from '../engine/types'
+import { Portrait } from './Portrait'
 
 const sign = (n: number) => (n >= 0 ? `+${n}` : `${n}`)
 
@@ -26,6 +27,7 @@ export function HeroPreview({ hero }: { hero: HeroDef }) {
     .sort((a, b) => a - b)
   return (
     <article className="hero-preview" style={{ ['--hero' as string]: h.color }} aria-label={`${h.name} preview`}>
+      <Portrait id={h.id} name={h.name} className="preview-portrait" />
       <h3>{h.name}</h3>
       <div className="muted">{h.title}</div>
       <p>{h.blurb}</p>
