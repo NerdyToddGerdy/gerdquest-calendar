@@ -1,0 +1,19 @@
+# DRAFT, not wired in. Amplify Hosting build spec; copy to ./amplify.yml.
+# Tests gate the deploy, as pages.yml does today.
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+        - npm test --if-present
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
