@@ -564,3 +564,10 @@ export interface PartyMember {
   /** Ability ids this follower actually added to the hero (removed when they leave). */
   granted?: string[]
 }
+
+// ---------- Player notes ----------
+
+export interface GameState {
+  /** The player's own free-text notes for this campaign run (saved and exported with it). */
+  notes?: string
+}

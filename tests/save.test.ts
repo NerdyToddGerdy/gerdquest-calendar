@@ -31,3 +31,12 @@ describe('export all / import', () => {
     expect(() => parseSaves(JSON.stringify(bundleSaves([start('halcyon'), bad], today)), today)).toThrow()
   })
 })
+
+describe('campaign notes', () => {
+  it('saves notes on any date and keeps them through export and import', () => {
+    const s = reduce(start('halcyon'), { type: 'SET_NOTES', text: 'Ask the dock boss about the core.' })
+    expect(s.notes).toBe('Ask the dock boss about the core.')
+    const back = parseSaves(JSON.stringify(bundleSaves([s], today)), today)
+    expect(back[0].notes).toBe('Ask the dock boss about the core.')
+  })
+})

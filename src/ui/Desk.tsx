@@ -11,6 +11,7 @@ import { DayView } from './DayView'
 import { HeroSheet } from './HeroSheet'
 import { Journal } from './Journal'
 import { Log } from './Log'
+import { Notes } from './Notes'
 import { readDevOverride, writeDevOverride } from './today'
 
 export interface DeskSlot {
@@ -212,14 +213,16 @@ interface PanelProps {
 
 /** One campaign's page for the viewed date, plus its hero sheet. */
 export function CampaignPanel({ slot, viewDate, today, dispatch, onDate, onDelete }: PanelProps) {
-  const [showJournal, setShowJournal] = useState(false)
+  const [panel, setPanel] = useState<'page' | 'journal' | 'notes'>('page')
   const state = slot.state
   const c = campaign(state.campaignId)
   const view = tabView(state, viewDate)
 
   let main
-  if (showJournal) {
+  if (panel === 'journal') {
     main = <Journal state={state} />
+  } else if (panel === 'notes') {
+    main = <Notes key={slot.id} title={c.title} text={state.notes ?? ''} onSave={(text) => dispatch({ type: 'SET_NOTES', text })} />
   } else if (view.kind === 'play') {
     const day = currentDay(state)!
     main = (
@@ -267,8 +270,12 @@ export function CampaignPanel({ slot, viewDate, today, dispatch, onDate, onDelet
             {state.hero!.name} · began {formatShort(state.startDate)} · page {Math.min(state.dayIndex + 1, c.pages.length)} of {c.pages.length}
           </span>
           <span className="spacer" />
-          <button className={showJournal ? 'active' : ''} onClick={() => setShowJournal(!showJournal)}>
-            {showJournal ? 'Back to page' : 'Journal'}
+          {panel !== 'page' && <button onClick={() => setPanel('page')}>Back to page</button>}
+          <button className={panel === 'journal' ? 'active' : ''} aria-pressed={panel === 'journal'} onClick={() => setPanel(panel === 'journal' ? 'page' : 'journal')}>
+            Journal
+          </button>
+          <button className={panel === 'notes' ? 'active' : ''} aria-pressed={panel === 'notes'} onClick={() => setPanel(panel === 'notes' ? 'page' : 'notes')}>
+            Notes{state.notes?.trim() ? ' •' : ''}
           </button>
           <button onClick={() => exportSave(state)}>Export</button>
           <button
@@ -282,7 +289,7 @@ export function CampaignPanel({ slot, viewDate, today, dispatch, onDate, onDelet
         {main}
       </div>
       {/* The sheet is only interactive on the page being played. */}
-      <fieldset className="sheet-wrap" disabled={view.kind !== 'play' || showJournal}>
+      <fieldset className="sheet-wrap" disabled={view.kind !== 'play' || panel !== 'page'}>
         <HeroSheet state={state} dispatch={dispatch} />
       </fieldset>
     </div>

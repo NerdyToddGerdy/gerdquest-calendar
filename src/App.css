@@ -558,3 +558,13 @@ button.active { border-color: var(--accent); }
 .item-tip:hover .item-tip-box, .item-tip:focus .item-tip-box, .item-tip:focus-within .item-tip-box { display: flex; }
 .item-tip-box b { font-size: 0.9rem; }
 .item-tip-effect { color: var(--accent, #e0a142); }
+
+/* Campaign notes */
+.notes .day-header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.notes-text {
+  display: block; width: calc(100% - 44px); min-height: 50vh; margin-top: 8px; padding: 12px; box-sizing: border-box; resize: vertical;
+  background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: var(--radius);
+  font: 1rem/1.55 var(--body);
+}
+.notes-text:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.day.notes { padding-bottom: 8px; }
