@@ -545,3 +545,16 @@ button.active { border-color: var(--accent); }
   .hero-modal-backdrop { padding: 0; align-items: stretch; }
   .hero-modal { max-height: 100vh; border-radius: 0; }
 }
+
+/* Item tooltips (pack and gear): hover, keyboard focus or tap */
+.item-tip { position: relative; cursor: help; border-bottom: 1px dotted var(--muted); outline-offset: 2px; }
+.item-tip-box {
+  display: none; position: absolute; left: 0; top: calc(100% + 6px); z-index: 30;
+  width: max-content; max-width: min(280px, 80vw); padding: 8px 10px; border-radius: 8px;
+  background: var(--panel, #1a2028); color: var(--text, #e8e6e1); border: 1px solid var(--line, #333c48);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45); font-size: 0.82rem; line-height: 1.35;
+  flex-direction: column; gap: 4px; white-space: normal; cursor: default;
+}
+.item-tip:hover .item-tip-box, .item-tip:focus .item-tip-box, .item-tip:focus-within .item-tip-box { display: flex; }
+.item-tip-box b { font-size: 0.9rem; }
+.item-tip-effect { color: var(--accent, #e0a142); }

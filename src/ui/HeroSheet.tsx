@@ -5,6 +5,7 @@ import { isFollower } from '../engine/followers'
 import { abilityReady, costLabel, POOL_NAMES } from '../engine/pools'
 import { canChangeGear, combatInProgress, type Action } from '../engine/state'
 import { TRAITS, TRAIT_NAMES } from '../engine/types'
+import { ItemTip } from './ItemTip'
 import type { GameState, GearSlot } from '../engine/types'
 import { ShipSheet } from './ShipSheet'
 
@@ -123,7 +124,7 @@ export function HeroSheet({ state, dispatch }: { state: GameState; dispatch: (a:
           return (
             <li key={slot}>
               <small>{slot}</small>
-              <span>{id ? item(id).name : <span className="muted">—</span>}</span>
+              <span>{id ? <ItemTip item={item(id)} /> : <span className="muted">—</span>}</span>
               {id && gearOk && <button onClick={() => dispatch({ type: 'UNEQUIP', slot })}>Remove</button>}
             </li>
           )
@@ -144,9 +145,9 @@ export function HeroSheet({ state, dispatch }: { state: GameState; dispatch: (a:
             button = <button disabled={busy} onClick={() => dispatch({ type: 'USE_ITEM', item: id })}>Use</button>
           }
           return (
-            <li key={id} title={it.text}>
+            <li key={id}>
               <span>
-                {it.name} {n > 1 && <small>×{n}</small>}
+                <ItemTip item={it} /> {n > 1 && <small>×{n}</small>}
               </span>
               {button}
             </li>
