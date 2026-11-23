@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { defaultStartDate, campaign } from '../src/engine/campaign'
-import { initialState, reduce } from '../src/engine/state'
+import { defaultStartDate, campaign } from '@questender/engine/campaign'
+import { initialState, reduce } from '@questender/engine/state'
 import { bundleSaves, parseSaves } from '../src/save'
 
 const today = '2026-11-23'

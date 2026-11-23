@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { rules } from '../engine/ruleset'
-import type { Action } from '../engine/state'
-import type { CompartmentId, Day, GameState } from '../engine/types'
-import { COMPARTMENT_NAMES, crewDef, upgradeDef } from '../engine/vehicle'
-import { canWorkOnShip } from '../engine/vehicleActions'
+import { rules } from '@questender/engine/ruleset'
+import type { Action } from '@questender/engine/state'
+import type { CompartmentId, Day, GameState } from '@questender/engine/types'
+import { COMPARTMENT_NAMES, crewDef, upgradeDef } from '@questender/engine/vehicle'
+import { canWorkOnShip } from '@questender/engine/vehicleActions'
 
 /** A shipyard: hire crew into a compartment, fit or sell upgrades, buy Ship Parts. */
 export function DockView({ state, dock, dispatch }: { state: GameState; dock: NonNullable<Day['dock']>; dispatch: (a: Action) => void }) {

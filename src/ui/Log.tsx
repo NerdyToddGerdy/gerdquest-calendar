@@ -1,4 +1,4 @@
-import type { LogEntry } from '../engine/types'
+import type { LogEntry } from '@questender/engine/types'
 
 export function Log({ entries }: { entries: LogEntry[] }) {
   return (

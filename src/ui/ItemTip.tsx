@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { ItemDef } from '../engine/types'
+import type { ItemDef } from '@questender/engine/types'
 import { itemEffect } from './itemEffect'
 
 /**

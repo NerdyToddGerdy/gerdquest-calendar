@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import type { GameState, RollSlot } from '../src/engine/types'
-import { initialState, reduce } from '../src/engine/state'
+import type { GameState, RollSlot } from '@questender/engine/types'
+import { initialState, reduce } from '@questender/engine/state'
 import { diceSoundFor } from '../src/sound/diceEvents'
 
 const base = () => reduce(initialState(), { type: 'NEW_GAME', heroId: 'wren', seed: 5, campaignId: 'brightwatch', startDate: '2026-11-16' })

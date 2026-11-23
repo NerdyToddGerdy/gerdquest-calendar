@@ -1,7 +1,7 @@
-import type { Action } from '../engine/state'
-import type { GameState } from '../engine/types'
-import { COMPARTMENT_NAMES, crewDef, maxIntegrity, shipStat, upgradeDef } from '../engine/vehicle'
-import { canWorkOnShip } from '../engine/vehicleActions'
+import type { Action } from '@questender/engine/state'
+import type { GameState } from '@questender/engine/types'
+import { COMPARTMENT_NAMES, crewDef, maxIntegrity, shipStat, upgradeDef } from '@questender/engine/vehicle'
+import { canWorkOnShip } from '@questender/engine/vehicleActions'
 
 /** The ship's stats, compartments, crew and upgrades, with Ship Part repairs. */
 export function ShipSheet({ state, dispatch }: { state: GameState; dispatch: (a: Action) => void }) {

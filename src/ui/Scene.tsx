@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { HiddenIcon, Scene as SceneKind } from '../engine/types'
+import type { HiddenIcon, Scene as SceneKind } from '@questender/engine/types'
 import { EMBER_SKIES, EMBER_ART } from './scenes/emberroad'
 import { STARWAKE_SKIES, STARWAKE_ART } from './scenes/starwake'
 import { SceneActor } from './Portrait'

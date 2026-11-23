@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { addDays } from '../src/engine/calendar'
-import { easter, holidaysOn, moonOn, phaseJD } from '../src/engine/almanac'
+import { addDays } from '@questender/engine/calendar'
+import { easter, holidaysOn, moonOn, phaseJD } from '@questender/engine/almanac'
 
 const utcDay = (jd: number) => Math.floor(jd - 2440587.5)
 const day = (iso: string) => Date.parse(iso) / 86400000

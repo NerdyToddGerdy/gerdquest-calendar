@@ -1,8 +1,8 @@
 // Scene art coverage: every SceneKind has a sky and drawing, and every Ember
 // Road page is set against Ember Road art.
 import { describe, expect, it } from 'vitest'
-import { campaign } from '../src/engine/campaign'
-import { EMBER_SCENES } from '../src/engine/types'
+import { campaign } from '@questender/engine/campaign'
+import { EMBER_SCENES } from '@questender/engine/types'
 import { EMBER_ART, EMBER_SKIES } from '../src/ui/scenes/emberroad'
 
 const er = campaign('emberroad')

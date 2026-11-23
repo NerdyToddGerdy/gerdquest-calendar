@@ -1,7 +1,7 @@
-import type { Action } from '../engine/state'
-import { stepsDone } from '../engine/state'
-import type { Day, GameState } from '../engine/types'
-import { craftDef, shipStat } from '../engine/vehicle'
+import type { Action } from '@questender/engine/state'
+import { stepsDone } from '@questender/engine/state'
+import type { Day, GameState } from '@questender/engine/types'
+import { craftDef, shipStat } from '@questender/engine/vehicle'
 import { RollPanel } from './RollPanel'
 
 /** A ship-to-ship fight on the current page. */

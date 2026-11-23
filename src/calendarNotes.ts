@@ -1,7 +1,7 @@
 // The player's own calendar entries. Desk-wide (not per campaign), kept in
 // localStorage under one key. Entries may sit on any date, including future
 // ones; they never touch campaign content.
-import type { ISODate } from './engine/calendar'
+import type { ISODate } from '@questender/engine/calendar'
 
 const KEY = 'questender.calendar'
 export const CALENDAR_EVENT = 'questender:calendar'

@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { entriesOn, importEntries, loadEntries, mergeEntries, sanitizeEntries, saveEntries } from '../src/calendarNotes'
 import { bundleSaves, parseCalendar, parseSaves } from '../src/save'
-import { addMonths, monthCells, shiftCursor, viewTitle, weekCells } from '../src/engine/calview'
-import { initialState, reduce } from '../src/engine/state'
+import { addMonths, monthCells, shiftCursor, viewTitle, weekCells } from '@questender/engine/calview'
+import { initialState, reduce } from '@questender/engine/state'
 
 function stubStorage() {
   const m = new Map<string, string>()

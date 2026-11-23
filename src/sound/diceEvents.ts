@@ -1,7 +1,7 @@
 // Works out which sound (if any) a game action should make, by comparing the
 // state before and after it. Pure, so it can be tested without audio.
-import { isNat1, isNat20 } from '../engine/dice'
-import type { GameState, RollSlot } from '../engine/types'
+import { isNat1, isNat20 } from '@questender/engine/dice'
+import type { GameState, RollSlot } from '@questender/engine/types'
 
 export interface DiceSound {
   kind: 'roll' | 'card'

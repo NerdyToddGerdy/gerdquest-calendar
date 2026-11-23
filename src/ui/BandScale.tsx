@@ -1,5 +1,5 @@
-import { bandLabel } from '../engine/dice'
-import type { Band } from '../engine/types'
+import { bandLabel } from '@questender/engine/dice'
+import type { Band } from '@questender/engine/types'
 
 function spoken(b: Band): string {
   if (b.min !== undefined && b.max !== undefined) return `${b.min} to ${b.max}`
