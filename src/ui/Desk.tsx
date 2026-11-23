@@ -31,6 +31,8 @@ interface Props {
   onNew: () => void
   onImport: () => void
   onExportAll: () => void
+  sound: boolean
+  onToggleSound: () => void
   onDelete: (id: string) => void
   onTodayChanged: () => void
 }
@@ -77,6 +79,15 @@ export function Desk(p: Props) {
           </div>
         )}
         <div className="row">
+          <button
+            className="sound-toggle"
+            aria-pressed={p.sound}
+            aria-label={p.sound ? 'Dice sounds on' : 'Dice sounds off'}
+            title={p.sound ? 'Dice sounds on (click to mute)' : 'Dice sounds off (click to unmute)'}
+            onClick={p.onToggleSound}
+          >
+            {p.sound ? '🔊' : '🔇'}
+          </button>
           <button onClick={p.onNew}>+ New campaign</button>
           {p.slots.length > 0 && (
             <button onClick={p.onExportAll} title="Download one file with every campaign (import it on another device or browser)">

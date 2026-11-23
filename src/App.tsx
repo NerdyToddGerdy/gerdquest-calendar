@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
+import { playDiceSound, setSoundEnabled, soundEnabled } from './sound/audio'
+import { diceSoundFor } from './sound/diceEvents'
 import { addDays, type ISODate } from './engine/calendar'
 import { pickTab, startingDate, turnPast } from './engine/desk'
 import { newSeed } from './engine/rng'
@@ -69,7 +71,28 @@ export default function App() {
       return next
     })
 
-  const dispatch = (id: string, a: Action) => update((prev) => prev.map((s) => (s.id === id ? { ...s, state: reduce(s.state, a) } : s)))
+  const [sound, setSound] = useState(soundEnabled)
+  const toggleSound = () => {
+    setSoundEnabled(!sound)
+    setSound(!sound)
+  }
+
+  // Dice sounds: compare the campaign the player just acted in with how it was before.
+  const acted = useRef<{ id: string; before: DeskSlot['state'] } | null>(null)
+  useEffect(() => {
+    const a = acted.current
+    if (!a) return
+    acted.current = null
+    const now = slots.find((s) => s.id === a.id)?.state
+    const sfx = now && now !== a.before ? diceSoundFor(a.before, now) : null
+    if (sfx) playDiceSound(sfx)
+  }, [slots])
+
+  const dispatch = (id: string, a: Action) => {
+    const before = slots.find((s) => s.id === id)?.state
+    if (before) acted.current = { id, before }
+    update((prev) => prev.map((s) => (s.id === id ? { ...s, state: reduce(s.state, a) } : s)))
+  }
 
   /** The › arrow: turn the page in every campaign whose page ends today, then move on a day. */
   const forward = () => {
@@ -148,6 +171,8 @@ export default function App() {
           onDispatch={dispatch}
           onNew={() => setScreen('new')}
           onImport={() => fileRef.current?.click()}
+          sound={sound}
+          onToggleSound={toggleSound}
           onExportAll={() => exportAll(slots.map((s) => s.state), today)}
           onDelete={(id) => {
             deleteSlot(id)
