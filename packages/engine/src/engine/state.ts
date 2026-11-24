@@ -129,6 +129,14 @@ export function stepLocked(s: GameState, step: number): boolean {
   return s.progress.steps.slice(0, step).some((x) => x === null)
 }
 
+/** True if this run satisfies a legacy requirement ("mark" or "!mark"). No requirement = always. */
+export function meetsRequirement(s: Pick<GameState, 'legacy'>, requires: string | undefined): boolean {
+  if (!requires) return true
+  const negate = requires.startsWith('!')
+  const has = (s.legacy ?? []).includes(negate ? requires.slice(1) : requires)
+  return negate ? !has : has
+}
+
 export function stepsDone(s: GameState): boolean {
   return s.progress.steps.every((x) => x !== null)
 }
@@ -273,6 +281,15 @@ export function applyEffects(s: Draft, effects: Effect[] | undefined, rng: Rng) 
       case 'ship':
         applyShipEffect(s, e, { log, applyEffects, checkDeath })
         break
+      case 'legacy': {
+        const marks = s.legacy ?? []
+        if (!marks.includes(e.id)) {
+          s.legacy = [...marks, e.id]
+          const def = campaign(s.campaignId).legacy?.find((l) => l.id === e.id)
+          if (def) log(s, `Legacy earned: ${def.name}.`)
+        }
+        break
+      }
     }
   }
   checkDeath(s, rng)
@@ -331,7 +348,7 @@ function step(s: Draft, day: Day, action: Action, rng: Rng): boolean {
     case 'CHOOSE': {
       if (!stepAvailable(s, action.step)) return false
       const opt = day.steps[action.step]?.options[action.option]
-      if (!opt) return false
+      if (!opt || !meetsRequirement(s, opt.requires)) return false
       if (opt.check) {
         const mods: Mod[] = d20Mods(s.hero, opt.check.trait)
         for (const id of s.hero.abilities) {
@@ -510,7 +527,9 @@ function step(s: Draft, day: Day, action: Action, rng: Rng): boolean {
         if (res.damageTaken > 0) s.hero = damage(s.hero, res.damageTaken)
         const died = s.hero.hp <= 0
         checkDeath(s, rng)
-        // Dying already ends the fight; don't also apply the win/lose outcome.
+        // Dying already ends the fight; don't also apply the win/lose outcome,
+        // except its legacy marks: falling to a chapter's boss still loses the chapter.
+        if (died) applyEffects(s, c.lose?.filter((e) => e.type === 'legacy'), rng)
         if (s.progress.combat.done && !died) {
           if (s.progress.combat.won) {
             log(s, c.winText)

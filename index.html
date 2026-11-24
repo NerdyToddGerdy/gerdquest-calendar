@@ -2,23 +2,123 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Questender: a solo adventure, one calendar page a day</title>
+    <meta name="description" content="Play a solo adventure one page per real day. Pick from five campaigns, run several at once on your desk, and keep your saves on your own device. Free in your browser." />
+    <link rel="canonical" href="__SITE_URL__" />
     <meta name="theme-color" content="#f3eee4" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0e141b" media="(prefers-color-scheme: dark)" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="Questender" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Questender" />
+    <meta property="og:title" content="Questender: a solo adventure, one calendar page a day" />
+    <meta property="og:description" content="Tear off today's page and play it. Five campaigns, one page per real day, saves on your device." />
+    <meta property="og:url" content="__SITE_URL__" />
+    <meta property="og:image" content="__SITE_URL__og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A tear-off calendar page beside the word Questender" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Questender: a solo adventure, one calendar page a day" />
+    <meta name="twitter:description" content="Tear off today's page and play it. Five campaigns, one page per real day, saves on your device." />
+    <meta name="twitter:image" content="__SITE_URL__og.png" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="manifest" href="site.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-    <title>Questender</title>
+    <link rel="stylesheet" href="site.css" />
+    <link rel="stylesheet" href="landing.css" />
+    <script>
+      // Returning players go straight to their desk. Add ?stay to see this page anyway.
+      try {
+        if (!/[?&]stay\b/.test(location.search)) {
+          var slots = JSON.parse(localStorage.getItem('questender.slots') || '[]')
+          if (Array.isArray(slots) && slots.length) location.replace('play/')
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="./?stay"><img src="favicon.svg" alt="" width="32" height="32" />Questender</a>
+        <nav aria-label="Main"><a href="play/">Open your desk</a></nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="wrap">
+          <div>
+            <h1>One page of adventure, every day</h1>
+            <p class="lede">Questender is a solo role-playing game that unfolds on a calendar. Each real date has its own page. Read it, roll the dice, make the call, and tomorrow's page waits until tomorrow.</p>
+            <a class="btn" id="cta" href="play/">Start playing</a>
+            <p class="note">Free, in your browser. No account needed.</p>
+          </div>
+          <div class="leaf" aria-hidden="true">
+            <svg viewBox="0 0 300 380" role="img" focusable="false">
+              <rect class="paper" x="8" y="30" width="284" height="340" rx="14" />
+              <path class="head" d="M8 44a14 14 0 0 1 14-14h256a14 14 0 0 1 14 14v52H8z" />
+              <text class="head-t" x="150" y="73" text-anchor="middle">Today</text>
+              <circle class="ring" cx="70" cy="30" r="9" /><circle class="ring" cx="150" cy="30" r="9" /><circle class="ring" cx="230" cy="30" r="9" />
+              <text class="num" x="150" y="238" text-anchor="middle">24</text>
+              <text class="small" x="150" y="290" text-anchor="middle">A locked gate in the fog,</text>
+              <text class="small" x="150" y="320" text-anchor="middle">and one choice to make.</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <section class="band" aria-labelledby="how">
+        <div class="wrap">
+          <h2 id="how">How it works</h2>
+          <ol class="steps">
+            <li><h3>One page per day</h3><p>Every campaign is a year of calendar pages. A page unlocks on its real date, so there is no reading ahead and no binge to burn through. Come back tomorrow.</p></li>
+            <li><h3>Several campaigns at once</h3><p>Keep a lamp-lit fog story on the left of your desk and a deep-space chase on the right. Each has its own party, its own pack and its own calendar.</p></li>
+            <li><h3>Your saves stay with you</h3><p>Progress is stored in this browser on this device. Nothing is uploaded, and you can export a backup whenever you like.</p></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="band" aria-labelledby="camps">
+        <div class="wrap">
+          <h2 id="camps">Campaigns to begin with</h2>
+          <ul class="campaigns">
+            <li class="c-brightwatch"><h3>The Lamp at Brightwatch</h3><p class="theme">Lantern coast mystery</p><p>Six wardens, one week each, and a fog that never quite leaves the marches. Then you choose who carries the lamp out to sea.</p></li>
+            <li class="c-ember"><h3>The Ember Road</h3><p class="theme">Frozen-north road trip, classic rules</p><p>Someone is snuffing the waystones that light the north road. Bring followers, spend spell points, and hope the gods are listening.</p></li>
+            <li class="c-halcyon"><h3>The Halcyon Debt</h3><p class="theme">Space-frontier courier run</p><p>A courier, a stolen data core, and a dented long-hauler racing a pirate captain across the Shoal.</p></li>
+            <li class="c-starwake"><h3>The Starwake</h3><p class="theme">Sea voyage under a fallen star</p><p>The star that held the night in place has dropped into the sea. Sail for its shards before a corsair-prince cages the light.</p></li>
+            <li class="c-verdant"><h3>The Verdant Accord</h3><p class="theme">Forest and city, legacy chapters</p><p>The city in the ancient stump must return the Seedcrown to the forest this year, and the Crown is gone. One chapter a month, and every ending is remembered.</p></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="band closing" aria-labelledby="go">
+        <div class="wrap">
+          <h2 id="go" style="margin-bottom: 14px">Today's page is waiting</h2>
+          <p>Pick a campaign, meet your hero, and turn the first leaf. It takes a few minutes a day.</p>
+          <a class="btn" href="play/">Start playing</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <span>Questender. Original stories, played one page at a time.</span>
+        <nav aria-label="Footer"><a href="play/">Play the game</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="https://github.com/NerdyToddGerdy/questender/issues">Contact</a></nav>
+      </div>
+    </footer>
+
+    <div class="sticky-cta" id="sticky"><a class="btn" href="play/">Start playing</a></div>
+    <script>
+      // Show the phone CTA bar once the hero button is out of view.
+      ;(function () {
+        var cta = document.getElementById('cta'), bar = document.getElementById('sticky')
+        if (!cta || !bar || !('IntersectionObserver' in window)) return
+        document.body.classList.add('has-sticky')
+        new IntersectionObserver(function (e) { bar.classList.toggle('on', !e[0].isIntersecting && e[0].boundingClientRect.top < 0) }).observe(cta)
+      })()
+    </script>
   </body>
 </html>

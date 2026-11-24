@@ -16,9 +16,10 @@ import { BRIGHTWATCH_ENTRY } from './campaigns/brightwatch/meta'
 import { EMBER_ROAD_ENTRY } from './campaigns/emberroad/meta'
 import { HALCYON_ENTRY } from './campaigns/halcyon/meta'
 import { STARWAKE_ENTRY } from './campaigns/starwake/meta'
+import { VERDANT_ENTRY } from './campaigns/verdant/meta'
 
 /** Every bundled campaign's catalog entry, in menu order. Add new campaigns here. */
-export const BUNDLED_CATALOG: CampaignEntry[] = [BRIGHTWATCH_ENTRY, EMBER_ROAD_ENTRY, HALCYON_ENTRY, STARWAKE_ENTRY]
+export const BUNDLED_CATALOG: CampaignEntry[] = [BRIGHTWATCH_ENTRY, EMBER_ROAD_ENTRY, HALCYON_ENTRY, STARWAKE_ENTRY, VERDANT_ENTRY]
 
 registerContent('base', { abilities: ABILITIES, enemies: ENEMIES, heroes: HEROES, items: ITEMS, members: MEMBERS })
 for (const e of BUNDLED_CATALOG) registerCatalog(e)
@@ -26,3 +27,4 @@ registerCampaignLoader('brightwatch', () => import('./campaigns/brightwatch').th
 registerCampaignLoader('emberroad', () => import('./campaigns/emberroad').then((m) => m.emberRoad))
 registerCampaignLoader('halcyon', () => import('./campaigns/halcyon').then((m) => m.halcyon))
 registerCampaignLoader('starwake', () => import('./campaigns/starwake').then((m) => m.starwake))
+registerCampaignLoader('verdant', () => import('./campaigns/verdant').then((m) => m.verdant))
