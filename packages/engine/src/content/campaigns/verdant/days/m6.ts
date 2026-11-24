@@ -199,7 +199,7 @@ export const M6: Draft[] = [
         task('Pike’s last stew', plain('Eat while you can, in the lee of the cabin', 'Bosun Pike ladles out what is left of the stew, hot and salty and more than a little burnt. Nobody speaks. It is the best meal of the voyage.', [heal(4)])),
         pick('Before the Leviathan breaks the surface',
           check('Lash everything down and stand to the pumps', 'con', ['physical'], ['A wave takes the lashings, and part of the deck with them.', [dmg(2)]], ['The Mudlark is as ready as a barge can be.', [buff('def', 1)]]),
-          needs('va_l5_win', plain('Unroll Halloran Vey’s coast chart with its pilot-marks', 'The Steward’s chart marks a deep channel the sea-folk call the Quiet Way. Pike steers the Mudlark into it, and the swells flatten.', [heal(3), buff('def', 1)])),
+          needs('va_l5_win', plain('Unroll Corwin Vey’s coast chart with its pilot-marks', 'The Steward’s chart marks a deep channel the sea-folk call the Quiet Way. Pike steers the Mudlark into it, and the swells flatten.', [heal(3), buff('def', 1)])),
           needs('va_l2_win', plain('Break out the millers’ oilskins and tar-pots', 'Millrow’s oilskins and a tub of mill-tar: every seam on the Mudlark is sealed against a wave that would have sunk her in March.', [heal(2), buff('atk', 1)])),
           needs('va_l5_loss', plain('Make do without a pilot’s chart', 'No Steward, no chart: you steer by the stars and the old coast’s lamps. It is a harder way, and Pike says so, at length.', [buff('def', 1), dmg(1)])),
         ),
@@ -241,7 +241,7 @@ export const M6: Draft[] = [
     'The Mudlark finds the reef at last. She rides up on a bar of black sand, and grinds to a stop. The surf drags at her. Beyond the shore a jungle climbs a smoking mountain, and from somewhere inside it comes a sound like a very large kiln, breathing. *To be continued in Chapter 7: The Ashen Isle.*',
     [pick('Get ashore',
       check('Wade ashore with the Crown held over your head', 'con', ['physical'], ['The surf throws you down and drags you under a wave.', [dmg(2)]], 'You walk up the black sand dry-shod, Seedcrown in hand.'),
-      needs('va_l5_win', plain('Use the Steward’s seal at the island’s landing', 'There is no landing, but Halloran Vey’s seal is stamped on a shipping-crate you find in the wreck. Inside is a spare lantern, a coil of rope and a letter of introduction to no one in particular.', [item('va_lanternoil'), item('ration', 2)])),
+      needs('va_l5_win', plain('Use the Steward’s seal at the island’s landing', 'There is no landing, but Corwin Vey’s seal is stamped on a shipping-crate you find in the wreck. Inside is a spare lantern, a coil of rope and a letter of introduction to no one in particular.', [item('va_lanternoil'), item('ration', 2)])),
       needs('va_l5_loss', plain('Cut loose what you cannot carry', 'You throw the ballast over the side to lighten the Mudlark. Pike watches, white-lipped, and says nothing.', [gold(-2), buff('def', 1)])),
     )]),
 ]

@@ -187,7 +187,7 @@ export const M7: Draft[] = [
     [pick('How you prepare',
       check('Study the lava’s flow for a safe path', 'wis', ['perception', 'lore'], 'The lava’s patterns are too chaotic.', ['The lava rises and falls on a slow, regular beat, like breathing.', [buff('roll', 1)]]),
       needs('va_l6_win', plain('Recall Pike’s sea-sense for rhythm', 'Pike’s timing of the tide comes back to you: count to nine, then move. The lava breathes on the same rhythm.', [buff('def', 1), heal(2)])),
-      needs('va_l5_win', plain('Use the Steward’s lantern-oil to light the way', 'Halloran Vey’s lantern-oil burns white. It shows the safe path across the floor as a line of cooler stone.', [buff('roll', 1), item('va_lanternoil')])),
+      needs('va_l5_win', plain('Use the Steward’s lantern-oil to light the way', 'Corwin Vey’s lantern-oil burns white. It shows the safe path across the floor as a line of cooler stone.', [buff('roll', 1), item('va_lanternoil')])),
       needs('va_l5_loss', plain('Think of the Steward’s hall', 'You think of the burning city and the old man’s keys, and your hands steady. It is a grim kind of focus, but it works.', [buff('atk', 1), dmg(1)])),
     )]),
   page('The Potters’ Workshop', 'va_lava',

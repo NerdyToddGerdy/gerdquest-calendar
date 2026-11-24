@@ -189,7 +189,7 @@ export const M8: Draft[] = [
       pick('Prepare for the parley',
         check('Rehearse what you will say with Ottoline and Agathe', 'cha', ['social'], 'The rehearsal turns into an argument.', ['By dawn you have a speech, three answers and a retreat.', [buff('roll', 1)]]),
         needs('va_l7_win', plain('Ask Emberlind’s grove to stand by you', 'Word flies from the ash-dryad’s grove over the mountains: she will stand beside you, in spirit. The wind carries an ember to your shoulder, warm and green.', [heal(3), buff('def', 1)])),
-        needs('va_l5_win', plain('Ask the Steward’s seal for safe-conduct', 'Halloran Vey’s name, even here, carries weight. The Thornwake’s runners recognise it, and a tense hush falls over the snow.', [buff('roll', 1), virtue(1)])),
+        needs('va_l5_win', plain('Ask the Steward’s seal for safe-conduct', 'Corwin Vey’s name, even here, carries weight. The Thornwake’s runners recognise it, and a tense hush falls over the snow.', [buff('roll', 1), virtue(1)])),
         needs('va_l5_loss', plain('Brace for the Elder’s grief', 'You think of the Steward’s hall, and the old man who fell. The Elder will not forgive that, and you do not ask her to.', [buff('def', 1), dmg(1)])),
       ),
       task('The vigil', check('Keep your nerve through the night', 'wis', ['social'], ['You sleep badly. The Thornwake’s drums are in every dream.', [dmg(1)]], 'You pass the night in calm, and the stars come out.')),

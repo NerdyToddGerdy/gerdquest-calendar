@@ -2,7 +2,7 @@
 // Copperleaf Exchange loots under cover of smoke while the Thornwake, the
 // forest's vengeful vanguard, breach the streets with roots. The hero holds the
 // Seedcrown. Boss: Crane's clockwork champion and a Thornwake briar knight,
-// with Steward Halloran Vey between them. Legacy: Steward Saved / Steward Fell.
+// with Steward Corwin Vey between them. Legacy: Steward Saved / Steward Fell.
 //
 // From here the legacy marks are a running tally: "Accord kept" (win) against
 // "Wilds let in" (loss). The finale offers options earned by earlier wins and
@@ -192,7 +192,7 @@ export const M5: Draft[] = [
     ['You carry the gate. The last footman folds at the knees, ticking, and the sellswords drop their coin-sacks and run.', [gold(3)]],
     ['They drive you off the steps. You can hear the hall’s doors being pried.', [dmg(3)]]),
   page('Before the Doors Give', 'va_manor',
-    'The doors of the Steward’s hall are barred from inside. Through the keyhole you can see the Steward himself, Halloran Vey: sixty, silver-bearded, with the Marrow’s great key-ring over his shoulder and an old sabre in his hand. Between him and the doors, two figures stand opposite one another, both waiting for the other to blink: a brass duelist in a Copperleaf tabard and a knight of bark and thorn. Both are here for the Crown.',
+    'The doors of the Steward’s hall are barred from inside. Through the keyhole you can see the Steward himself, Corwin Vey: sixty, silver-bearded, with the Marrow’s great key-ring over his shoulder and an old sabre in his hand. Between him and the doors, two figures stand opposite one another, both waiting for the other to blink: a brass duelist in a Copperleaf tabard and a knight of bark and thorn. Both are here for the Crown.',
     [
       pick('How you prepare',
         check('Plan the entry with Ottoline’s notes', 'int', ['lore'], 'Ottoline’s notes are good. Yours are not.', ['The brass champion’s springs are quick but brittle. The briar knight is slow but hits like a felled tree.', [buff('roll', 1)]]),
@@ -203,10 +203,10 @@ export const M5: Draft[] = [
       task('The doors', check('Force the barred doors', 'str', ['physical'], ['The bar holds and your shoulder doesn’t.', [dmg(2)]], 'The doors give with a crack, and you’re in the hall.')),
     ]),
   bossFight('Protect the Steward', 'va_manor',
-    'The hall is a ring of old oak benches, a long table and a very small fire. Halloran Vey stands in the middle with his sabre and his keys, and on either side of him the two figures finally move at the same moment: Crane’s clockwork champion, in a flash of brass; the Thornwake’s briar knight, in a groan of living wood. Each wants the Crown. Both are quite willing to go through the Steward to get it.',
+    'The hall is a ring of old oak benches, a long table and a very small fire. Corwin Vey stands in the middle with his sabre and his keys, and on either side of him the two figures finally move at the same moment: Crane’s clockwork champion, in a flash of brass; the Thornwake’s briar knight, in a groan of living wood. Each wants the Crown. Both are quite willing to go through the Steward to get it.',
     ['va_clockchamp', 'va_briarknight'], 4,
     '“Stand back, citizen!” cries the Steward, “and take the Crown out of this hall!”',
-    ['The champion’s springs let go and the knight’s briar-blade stops against the steward’s old sabre. Halloran Vey, bleeding and furious, lowers his blade as the last of the knight’s thorns rattle to the floor. “Highmarrow,” he says, “owes you its keys.” The ring of keys is pressed into your hand.', [gold(6), item('va_steward'), legacy('va_l5_win')]],
+    ['The champion’s springs let go and the knight’s briar-blade stops against the steward’s old sabre. Corwin Vey, bleeding and furious, lowers his blade as the last of the knight’s thorns rattle to the floor. “Highmarrow,” he says, “owes you its keys.” The ring of keys is pressed into your hand.', [gold(6), item('va_steward'), legacy('va_l5_win')]],
     ['The champion’s blade finds the Steward’s heart before you can reach him. The briar knight takes the keys from his fingers, bows once to the fallen, and walks out through the shattered doors. The city is on its own.', [dmg(3), legacy('va_l5_loss')]],
     {
       steps: [task('Ottoline’s last tonic', plain('Drink what the clockmaker presses on you', 'Ottoline uncorks a flask from her satchel with shaking hands. It tastes of pine-tar and mint, and by the time you have swallowed it your hands have stopped trembling.', [heal(3)]))],
@@ -221,7 +221,7 @@ export const M5: Draft[] = [
     'In the Ninth Bell’s cellar Captain Mags, Sedge and Ottoline lay out the ledger of the fire: houses lost, houses saved, the dead and the living. Every mark you have earned since January is somewhere in it. Highmarrow is in the balance. Crane is calling the fire an accident, and the Thornwake are calling it a beginning.',
     [pick('What you ask for',
       check('Ask Mags where the Crown can go that neither of them can follow', 'cha', ['social'], 'Mags only shrugs.', ['“Away,” she says. “Down the river, where the sea is. There’s a barge at Millrow’s foot, and the barge-woman owes me a favour.”', [virtue(1), buff('roll', 1)]]),
-      needs('va_l5_win', plain('Ask the Steward for a favour', 'Halloran Vey has you shown into the hall’s back room. “Take what you need from the Marrow’s stores,” he says. “And a letter of passage. The coast will honour my seal.”', [item('va_heartsap'), gold(3)])),
+      needs('va_l5_win', plain('Ask the Steward for a favour', 'Corwin Vey has you shown into the hall’s back room. “Take what you need from the Marrow’s stores,” he says. “And a letter of passage. The coast will honour my seal.”', [item('va_heartsap'), gold(3)])),
       needs('va_l5_loss', plain('Ask who else will help', 'Without a Steward, the city’s guilds and neighbours do. They club together for what they can: a few rations, a few coins, a lot of apologies.', [item('ration', 3), gold(1)])),
     )]),
   page('The Mudlark', 'va_ford',
