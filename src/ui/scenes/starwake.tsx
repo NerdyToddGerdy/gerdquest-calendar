@@ -21,6 +21,9 @@ export const STARWAKE_SKIES: Record<StarwakeScene, [string, string]> = {
   sw_tavern: ['#24150e', '#7a4826'],
   sw_isle: ['#2f6fa0', '#f2d6a0'],
   sw_cave: ['#05080b', '#1b2a2e'],
+  sw_skysea: ['#0a0d2a', '#4a5aa0'],
+  sw_stair: ['#070b24', '#2e3a7a'],
+  sw_summit: ['#02030f', '#1e2866'],
 }
 
 // ---------- shared pieces ----------
@@ -266,6 +269,56 @@ export const STARWAKE_ART: Record<StarwakeScene, ReactNode> = {
       {[[70, 60], [150, 52], [300, 70], [350, 58]].map(([x, y], i) => <path key={i} d={`M${x - 6} ${y} L${x} ${y + 24} L${x + 6} ${y} Z`} fill="#020406" />)}
       {shard(220, 120, 4)}
       {[[60, 160], [320, 150]].map(([x, y], i) => <path key={i} d={`M${x} ${y} l8 -18 l8 18 Z`} fill="#dfe8e8" opacity="0.7" />)}
+    </>
+  ),
+  sw_skysea: (
+    <>
+      {driftingStars(70, 110, 14)}
+      {/* the Upper Sea: a sea of light, with cloud-stone isles floating on it */}
+      <rect x="0" y="120" width="400" height="80" fill="#1d2a6a" />
+      <path d="M0 120 H400" stroke="#b9c8ff" strokeWidth="1.5" opacity="0.7" />
+      {[...Array(14)].map((_, i) => <path key={i} d={`M${rnd(i, 3) * 380} ${130 + rnd(i, 4) * 60} h${20 + rnd(i, 5) * 30}`} stroke="#8fa4ff" strokeWidth="1" opacity="0.35" />)}
+      {[[70, 112, 1], [300, 108, 1.4], [200, 116, 0.6]].map(([x, y, s], i) => (
+        <g key={i} transform={`translate(${x} ${y}) scale(${s})`}>
+          <path d="M-34 0 Q-10 -18 10 -10 Q28 -16 38 0 Q10 8 -34 0 Z" fill="#cfd8f4" />
+          <path d="M-30 2 Q0 12 34 2 L22 14 L-18 14 Z" fill="#8a96c8" />
+        </g>
+      ))}
+      <path d="M0 120 q-6 40 0 80 M14 124 q-8 36 0 76" stroke="#d8e4ff" strokeWidth="3" opacity="0.5" fill="none" />
+      {sloop(200, 128, 0.8)}
+      {shard(350, 36, 4)}
+    </>
+  ),
+  sw_stair: (
+    <>
+      {driftingStars(90, 200, 17)}
+      {/* a spiral stair of pale light-stone climbing out of sight */}
+      {[...Array(16)].map((_, i) => {
+        const x = 40 + i * 20
+        const y = 190 - i * 11
+        return (
+          <g key={i} opacity={i > 11 && i % 2 ? 0.25 : 1}>
+            <path d={`M${x} ${y} h30 v6 h-30 Z`} fill={i % 3 === 0 ? '#e8f0ff' : '#b9c8ee'} />
+            <path d={`M${x} ${y + 6} h30 v4 h-26 Z`} fill="#6a7ab0" />
+          </g>
+        )
+      })}
+      <path d="M0 150 L60 150 L60 200" stroke="#2b3c7a" strokeWidth="1" fill="none" />
+      <circle cx="170" cy="150" r="30" fill="url(#glow)" opacity="0.5" />
+      {shard(360, 20, 5)}
+    </>
+  ),
+  sw_summit: (
+    <>
+      {driftingStars(110, 200, 21)}
+      {/* the Crown: a ring in the sky where Wend belongs, with a landing below */}
+      <circle cx="200" cy="64" r="44" fill="none" stroke="#c9d6ff" strokeWidth="3" opacity="0.8" />
+      <circle cx="200" cy="64" r="56" fill="url(#glow)" opacity="0.5" />
+      <path d="M200 20 V4 M200 108 V124" stroke="#c9d6ff" strokeWidth="2" opacity="0.6" />
+      <path d="M120 170 Q200 150 280 170 L300 200 H100 Z" fill="#1b2660" />
+      <path d="M120 170 Q200 150 280 170" fill="none" stroke="#e8f0ff" strokeWidth="2" />
+      {[150, 200, 250].map((x) => <path key={x} d={`M${x} 160 v-14`} stroke="#e8f0ff" strokeWidth="2" opacity="0.6" />)}
+      {shard(200, 64, 6)}
     </>
   ),
 }

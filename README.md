@@ -11,7 +11,7 @@ real calendar dates. You can't peek ahead, but you can always catch up.
 - **The Lamp at Brightwatch** — six trial heroes, then a year-long hunt for the Sevenfold Peal.
 - **The Ember Road** — relight the waystones of a frozen road (classic rules: point pools, followers).
 - **The Halcyon Debt** — pay off a ship's debt across a frontier (ships, dogfights, a weekly lottery).
-- **The Starwake** — sail for the shards of a fallen star before a corsair-prince cages it (classic rules; Months 1–9, more to come).
+- **The Starwake** — sail for the shards of a fallen star before a corsair-prince cages it (classic rules; a full year of pages).
 
 Several campaigns can run at once on the desk; each starts about a week before
 today so you get a few warm-up pages. Progress is saved in your browser. Import, Export all, light/dark mode and

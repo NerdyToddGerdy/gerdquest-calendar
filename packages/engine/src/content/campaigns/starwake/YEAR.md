@@ -1,9 +1,8 @@
-# The Starwake — the voyage (Months 1–9 of 13)
+# The Starwake — the voyage (the full year, Jan 1 – Dec 31, 2022 format)
 
-A sea campaign with one chapter per month. Months 1–9 are outlined here.
-Four more chapters (Months 10–13) will be added later, so Month 9 ends on a
-cliffhanger instead of the finale. Its
-structure follows the user's nine-chapter *Voyage of the Fallen Star* box set:
+A sea campaign with one chapter per month, twelve in all (313 pages). Months
+1–9 carry the hunt for the shards; Months 10–12 take the voyage over the Rim
+and home. Its structure through September follows the user's nine-chapter *Voyage of the Fallen Star* box set:
 a port opening, an island hunt for star-shards, a climb, a strange island, a
 deathly sea, the star's resting place, a forge, a library and a final battle.
 **Every name, character, place and plot beat here is original to Questender.**
@@ -51,7 +50,9 @@ headed, his sails are never far behind.
 The pacing matches the other campaigns: Mon–Fri pages plus a combined Sat/Sun
 page. Most weekends are **ports** with Rest, shopping and sometimes a crew
 member to hire. Each month has one big boss, usually on its last Friday.
-Level-ups land on port weekends, roughly one every month and a half.
+Level-ups land on port weekends, roughly one every month and a half (Lv 7 on
+Oct 22–23, Lv 8 on Nov 26–27). The year's last Saturday, Dec 31, is a one-day
+page. Bosses: one a month on or near the last Friday, and two in December.
 
 ## The months
 
@@ -65,7 +66,11 @@ Level-ups land on port weekends, roughly one every month and a half.
 | 6 | **Down the Lantern Well** | The four shards point to a monastery of diver-monks over a bottomless sinkhole in the sea. The hero goes down in a brass diving bell and takes the fifth shard from the monks' reliquary in a test of trust. Deeper still lies **Wend's heart**, dim and cold and guarded by something its fall woke up. | The Deepmaw, a lightless eel the length of a harbor | Fifth shard; Wend's heart; Diving Bell upgrade |
 | 7 | **Into the Everstorm** | The heart can only be rekindled by first lightning, from the eye of the hurricane that has circled the Saltreach since the world was young. The hero sails the *Second Chance* through storm-walls and waterspouts. Ashe's ironclad gives chase, and Bosun Teague boards in the eye. | Bosun Harrow Teague (then the storm itself, as a sailing challenge) | Rekindled heart (Wend speaks for the first time); Stormglass Blade; **Lv 5** |
 | 8 | **The Orrery Isle** | Wend is awake but can't remember the way home, because the true Night Chart was lost when it fell. The only surviving copy sits in the **Orrery**, a clockwork island of astronomers whose gears turn the whole isle like a map of the sky. Ashe raids it the same week. The hero solves the Orrery's riddles before his crew burns the archive. | The Runaway Orrery, gears unleashed by Ashe's sabotage | The true Night Chart; Astronomer's Lens; Aunt Calibra the clockmaker (follower); the Keeper's Sextant |
-| 9 | **The Rim** | The run west to the edge of the world, with Ashe's whole fleet in pursuit. The month builds through a running sea battle, a last port at the lighthouse at the end of the map, and the sight of the Rim where the sea pours into the stars. But the stair Wend must climb is broken. Ashe uses the Hollow Needle to cut his way *over* the Rim and sails the *Gilt Gull* off into the sky-sea beyond. **Cliffhanger:** the hero has to follow him. | The *Gilt Gull* in a ship-to-ship battle (Ashe escapes) | **Lv 6**; the way over the Rim (Months 10–13) |
+| 9 | **The Rim** | The run west to the edge of the world, with Ashe's whole fleet in pursuit. The month builds through a running sea battle, a last port at the lighthouse at the end of the map, and the sight of the Rim where the sea pours into the stars. But the stair Wend must climb is broken. Ashe uses the Hollow Needle to cut his way *over* the Rim and sails the *Gilt Gull* off into the sky-sea beyond. **Cliffhanger** into Month 10: the hero follows him. | The *Gilt Gull* in a ship-to-ship battle (Ashe escapes) | **Lv 6**; the way over the Rim (Month 10) |
+
+| 10 | **The Upper Sea** (Skymoon) | Over the Rim lies a sea of starlight above the world and the **Stair**, six flights of star-glass built so a fallen star could always climb home. Cloudmoor harbor and **Ismay Tolliver**, the last stairwright, who explains that the Hollow Needle is the stair's stolen keystone (Ashe's ancestor was a stairwright's apprentice). Ashe's quarry barges are cutting the stair up for a cage. | The Cloudback, a sky-whale chained to the lead barge (freed, not slain) | Ismay Tolliver (follower); Stairwright's Chisel and Badge; Skysilk Cloak; **Lv 7** (Oct 22–23) |
+| 11 | **The Landings** (Mendmoon) | The Cloudback tows the sloop up the stair. At each of the first five landings the hero returns a shard, and its echo (salt-men, the Roc's brood, the Admiral's marines, the Deepmaw's prey) rises to test them. A gunner, **Hallam Marrow**, deserts Ashe. Then the Lantern-Cage springs: Ashe's engine snatches Wend's lantern. | The Lantern-Cage (Nov 25) | Hallam Marrow (follower); Cage-Warden's Gauntlets; **Lv 8** (Nov 26–27) |
+| 12 | **The Crown** (Longnight) | The frozen sixth flight, Ashe's abandoned camp (his journal, his father's lost ship), Vessa's confession, the wreck of the *Gilt Gull*. Ashe is beaten at the Last Gate (Dec 16); the gate opens only on the longest night. He jams the Needle into the keystone socket and it feeds on him. Wend fills the Hollow Needle with its own light, the stars climb home, the hero gives back Wend's gifts. A Longnight feast, the descent, Ashe's letter, and the first clear night over Saltmere Quay. | Ashe Calloway (Dec 16) and the Hollow Needle (Dec 21, the longest night) | Ashe's Gilded Rapier; Longnight Mantle; epilogue to Dec 31 |
 
 ## The arc
 
@@ -79,12 +84,16 @@ Level-ups land on port weekends, roughly one every month and a half.
 - **Month 8:** The hero races Ashe for the chart.
 - **Month 9:** The hero reaches the edge of the world, only to find the way
   home broken and Ashe gone ahead into the sky.
-- **Months 10–13 (to come):** These cover the four chapters still to be
-  added. Their plot will continue from the Month 9 cliffhanger.
+- **Month 10:** Over the Rim, the hero learns the stair, the keystone and
+  what Ashe's family took.
+- **Month 11:** The shards go home, the stair lights, and Ashe tries to cage
+  Wend. He fails.
+- **Month 12:** Ashe is beaten at the gate. At the longest night the Needle
+  is filled with light instead of a star, Wend climbs home, and the Night
+  Chart snaps back into place. Ashe survives and becomes a (bad) ferryman.
 
-**Planned ending (Month 13):** Wend climbs home and the Night Chart snaps
-back into place. The last page is the first clear night in a year, with every
-ship on the Saltreach finding its way home.
+**Ending (Dec 31, a single-day page):** the first clear night in a year, with
+every ship on the Saltreach finding its way home.
 
 ## Recurring threads
 

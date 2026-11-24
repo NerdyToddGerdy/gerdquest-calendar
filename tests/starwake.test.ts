@@ -1,4 +1,4 @@
-// The Starwake (Months 1–9): calendar shape, content integrity, scene art,
+// The Starwake (the full year): calendar shape, content integrity, scene art,
 // and a seeded playthrough with every hero.
 import { describe, expect, it } from 'vitest'
 import { addDays, weekday } from '@questender/engine/calendar'
@@ -7,6 +7,8 @@ import { ability, enemy, heroDef, item, member } from '@questender/engine/conten
 import { canAdvance, initialState, reduce } from '@questender/engine/state'
 import { STARWAKE_SCENES, type Day, type Effect } from '@questender/engine/types'
 import { STARWAKE_ART, STARWAKE_SKIES } from '../src/ui/scenes/starwake'
+import { STARWAKE_HEROES } from '@questender/engine/content/campaigns/starwake/content'
+import { PORTRAITS } from '../src/ui/portraits/specs'
 
 const sw = campaign('starwake')
 const MUSTER = 3 // page where the hero is chosen
@@ -35,19 +37,23 @@ function textsOf(p: Day): string[] {
 const levelUps = sw.pages.slice(MUSTER + 1).filter((p) => effectsOf(p).some((e) => e.type === 'levelUp')).length
 
 describe('Starwake: calendar shape', () => {
-  it('runs from Sat Jan 1 to Fri Sep 30, 2022 with no gaps', () => {
+  it('runs from Sat Jan 1 to Sat Dec 31, 2022 with no gaps', () => {
     expect(authoredDate(sw, 0)).toBe('2022-01-01')
     for (let i = 1; i < sw.pages.length; i++) {
       expect(authoredDate(sw, i)).toBe(addDays(authoredDate(sw, i - 1), pageSpan(sw, i - 1)))
     }
-    expect(authoredDate(sw, sw.pages.length - 1)).toBe('2022-09-30')
-    expect(sw.pages).toHaveLength(234)
+    const last = sw.pages.length - 1
+    expect(authoredDate(sw, last)).toBe('2022-12-31')
+    expect(pageSpan(sw, last)).toBe(1)
+    expect(sw.pages).toHaveLength(313)
+    expect(sw.pages).toHaveLength(sw.pageCount)
   })
 
   it('weekend pages cover Sat + Sun; every other page is a weekday', () => {
     sw.pages.forEach((p, i) => {
       const wd = weekday(authoredDate(sw, i))
       if (p.span === 2) expect(wd).toBe(6)
+      else if (i === sw.pages.length - 1) expect(wd).toBe(6) // Dec 31, the year’s last Saturday
       else expect(wd >= 1 && wd <= 5).toBe(true)
     })
   })
@@ -59,12 +65,22 @@ describe('Starwake: calendar shape', () => {
 
   it('in-world dates follow the Saltreach months', () => {
     expect(sw.inWorldDate!(0)).toBe('Driftmoon 1–2')
-    expect(sw.inWorldDate!(sw.pages.length - 1)).toBe('Rimmoon 30')
+    expect(sw.inWorldDate!(sw.pages.length - 1)).toBe('Longnight 31')
+    const lastSep = sw.pages.findIndex((p) => p.month === 10) - 1
+    expect(sw.inWorldDate!(lastSep)).toBe('Rimmoon 30')
+    expect(sw.inWorldDate!(lastSep + 1)).toBe('Skymoon 1–2')
   })
 
-  it('has one boss per month, each the month’s last weekday fight or near it', () => {
-    const bosses = sw.pages.filter((p) => p.note?.startsWith('A single foe'))
-    expect(bosses.map((p) => p.month)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])
+  it('has one boss per month, and two in December (Ashe, then the longest night)', () => {
+    const bosses = sw.pages.filter((p) => p.note?.startsWith('A single foe') || p.note?.startsWith('The final battle'))
+    expect(bosses.map((p) => p.month)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12])
+    const dec = bosses.slice(-2).map((p) => `${p.month}-${p.day}`)
+    expect(dec).toEqual(['12-16', '12-21'])
+  })
+
+  it('every weekend page after the prologue is a Rest, including the last page of the year', () => {
+    for (const p of sw.pages.slice(1)) if (p.span === 2) expect(p.rest, p.title).toBe(true)
+    expect(sw.pages[sw.pages.length - 1].rest).toBe(true)
   })
 })
 
@@ -82,15 +98,30 @@ describe('Starwake: content integrity', () => {
     for (const id of sw.heroIds!) {
       const h = heroDef(id)
       for (const a of h.abilities) expect(() => ability(a)).not.toThrow()
-      for (const lvl of [2, 3, 4, 5, 6]) {
+      for (const lvl of [2, 3, 4, 5, 6, 7, 8]) {
         expect(h.levels[lvl], `${id} level ${lvl}`).toBeDefined()
         if (h.levels[lvl].ability) expect(() => ability(h.levels[lvl].ability!)).not.toThrow()
       }
     }
   })
 
-  it('each hero reaches level 6 by the end of Month 9', () => {
-    expect(levelUps).toBe(5)
+  it('each hero reaches level 8 by the end of November, with no level 9', () => {
+    expect(levelUps).toBe(7)
+    const lastLevelUp = sw.pages.map((p, i) => (effectsOf(p).some((e) => e.type === 'levelUp') ? i : -1)).filter((i) => i >= 0).pop()!
+    expect(sw.pages[lastLevelUp].month).toBe(11)
+    for (const id of sw.heroIds!) expect(heroDef(id).levels[9], id).toBeUndefined()
+  })
+
+  it('the catalog entry matches the pack', () => {
+    expect(sw.pageCount).toBe(sw.pages.length)
+    expect(sw.heroIds).toEqual(STARWAKE_HEROES)
+    expect(sw.firstDate).toBe(authoredDate(sw, 0))
+  })
+
+  it('every enemy used in the final quarter has a portrait for bosses', () => {
+    for (const p of sw.pages.filter((d) => d.month >= 10 && d.note?.match(/^(A single foe|The final battle)/))) {
+      for (const id of p.combat!.enemies) expect(PORTRAITS[id], id).toBeDefined()
+    }
   })
 
   it('the muster page offers all six heroes', () => {
@@ -113,7 +144,7 @@ describe('Starwake: scenes', () => {
 
 describe('Starwake: seeded playthrough', () => {
   for (const option of [0, 1, 2, 3, 4, 5]) {
-    it(`plays Months 1–9 with ${sw.heroIds![option]}`, () => {
+    it(`plays the whole year with ${sw.heroIds![option]}`, () => {
       let s = reduce(initialState(), { type: 'NEW_GAME', seed: 7 + option, campaignId: 'starwake', startDate: '2026-01-03' })
       for (let guard = 0; guard < 20000 && !s.finished; guard++) {
         if (s.pending) {
