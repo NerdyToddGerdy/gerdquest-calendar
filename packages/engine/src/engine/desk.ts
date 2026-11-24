@@ -2,9 +2,10 @@
 //
 // The player moves a single date back and forth. For each campaign, the
 // desk works out what that date shows (the page to play, a finished page,
-// nothing yet, …). Moving forward is allowed only when every campaign is
-// finished with the current date and the next date isn't in the future;
-// moving forward also turns the page in any campaign whose page ends today.
+// nothing yet, …). Moving forward is allowed when the SELECTED campaign
+// is finished with the current date and the next date isn't in the future.
+// Other campaigns may lag: moving forward turns the page only in campaigns
+// that completed their page, and the rest show as "behind" until caught up.
 import { addDays, type ISODate } from './calendar'
 import { campaign, pageDate, pageEndDate } from './campaign'
 import { canAdvance, reduce } from './state'
@@ -54,9 +55,28 @@ export function dayComplete(states: GameState[], date: ISODate): boolean {
   return states.every((s) => tabDone(s, date))
 }
 
-/** The › arrow: the day is complete and the next date isn't in the future. */
-export function canGoForward(states: GameState[], date: ISODate, today: ISODate): boolean {
-  return date < today && dayComplete(states, date)
+/**
+ * The › arrow: the selected campaign has nothing left to do on `date` and the
+ * next date isn't in the future. Other campaigns may lag behind.
+ */
+export function canGoForward(selected: GameState | undefined, date: ISODate, today: ISODate): boolean {
+  return !!selected && date < today && tabDone(selected, date)
+}
+
+/**
+ * Unfinished pages a campaign owes as of `date`: pages that start on or before
+ * `date` and aren't completed. Never counts pages after `date`.
+ */
+export function pagesOwed(s: GameState, date: ISODate): number {
+  if (s.finished) return 0
+  const c = campaign(s.campaignId)
+  const last = Math.min(pageIndexOn(s, date), c.pages.length - 1)
+  let n = 0
+  for (let i = s.dayIndex; i <= last; i++) {
+    if (i === s.dayIndex && canAdvance(s)) continue
+    n++
+  }
+  return n
 }
 
 /** Every campaign shows the same page on both dates (e.g. Saturday and Sunday of a weekend page). */
