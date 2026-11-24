@@ -14,6 +14,19 @@ export interface Release {
 
 export const CHANGELOG: Release[] = [
   {
+    version: '0.8.0',
+    date: '2026-11-24',
+    title: 'Two new journeys and a front door',
+    changes: [
+      'New campaign: The Verdant Accord, a legacy campaign told in chapters, where what happens in one chapter opens or closes choices in the next.',
+      'The Starwake now runs all year, with October, November and a finale on the longest night.',
+      'Questender has a home page that explains the game. If you already play, you go straight to your desk.',
+      'Privacy and terms pages, in plain language. Short version: your progress stays on your device.',
+      'Fairer heroes: the most fragile heroes in Brightwatch, Ember Road and Halcyon are tougher now, and the finales are a real fight.',
+      'Brightwatch’s late markets have new upgrades worth saving for.',
+    ],
+  },
+  {
     version: '0.7.0',
     date: '2026-11-24',
     title: 'Play at your own pace',
