@@ -1,7 +1,7 @@
 import { resolve } from 'node:path'
 import react from '@vitejs/plugin-react'
 import type { Plugin } from 'vite'
-import { defineConfig } from 'vitest/config'
+import { configDefaults, defineConfig } from 'vitest/config'
 
 // Where the site lives. Used for absolute URLs that cannot be relative
 // (Open Graph tags, sitemap.xml, robots.txt) and for 404.html, which GitHub
@@ -49,5 +49,5 @@ export default defineConfig(({ command }) => ({
       },
     },
   },
-  test: { setupFiles: ['./tests/setup.ts'] },
+  test: { setupFiles: ['./tests/setup.ts'], exclude: [...configDefaults.exclude, 'tests/e2e/**'] },
 }))
