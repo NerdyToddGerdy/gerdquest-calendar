@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import { persistenceMessage } from '../backup'
 import { isPersisted, requestPersistence } from '../deviceStorage'
 import { APP_VERSION, CHANGELOG } from '../changelog'
@@ -8,6 +8,7 @@ import { campaign } from '@questender/engine/campaign'
 import { STYLE_CATEGORIES, STYLE_LABELS, rewardTheme } from '@questender/engine/rewards'
 import { playedDates, type Action } from '@questender/engine/state'
 import type { DeskSlot } from './Desk'
+import { TUTORIAL_DAYS, readTutorial, restartTutorial, skipTutorial, subscribeTutorial } from './tutorialPrefs'
 
 interface Props {
   theme: ThemePref
@@ -36,6 +37,7 @@ export function Settings({ theme, onTheme, campaigns, slots, onDispatch, onImpor
     return () => window.removeEventListener('keydown', onKey)
   }, [onClose])
 
+  const tips = useSyncExternalStore(subscribeTutorial, readTutorial, readTutorial)
   const [latest, ...rest] = CHANGELOG
   const [persisted, setPersisted] = useState<boolean | null>(null)
   const [canPersist] = useState(() => typeof navigator !== 'undefined' && !!navigator.storage?.persist)
@@ -69,6 +71,16 @@ export function Settings({ theme, onTheme, campaigns, slots, onDispatch, onImpor
               </button>
             ))}
           </div>
+        </section>
+
+        <section className="settings-section" aria-label="Tutorial tips">
+          <h3>Tutorial tips</h3>
+          <p className="muted small">Pop-up tips point at what to click next during your first few days.</p>
+          {tips.off || tips.days.length >= TUTORIAL_DAYS ? (
+            <button onClick={restartTutorial}>Show tutorial tips again</button>
+          ) : (
+            <button onClick={skipTutorial}>Turn tutorial tips off</button>
+          )}
         </section>
 
         {slots.some((s) => rewardTheme(s.state.campaignId).styles.length > 0) && (

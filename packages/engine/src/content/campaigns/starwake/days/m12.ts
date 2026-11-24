@@ -25,7 +25,7 @@ export const M12: Draft[] = [
   page('Ice on the Stair', 'sw_stair',
     'Above the Cold Landing, frost has glazed every step. The Cloudback cannot follow here; the stair is too narrow. It circles once, sings, and settles in the sea of light below, to wait. From here on you climb on your own legs.',
     [pick('Choose one',
-      check('Cut footholds with Ismay’s chisel', 'dex', ['physical'], ['You slip and bark your shins.', [dmg(1)]], ['The steps bite, and you cut a safe path for everyone.', [virtue(1)]]),
+      check('Cut footholds with Ismay’s chisel', 'dex', ['physical'], ['You slip and scrape your shins.', [dmg(1)]], ['The steps bite, and you cut a safe path for everyone.', [virtue(1)]]),
       check('Rope the party together', 'int', ['physical'], 'The rope is more tangle than help.', ['Everyone is tied on. Nobody falls.', [buff('def', 1)]]),
     )]),
   fight('Hollow Shades', 'sw_stair',

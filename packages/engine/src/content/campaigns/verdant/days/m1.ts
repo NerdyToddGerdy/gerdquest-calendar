@@ -16,7 +16,7 @@ export const M1: Draft[] = [
     ],
     { note: 'Prologue. You play Agathe for the first few pages; then the story passes to the hero you choose.' })),
   page('The Green Box', 'va_town',
-    'A clerk in copper-buttoned livery arrives with a sealed box of green lacquer, a fat purse and a letter from the **Copperleaf Exchange** in Highmarrow. The box must ride in the middle wagon, unopened, and be delivered to Provost Ilsabet Crane by the first of next month. The fee is three times the usual. Agathe has never liked anything that paid three times the usual.',
+    'A clerk in copper-buttoned livery arrives with a sealed box of green lacquer, a fat purse and a letter from the Copperleaf Exchange in Highmarrow. The box must ride in the middle wagon, unopened, and be delivered to Provost Ilsabet Crane by the first of next month. The fee is three times the usual. Agathe has never liked anything that paid three times the usual.',
     [pick('Choose one',
       check('Take the job and ask no questions', 'cha', ['social'], 'The clerk counts out the advance very slowly.', ['The clerk pays half in advance without being asked.', [gold(4)]]),
       check('Weigh the box in your hands first', 'wis', ['perception'], 'It is heavier than it looks, and that’s all you learn.', ['It is light, and something inside it shifts like dry leaves. You feel, absurdly, that it is listening.', [buff('roll', 1)]]),

@@ -38,9 +38,13 @@ interface Props {
   dispatch: (a: Action) => void
   /** The player's local date (ISO). */
   today: string
+  /** Turn to the next page; undefined when that isn't possible yet. */
+  onNext?: () => void
+  /** Why the next page isn't available (from the desk). */
+  nextHint?: string
 }
 
-export function DayView({ state, day, dispatch, today }: Props) {
+export function DayView({ state, day, dispatch, today, onNext, nextHint }: Props) {
   const camp = campaign(state.campaignId)
   const realDate = pageDate(camp, state.dayIndex, state.startDate)
   const realEnd = pageEndDate(camp, state.dayIndex, state.startDate)
@@ -202,7 +206,7 @@ export function DayView({ state, day, dispatch, today }: Props) {
           <h3>{day.rest && lotteryToday ? 'Rest & lottery' : day.rest ? 'Rest' : 'Sunday lottery'}</h3>
           <div className="row">
             {day.rest && (
-              <button disabled={p.rested || !!pend} onClick={() => dispatch({ type: 'REST' })}>
+              <button className="rest-btn" disabled={p.rested || !!pend} onClick={() => dispatch({ type: 'REST' })}>
                 {p.rested ? 'Rested' : 'Take a Rest'}
               </button>
             )}
@@ -219,25 +223,82 @@ export function DayView({ state, day, dispatch, today }: Props) {
       {day.dock && <DockView state={state} dock={day.dock} dispatch={dispatch} />}
 
       <footer className="day-footer">
-        {canAdvance(state) ? (
-          lockedUntil ? (
-            <div className="locked-next">
-              <span className="muted small">Page complete. The next page unlocks</span>
-              <b>{formatShort(lockedUntil)}</b>
-              <span className="muted small">
-                {(() => {
-                  const n = daysBetween(today, lockedUntil)
-                  return n === 1 ? 'tomorrow' : `in ${n} days`
-                })()}
-              </span>
-            </div>
-          ) : (
-            <span className="muted">Page complete — use › at the top to move on.</span>
-          )
-        ) : (
-          <span className="muted small">Finish everything on this page to move on.</span>
-        )}
+        <PageEnd state={state} day={day} today={today} lockedUntil={lockedUntil} onNext={onNext} nextHint={nextHint} />
       </footer>
     </article>
+  )
+}
+
+/** What's left on this page, in plain words. */
+function remaining(state: GameState, day: Day): string[] {
+  const left: string[] = []
+  if (state.pending) left.push(state.pending.type === 'combat' ? 'Resolve the round you just rolled.' : 'Finish the roll in progress (press Accept result).')
+  const open = state.progress.steps.filter((x) => x === null).length
+  if (open) left.push(`Complete ${open === 1 ? 'the last step' : `the ${open} remaining steps`} above.`)
+  if (day.combat && !state.progress.combat?.done) left.push(state.progress.combat ? 'Finish the fight.' : 'Fight: press Begin the fight once the steps are done.')
+  if (day.dogfight && state.ship && !state.progress.dogfight?.done) left.push('Finish the ship battle.')
+  return left
+}
+
+interface EndProps {
+  state: GameState
+  day: Day
+  today: string
+  lockedUntil: string | null
+  onNext?: () => void
+  nextHint?: string
+}
+
+/**
+ * The bottom of the page: either what's left to do, or that the page is done
+ * and exactly what happens next (turn the page now, or come back on a date).
+ */
+function PageEnd({ state, day, today, lockedUntil, onNext, nextHint }: EndProps) {
+  if (!canAdvance(state)) {
+    const left = remaining(state, day)
+    return (
+      <div className="page-end todo">
+        <h3>Not done yet</h3>
+        {left.length ? (
+          <ul>
+            {left.map((t) => (
+              <li key={t}>{t}</li>
+            ))}
+          </ul>
+        ) : (
+          <p>Finish everything on this page to move on.</p>
+        )}
+      </div>
+    )
+  }
+  const optional = day.rest && !state.progress.rested ? ' You can still take a Rest above before you go.' : day.shop ? ' The shop above closes once you turn the page.' : ''
+  if (lockedUntil) {
+    const n = daysBetween(today, lockedUntil)
+    return (
+      <div className="page-end done" data-tour="page-locked">
+        <h3>✓ Page complete</h3>
+        <p>
+          That’s everything for today. One new page unlocks each real day, so the story continues{' '}
+          <b>{n === 1 ? 'tomorrow' : `in ${n} days`}</b>, on {formatShort(lockedUntil)}.{optional}
+        </p>
+        <p className="muted small">Until then you can look over your hero, read the Journal, or play a page in another campaign.</p>
+      </div>
+    )
+  }
+  return (
+    <div className="page-end done">
+      <h3>✓ Page complete</h3>
+      <p>Your progress is saved.{optional}</p>
+      {onNext ? (
+        <>
+          <button className="primary big" data-tour="next-page" onClick={onNext}>
+            Turn to the next page ›
+          </button>
+          {nextHint && <p className="muted small">{nextHint}</p>}
+        </>
+      ) : (
+        nextHint && <p className="muted small">{nextHint}</p>
+      )}
+    </div>
   )
 }
