@@ -947,6 +947,8 @@ button:disabled { opacity: 1; color: var(--muted); background: transparent; bord
 .tab.not-started { opacity: 0.72; }
 .tab.not-started > span:nth-child(2) { font-style: normal; }
 .tab-when { font-size: 0.78rem; color: var(--muted); }
+.tab-behind { font-size: 0.78rem; font-weight: 600; color: var(--bad); }
+.forward-hint { margin: 0.35rem 0 0; text-align: center; }
 .mark.none { color: var(--muted); }
 @media (max-width: 600px) {
   .cal-mark { width: 12px; height: 12px; border-width: 1.5px; font-size: 0.5rem; }
@@ -1222,3 +1224,22 @@ body {
   .day-panel { max-height: 85vh; }
   .calendar.with-panel { padding-bottom: 85vh; }
 }
+
+/* Backup reminder: a quiet strip under the top bar. */
+.backup-notice {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  width: min(1160px, calc(100% - 32px));
+  box-sizing: border-box;
+  margin: 10px auto 0;
+  padding: 10px 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  font-size: 0.92rem;
+}
+.backup-notice p { margin: 0; }

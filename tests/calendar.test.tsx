@@ -18,7 +18,7 @@ import { canTurnPage, nextPageLockedUntil, pagesBehind, slotStatus } from '@ques
 import { canAdvance, initialState, reduce } from '@questender/engine/state'
 import type { Campaign, Day, GameState } from '@questender/engine/types'
 import { normalizeState } from '../src/save'
-import { canGoForward, dayComplete, dayStatus, startingDate, tabView, turnPast } from '@questender/engine/desk'
+import { canGoForward, dayComplete, dayStatus, nextDeskDate, pagesOwed, pickTab, startingDate, tabView, turnPast, turnThrough } from '@questender/engine/desk'
 import { CalendarView } from '../src/ui/CalendarView'
 import { Desk } from '../src/ui/Desk'
 
@@ -269,14 +269,102 @@ describe('desk: one date, every campaign', () => {
     expect(tabView(s, AFTER_END)).toEqual({ kind: 'finished' })
   })
 
-  it('› needs every campaign done with the date, and the next date not in the future', () => {
+  it('› needs the selected campaign done with the date, and the next date not in the future', () => {
     const a = newGame()
     const b = newGame('2026-01-06') // a second run that starts a day later
     expect(dayComplete([a, b], '2026-01-05')).toBe(false) // a still has page 1 to play
     const aDone = finishPage(a)
     expect(dayComplete([aDone, b], '2026-01-05')).toBe(true) // b hasn't started yet
-    expect(canGoForward([aDone, b], '2026-01-05', '2026-01-06')).toBe(true)
-    expect(canGoForward([aDone, b], '2026-01-05', '2026-01-05')).toBe(false) // tomorrow is in the future
+    expect(canGoForward(aDone, '2026-01-05', '2026-01-06')).toBe(true)
+    expect(canGoForward(aDone, '2026-01-05', '2026-01-05')).toBe(false) // tomorrow is in the future
+    expect(canGoForward(undefined, '2026-01-05', '2026-01-06')).toBe(false)
+  })
+
+  describe('independent forward', () => {
+    const lag = newGame() // never played: owes Jan 5
+    const done = finishPage(newGame())
+
+    it('is enabled when only a non-selected campaign lags', () => {
+      expect(dayComplete([done, lag], '2026-01-05')).toBe(false)
+      expect(canGoForward(done, '2026-01-05', '2026-01-09')).toBe(true)
+    })
+
+    it('is disabled when the selected campaign still has work', () => {
+      expect(canGoForward(lag, '2026-01-05', '2026-01-09')).toBe(false)
+    })
+
+    it('a blocked selected campaign cannot go forward', () => {
+      expect(tabView(lag, '2026-01-07').kind).toBe('blocked')
+      expect(canGoForward(lag, '2026-01-07', '2026-01-09')).toBe(false)
+    })
+
+    it('stops at the weekend as one stop, and never goes past today', () => {
+      const states = [done, lag]
+      expect(nextDeskDate(states, '2026-01-09', '2026-01-20')).toBe('2026-01-10')
+      expect(nextDeskDate(states, '2026-01-10', '2026-01-20')).toBe('2026-01-12') // Sat–Sun is one stop
+      expect(nextDeskDate(states, '2026-01-09', '2026-01-09')).toBe('2026-01-10') // caller gates on canGoForward
+      expect(canGoForward(done, '2026-01-09', '2026-01-09')).toBe(false)
+      expect(canGoForward(done, '2026-01-05', '2026-01-05')).toBe(false)
+    })
+
+    it('turns only campaigns that completed the page', () => {
+      const [t1, t2] = [done, lag].map((s) => turnThrough(s, '2026-01-05', '2026-01-06'))
+      expect(t1.dayIndex).toBe(1)
+      expect(t2.dayIndex).toBe(0)
+      expect(tabView(t2, '2026-01-06')).toEqual({ kind: 'blocked', page: 1, catchUp: '2026-01-05' })
+      expect(pagesOwed(t2, '2026-01-06')).toBe(2)
+      expect(pagesOwed(t1, '2026-01-06')).toBe(1) // its Jan 6 page, not yet played
+      expect(pagesOwed(t2, '2026-01-04')).toBe(0) // nothing about future dates
+    })
+
+    it('can catch up later, and the calendar stays consistent', () => {
+      const t2 = turnThrough(lag, '2026-01-05', '2026-01-06')
+      expect(dayStatus(t2, '2026-01-05', '2026-01-09')).toBe('available')
+      expect(dayStatus(t2, '2026-01-09', '2026-01-09')).toBe('available')
+      expect(dayStatus(t2, '2026-01-10', '2026-01-09')).toBe('locked')
+      expect(dayStatus(turnThrough(done, '2026-01-05', '2026-01-06'), '2026-01-05', '2026-01-09')).toBe('completed')
+    })
+
+    it('pickTab prefers a campaign with something to do on the new date', () => {
+      const d = turnThrough(done, '2026-01-05', '2026-01-06')
+      const l = turnThrough(lag, '2026-01-05', '2026-01-06')
+      const slots = [
+        { id: 'done', state: d },
+        { id: 'lag', state: l },
+      ]
+      expect(pickTab(slots, '2026-01-06', 'lag')).toBe('done') // lag is blocked, done has Jan 6 to play
+      expect(pickTab(slots, '2026-01-06', 'done')).toBe('done')
+      expect(pickTab(slots, '2026-01-05', 'done')).toBe('lag') // lag has Jan 5 to play
+    })
+
+    it('the forward hint names the lagging campaign without showing its pages', () => {
+      const html = renderToStaticMarkup(
+        <Desk
+          slots={[
+            { id: 'a', state: done },
+            { id: 'b', state: lag },
+          ]}
+          viewDate="2026-01-05"
+          today="2026-01-09"
+          selected="a"
+          theme="system"
+          sound={false}
+          onSelect={() => {}}
+          onDate={() => {}}
+          onForward={() => {}}
+          onDispatch={() => {}}
+          onNew={() => {}}
+          onImport={() => {}}
+          onExportAll={() => {}}
+          onToggleSound={() => {}}
+          onTheme={() => {}}
+          onDelete={() => {}}
+          onTodayChanged={() => {}}
+        />,
+      )
+      expect(html).toContain('is 1 page behind; you can catch up any time')
+      expect(html).not.toContain(bw.pages[3].title)
+    })
   })
 
   it('› turns the page only where the page ends that day (weekend pages span two)', () => {

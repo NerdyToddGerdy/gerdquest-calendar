@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { formatLong, formatShort, formatSpan, parseISO, type ISODate } from '@questender/engine/calendar'
 import { campaign } from '@questender/engine/campaign'
-import { canGoForward, deskSpanEnd, earliestDate, prevDeskDate, startingDate, tabDone, tabView, type TabView } from '@questender/engine/desk'
+import { canGoForward, deskSpanEnd, earliestDate, pagesOwed, prevDeskDate, startingDate, tabView, type TabView } from '@questender/engine/desk'
 import { canAdvance, currentDay, type Action } from '@questender/engine/state'
 import type { GameState } from '@questender/engine/types'
 import { exportSave } from '../save'
@@ -17,7 +17,9 @@ import { Journal } from './Journal'
 import { Log } from './Log'
 import { Notes } from './Notes'
 import { revealTab } from './revealTab'
+import { BackupNotice } from './BackupNotice'
 import { Settings } from './Settings'
+import { recordExport } from '../deviceStorage'
 import { readDevOverride, writeDevOverride } from './today'
 
 export interface DeskSlot {
@@ -60,22 +62,33 @@ export function Desk(p: Props) {
     markSeen()
     setNews(false)
   }
+  const [exportedAt, setExportedAt] = useState(0)
+  const exportAll = () => {
+    p.onExportAll()
+    recordExport(p.today)
+    setExportedAt((n) => n + 1)
+  }
   const states = p.slots.map((s) => s.state)
   const active = p.slots.find((s) => s.id === p.selected) ?? p.slots[0]
   const earliest = earliestDate(states, p.today)
   // A weekend page shows as one date range (Sat – Sun) rather than two stops.
   const spanEnd = deskSpanEnd(states, p.viewDate)
   // Nothing new until the day after the range, so › waits until then.
-  const forward = canGoForward(states, p.viewDate, p.today) && spanEnd < p.today
+  const forward = canGoForward(active?.state, p.viewDate, p.today) && spanEnd < p.today
   const catchUp = startingDate(states, p.today)
 
+  // Campaigns other than the selected one that still owe pages as of this date.
+  const lagging = p.slots
+    .filter((s) => s !== active)
+    .map((s) => ({ title: campaign(s.state.campaignId).title, owed: pagesOwed(s.state, p.viewDate) }))
+    .filter((l) => l.owed > 0)
+  const laggingText = lagging.map((l) => `${l.title} is ${l.owed} ${l.owed === 1 ? 'page' : 'pages'} behind`).join('; ')
   let forwardHint = ''
   if (!forward) {
     if (spanEnd >= p.today) forwardHint = 'Tomorrow’s pages unlock at midnight.'
-    else {
-      const open = p.slots.filter((s) => !tabDone(s.state, p.viewDate)).map((s) => campaign(s.state.campaignId).title)
-      forwardHint = `Finish today’s page in: ${open.join(', ')}`
-    }
+    else if (active) forwardHint = `Finish this page in ${campaign(active.state.campaignId).title} to move on.`
+  } else if (laggingText) {
+    forwardHint = `${laggingText}; you can catch up any time.`
   }
 
   return (
@@ -149,8 +162,18 @@ export function Desk(p: Props) {
             setSettings(false)
             p.onImport()
           }}
-          onExportAll={p.onExportAll}
+          onExportAll={exportAll}
           onClose={() => setSettings(false)}
+        />
+      )}
+
+      {p.slots.length > 0 && (
+        <BackupNotice
+          campaigns={p.slots.length}
+          playedDays={states.reduce((n, s) => n + s.journal.length, 0)}
+          today={p.today}
+          exportedAt={exportedAt}
+          onExportAll={exportAll}
         />
       )}
 
@@ -232,6 +255,8 @@ export function Desk(p: Props) {
             </button>
           </header>
 
+          {forwardHint && <p className="forward-hint small muted">{forwardHint}</p>}
+
           <div className="tabs" role="tablist">
             {p.slots.map((s) => {
               const v = tabView(s.state, p.viewDate)
@@ -247,9 +272,10 @@ export function Desk(p: Props) {
                   onClick={() => p.onSelect(s.id)}
                   ref={s.id === active.id ? revealTab : undefined}
                 >
-                  <TabMark view={v} state={s.state} />
+                  <TabMark view={v} state={s.state} owed={pagesOwed(s.state, p.viewDate)} />
                   {v.kind === 'notStarted' && <span className="tab-when">starts {shortDate(v.begins)}</span>}
                   <span>{c.title}</span>
+                  {v.kind === 'blocked' && <span className="tab-behind">{pagesOwed(s.state, p.viewDate)} behind</span>}
                   <span className="tab-hero">{s.state.hero?.name.split(' ')[0]}</span>
                 </button>
               )
@@ -275,7 +301,7 @@ export function Desk(p: Props) {
 }
 
 /** Small status mark on each tab; the words live in the title and aria-label. */
-function TabMark({ view, state }: { view: TabView; state: GameState }) {
+function TabMark({ view, state, owed }: { view: TabView; state: GameState; owed: number }) {
   const mark = (cls: string, glyph: string, label: string) => (
     <span className={`mark ${cls}`} role="img" aria-label={label} title={label}>
       {glyph}
@@ -284,7 +310,7 @@ function TabMark({ view, state }: { view: TabView; state: GameState }) {
   if (view.kind === 'play') {
     return canAdvance(state) ? mark('done', '✓', 'Done for this day') : mark('todo', '●', 'Ready to play')
   }
-  if (view.kind === 'blocked') return mark('behind', '!', 'Behind: earlier pages are unfinished')
+  if (view.kind === 'blocked') return mark('behind', '!', `Behind by ${owed} ${owed === 1 ? 'page' : 'pages'}: catch up any time`)
   if (view.kind === 'past') return mark('done', '✓', 'Completed')
   if (view.kind === 'finished') return mark('done', '★', 'Campaign finished')
   return mark('none', '○', `Not started: begins ${formatLong(view.begins)}`)
@@ -326,7 +352,7 @@ export function CampaignPanel({ slot, viewDate, today, dispatch, onDate, onDelet
     main = (
       <article className="day notice">
         <h2>Catch up first</h2>
-        <p className="narrative">This campaign still has unfinished pages from earlier days.</p>
+        <p className="narrative">This campaign is {pagesOwed(state, viewDate)} {pagesOwed(state, viewDate) === 1 ? 'page' : 'pages'} behind. You can catch up any time.</p>
         <button className="primary" onClick={() => onDate(view.catchUp)}>
           Go to {formatLong(view.catchUp)}
         </button>
