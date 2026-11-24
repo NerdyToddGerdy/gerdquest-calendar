@@ -5,7 +5,7 @@ export const ABILITIES: AbilityDef[] = [
   // Juniper Okafor — prologue courier
   { id: 'hd_knowlanes', name: 'Know the Lanes', kind: 'passive', bonus: 2, tags: ['stealth', 'physical'], text: '+2 to sneaking and running the station’s back corridors.' },
   { id: 'hd_secondlook', name: 'Second Look', kind: 'reroll', per: 'page', uses: 1, text: 'Once per page: reroll a d20 and take the new result.' },
-  { id: 'hd_patchup', name: 'Patch Up', kind: 'heal', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 4, bonus: 1, text: '1 Charges: recover d4+1 health.' },
+  { id: 'hd_patchup', name: 'Patch Up', kind: 'heal', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 4, bonus: 1, text: '1 Charge: recover d4+1 health.' },
 
   // Marisol Reyes — pilot
   { id: 'hd_flightsense', name: 'Flight Sense', kind: 'passive', bonus: 2, tags: ['piloting', 'perception'], text: '+2 to piloting and spotting trouble.' },
@@ -17,18 +17,18 @@ export const ABILITIES: AbilityDef[] = [
   { id: 'hd_heavylifter', name: 'Heavy Lifter', kind: 'passive', bonus: 2, tags: ['physical'], text: '+2 to feats of strength and endurance.' },
   { id: 'hd_overcharge', name: 'Overcharge', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 6, slots: ['damage'], text: '1 Surge: add d6 to a Damage roll.' },
   { id: 'hd_bulkhead', name: 'Bulkhead Stance', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 4, slots: ['defense'], text: '1 Surge: add d4 to a Defense roll.' },
-  { id: 'hd_shrugoff', name: 'Shrug It Off', kind: 'heal', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 6, bonus: 1, text: '1 Charges: recover d6+1 health.' },
+  { id: 'hd_shrugoff', name: 'Shrug It Off', kind: 'heal', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 6, bonus: 1, text: '1 Charge: recover d6+1 health.' },
 
   // Ilse Varga — field medic
   { id: 'hd_triage', name: 'Triage', kind: 'passive', bonus: 2, tags: ['medical', 'lore'], text: '+2 to medicine and technical knowledge.' },
-  { id: 'hd_stimshot', name: 'Stim Shot', kind: 'heal', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 6, bonus: 2, text: '1 Charges: recover d6+2 health.' },
+  { id: 'hd_stimshot', name: 'Stim Shot', kind: 'heal', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 6, bonus: 2, text: '1 Charge: recover d6+2 health.' },
   { id: 'hd_diagnose', name: 'Diagnose', kind: 'reroll', per: 'page', uses: 1, text: 'Once per page: reroll a d20 and take the new result.' },
   { id: 'hd_adrenal', name: 'Adrenal Spike', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 6, slots: ['defense'], text: '1 Surge: add d6 to a Defense roll.' },
 
   // Kit Sorensen — slicer
   { id: 'hd_backdoor', name: 'Backdoor', kind: 'passive', bonus: 2, tags: ['tech', 'stealth'], text: '+2 to hacking systems and slipping past security.' },
   { id: 'hd_spoof', name: 'Spoof', kind: 'reroll', per: 'page', uses: 1, text: 'Once per page: reroll a d20 and take the new result.' },
-  { id: 'hd_signaljam', name: 'Signal Jam', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 4, slots: ['check', 'attack', 'defense'], text: '1 Charges: add d4 to any d20 roll.' },
+  { id: 'hd_signaljam', name: 'Signal Jam', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 4, slots: ['check', 'attack', 'defense'], text: '1 Charge: add d4 to any d20 roll.' },
   { id: 'hd_overclock', name: 'Overclock', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 8, slots: ['damage'], text: '1 Surge: add d8 to a Damage roll.' },
 
   // Ash Tanaka-Bell — gunner
@@ -47,8 +47,8 @@ export const ABILITIES: AbilityDef[] = [
   { id: 'hd_barrelroll', name: 'Barrel Roll', kind: 'addDie', per: 'page', uses: 1, die: 8, slots: ['evasion', 'defense'], text: 'Once per page: add d8 to an Evasion or Defense roll.' },
   { id: 'hd_aceflight', name: 'Ace Flying', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 12, slots: ['aim', 'evasion'], text: '1 Surge: add d12 to a ship’s Aim or Evasion roll.' },
   { id: 'hd_breachcharge', name: 'Breaching Charge', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 10, slots: ['damage'], text: '1 Surge: add d10 to a Damage roll.' },
-  { id: 'hd_ironwall', name: 'Iron Wall', kind: 'heal', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 8, bonus: 2, text: '1 Charges: recover d8+2 health.' },
-  { id: 'hd_fieldsurgery', name: 'Field Surgery', kind: 'heal', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 10, bonus: 2, text: '1 Charges: recover d10+2 health.' },
+  { id: 'hd_ironwall', name: 'Iron Wall', kind: 'heal', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 8, bonus: 2, text: '1 Charge: recover d8+2 health.' },
+  { id: 'hd_fieldsurgery', name: 'Field Surgery', kind: 'heal', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 10, bonus: 2, text: '1 Charge: recover d10+2 health.' },
   { id: 'hd_clinicaleye', name: 'Clinical Eye', kind: 'addDie', per: 'page', uses: 1, die: 6, slots: ['check', 'attack'], text: 'Once per page: add d6 to a check or Attack roll.' },
   { id: 'hd_ghostprotocol', name: 'Ghost Protocol', kind: 'addDie', per: 'page', uses: 1, die: 6, slots: ['check', 'defense', 'evasion'], text: 'Once per page: add d6 to a check, Defense or Evasion roll.' },
   { id: 'hd_cascade', name: 'Cascade Failure', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 12, slots: ['damage', 'aim'], text: '1 Surge: add d12 to a Damage or Aim roll.' },

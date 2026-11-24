@@ -286,7 +286,7 @@ describe('Surge and Charges pools', () => {
   it('a Charges ability spends points, and is disabled when the pool is short', () => {
     let s = as('hd_ilse', 3) // Stim Shot: 1 Charges, pool 2
     const stim = ability('hd_stimshot')
-    expect(costLabel(stim)).toBe('1 Charges')
+    expect(costLabel(stim)).toBe('1 Charge')
     s = act(s, { type: 'USE_ABILITY', ability: 'hd_stimshot' }, [3])
     expect(s.hero!.pools!.charges).toBe(1)
     s = act(s, { type: 'USE_ABILITY', ability: 'hd_stimshot' }, [3])
