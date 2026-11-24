@@ -45,5 +45,7 @@ export function growPools(hero: Hero, gain: Partial<Record<PoolId, number>> | un
 
 /** Short label for an ability's cost, e.g. "2 Spell". */
 export function costLabel(a: AbilityDef): string | null {
-  return a.cost ? `${a.cost.amount} ${POOL_NAMES[a.cost.pool]}` : null
+  if (!a.cost) return null
+  const name = a.cost.pool === 'charges' && a.cost.amount === 1 ? 'Charge' : POOL_NAMES[a.cost.pool]
+  return `${a.cost.amount} ${name}`
 }

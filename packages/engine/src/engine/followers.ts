@@ -7,19 +7,42 @@ export function isFollower(def: MemberDef): boolean {
   return !!def.follower
 }
 
-/** Hire: pay the fee, add the follower, and lend the hero any abilities they don't already have. */
+/**
+ * Hire: pay the fee and add the follower. Abilities the hero lacks are lent;
+ * abilities the hero already has get +1 instead (a bigger passive bonus, or one
+ * extra use for limited abilities).
+ */
 export function hireFollower(hero: Hero, party: PartyMember[], def: MemberDef): { hero: Hero; party: PartyMember[] } {
-  const granted = (def.follower?.grants ?? []).filter((id) => !hero.abilities.includes(id))
+  const grants = def.follower?.grants ?? []
+  const granted = grants.filter((id) => !hero.abilities.includes(id))
+  const boosted = grants.filter((id) => hero.abilities.includes(id))
+  const abilityBoost = { ...hero.abilityBoost }
+  for (const id of boosted) abilityBoost[id] = (abilityBoost[id] ?? 0) + 1
   return {
-    hero: { ...hero, glint: hero.glint - def.fee, abilities: [...hero.abilities, ...granted] },
-    party: [...party, { defId: def.id, hp: def.maxHp, usedPage: false, granted }],
+    hero: {
+      ...hero,
+      glint: hero.glint - def.fee,
+      abilities: [...hero.abilities, ...granted],
+      ...(boosted.length ? { abilityBoost } : {}),
+    },
+    party: [...party, { defId: def.id, hp: def.maxHp, usedPage: false, granted, ...(boosted.length ? { boosted } : {}) }],
   }
 }
 
-/** A follower leaves: take back the abilities they lent. */
+/** A follower leaves: take back exactly what they lent or added. */
 export function releaseFollower(hero: Hero, m: PartyMember): Hero {
   const lent = new Set(m.granted ?? [])
-  return { ...hero, abilities: hero.abilities.filter((id) => !lent.has(id)) }
+  let h: Hero = { ...hero, abilities: hero.abilities.filter((id) => !lent.has(id)) }
+  if (m.boosted?.length) {
+    const abilityBoost = { ...hero.abilityBoost }
+    for (const id of m.boosted) {
+      const n = (abilityBoost[id] ?? 0) - 1
+      if (n > 0) abilityBoost[id] = n
+      else delete abilityBoost[id]
+    }
+    h = { ...h, abilityBoost }
+  }
+  return h
 }
 
 /**

@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { weekday } from '@questender/engine/calendar'
 import { authoredDate, campaign, isLotteryPage, pageDate, pageSpan } from '@questender/engine/campaign'
-import { heroDef, item } from '@questender/engine/content'
+import { ability, heroDef, item } from '@questender/engine/content'
+import { resolveDeath } from '@questender/engine/death'
+import { createHero, levelUp } from '@questender/engine/hero'
+import { abilityReady, costLabel, growPools } from '@questender/engine/pools'
+import { FRONTIER } from '@questender/engine/ruleset'
 import { scriptedRng } from '@questender/engine/rng'
 import { canAdvance, initialState, reduce, type Action } from '@questender/engine/state'
 import type { GameState, RollSlot, Ship } from '@questender/engine/types'
@@ -254,3 +258,69 @@ describe('full playthrough', () => {
 function hdPage(s: GameState) {
   return hd.pages[s.dayIndex]
 }
+
+describe('Surge and Charges pools', () => {
+  const act = (s: GameState, a: Action, rolls: number[] = []) => reduce(s, a, scriptedRng(rolls))
+  /** A Halcyon game on the captain page (it has a Rest), playing `heroId` at `hp`. */
+  const as = (heroId: string, hp?: number): GameState => {
+    const s = { ...newGame(), dayIndex: 6 }
+    const hero = createHero(heroDef(heroId))
+    return { ...s, hero: { ...hero, hp: hp ?? hero.hp } }
+  }
+
+  it('every Halcyon per-Rest ability is pool-costed, and level-1 pools equal the old uses per Rest', () => {
+    const lv1: Record<string, Partial<Record<string, number>>> = {
+      hd_juniper: { charges: 1 }, hd_tamsin: { surge: 2 }, hd_brask: { surge: 4 },
+      hd_ilse: { charges: 2 }, hd_kit: { charges: 3 }, hd_ash: { surge: 4 }, hd_seren: { surge: 1 },
+    }
+    for (const [id, pools] of Object.entries(lv1)) expect(heroDef(id).pools).toEqual(pools)
+    for (const id of Object.keys(lv1)) {
+      const def = heroDef(id)
+      const all = [...def.abilities, ...Object.values(def.levels).flatMap((l) => (l.ability ? [l.ability] : []))]
+      for (const a of all.map(ability)) {
+        if (a.kind !== 'passive' && a.per === 'rest') expect(a.cost, a.id).toBeDefined()
+      }
+    }
+  })
+
+  it('a Charges ability spends points, and is disabled when the pool is short', () => {
+    let s = as('hd_ilse', 3) // Stim Shot: 1 Charges, pool 2
+    const stim = ability('hd_stimshot')
+    expect(costLabel(stim)).toBe('1 Charge')
+    s = act(s, { type: 'USE_ABILITY', ability: 'hd_stimshot' }, [3])
+    expect(s.hero!.pools!.charges).toBe(1)
+    s = act(s, { type: 'USE_ABILITY', ability: 'hd_stimshot' }, [3])
+    expect(s.hero!.pools!.charges).toBe(0)
+    expect(abilityReady(s.hero!, stim)).toBe(false)
+    expect(act(s, { type: 'USE_ABILITY', ability: 'hd_stimshot' }, [3])).toBe(s)
+  })
+
+  it('Surge abilities need Surge and show their cost', () => {
+    expect(newGame().hero!.poolMax).toEqual({ charges: 1 }) // prologue courier
+    const hero = createHero(heroDef('hd_ash'))
+    expect(hero.pools).toEqual({ surge: 4 })
+    expect(abilityReady({ ...hero, pools: { surge: 0 } }, ability('hd_lockon'))).toBe(false)
+    expect(abilityReady(hero, ability('hd_lockon'))).toBe(true)
+    expect(costLabel(ability('hd_lockon'))).toBe('1 Surge')
+  })
+
+  it('a Rest refills Surge and Charges', () => {
+    let s = as('hd_brask')
+    s = { ...s, hero: { ...s.hero!, pools: { surge: 0 } } }
+    s = act(s, { type: 'REST' })
+    expect(s.hero!.pools!.surge).toBe(4)
+    let k = as('hd_kit')
+    k = { ...k, hero: { ...k.hero!, pools: { charges: 1 } } }
+    expect(act(k, { type: 'REST' }).hero!.pools!.charges).toBe(3)
+  })
+
+  it('level-ups raise pools by the new ability’s old uses, and a death drain empties them', () => {
+    const def = heroDef('hd_brask')
+    const lv2 = growPools(levelUp(createHero(def), def.levels[2]), def.levels[2].pools)
+    expect(lv2.poolMax).toEqual({ surge: 4, charges: 1 })
+    expect(lv2.pools).toEqual({ surge: 4, charges: 1 })
+    expect(lv2.abilities).toContain('hd_shrugoff')
+    const drained = resolveDeath(createHero(def), scriptedRng([4]), FRONTIER.death, 'credits').hero
+    expect(drained.pools).toEqual({ surge: 0 })
+  })
+})

@@ -554,6 +554,8 @@ export interface Hero {
   poolMax?: Partial<Record<PoolId, number>>
   /** Current points per pool. */
   pools?: Partial<Record<PoolId, number>>
+  /** +1 per follower that duplicates a skill the hero already has (passive bonus, or an extra use). */
+  abilityBoost?: Record<string, number>
 }
 
 /** A follower: hired for a fee, paid upkeep at every Rest, lends abilities while present. */
@@ -570,6 +572,8 @@ export interface MemberDef {
 export interface PartyMember {
   /** Ability ids this follower actually added to the hero (removed when they leave). */
   granted?: string[]
+  /** Ability ids the hero already had, so this follower added +1 to them instead (see Hero.abilityBoost). */
+  boosted?: string[]
 }
 
 // ---------- Player notes ----------

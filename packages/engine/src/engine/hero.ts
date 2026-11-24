@@ -72,10 +72,26 @@ export function clampVirtue(v: number): number {
   return Math.max(-10, Math.min(10, v))
 }
 
+/** Extra +1s lent by followers who duplicate a skill the hero already has. */
+export function abilityBoost(hero: Hero, id: string): number {
+  return hero.abilityBoost?.[id] ?? 0
+}
+
+/** Passive bonus including follower boosts. */
+export function passiveBonus(hero: Hero, def: AbilityDef): number {
+  return def.kind === 'passive' ? def.bonus + abilityBoost(hero, def.id) : 0
+}
+
+/** Uses per page/rest including follower boosts. */
+export function maxUses(hero: Hero, def: AbilityDef): number {
+  if (def.kind === 'passive') return Infinity
+  return def.uses + abilityBoost(hero, def.id)
+}
+
 export function usesLeft(hero: Hero, def: AbilityDef): number {
   if (def.kind === 'passive') return Infinity
   const used = (def.per === 'rest' ? hero.usedRest : hero.usedPage)[def.id] ?? 0
-  return Math.max(0, def.uses - used)
+  return Math.max(0, maxUses(hero, def) - used)
 }
 
 export function markUsed(hero: Hero, def: AbilityDef): Hero {

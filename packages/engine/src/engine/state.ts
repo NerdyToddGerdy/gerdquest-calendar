@@ -16,6 +16,7 @@ import {
   markUsed,
   maxHp,
   usesLeft,
+  passiveBonus,
 } from './hero'
 import { activateWithCard, activateWithDice, canHire, drawCard, freshDeck, shuffle } from './party'
 import { rest } from './rest'
@@ -336,7 +337,7 @@ function step(s: Draft, day: Day, action: Action, rng: Rng): boolean {
         for (const id of s.hero.abilities) {
           const a = ability(id)
           if (a.kind === 'passive' && a.tags.some((t) => opt.check!.tags?.includes(t))) {
-            mods.push({ label: a.name, value: a.bonus })
+            mods.push({ label: a.name, value: passiveBonus(s.hero, a) })
           }
         }
         mods.push(...situationalMods(s.hero, opt.check))

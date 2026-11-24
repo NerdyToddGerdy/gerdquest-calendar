@@ -1,5 +1,5 @@
 import { ability, item } from './content'
-import { maxHp, woundName } from './hero'
+import { maxHp, maxUses, woundName } from './hero'
 import type { Rng } from './rng'
 import { MODERN } from './ruleset'
 import type { DeathTable, GearSlot, Hero, ItemDef, WoundKind } from './types'
@@ -66,9 +66,11 @@ export function resolveDeath(
     const usedRest = { ...h.usedRest }
     for (const id of h.abilities) {
       const a = ability(id)
-      if (a.kind !== 'passive' && a.per === 'rest') usedRest[id] = a.uses
+      if (a.kind !== 'passive' && a.per === 'rest') usedRest[id] = maxUses(h, a)
     }
-    h = { ...h, usedRest }
+    // Pool-costed abilities are "spent" by emptying the pools.
+    const pools = h.pools ? Object.fromEntries(Object.keys(h.pools).map((k) => [k, 0])) : h.pools
+    h = { ...h, usedRest, ...(pools ? { pools } : {}) }
     lines.push(`Rolled ${r}: ${e.text}`)
     break
   }
