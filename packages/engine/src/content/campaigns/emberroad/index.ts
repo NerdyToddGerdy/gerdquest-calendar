@@ -1,5 +1,6 @@
+import { EMBER_ROAD_ENTRY } from './meta'
 import type { Campaign } from '../../../engine/types'
-import { EMBER_ROAD_CONTENT, EMBER_ROAD_HEROES } from './content'
+import { EMBER_ROAD_CONTENT } from './content'
 import { DAYS } from './days/index'
 
 /** The northern calendar: one in-world month per real month. */
@@ -13,15 +14,8 @@ function inWorldDate(i: number): string {
 }
 
 export const emberRoad: Campaign = {
-  id: 'emberroad',
-  title: 'The Ember Road',
-  blurb: 'Someone is snuffing the waystones that light the frozen north road. Classic rules: followers, spell points, and a gods-or-gold death table.',
-  authoredYear: 2022,
-  rulesetId: 'classic',
+  ...EMBER_ROAD_ENTRY,
   pages: DAYS,
   content: EMBER_ROAD_CONTENT,
-  startHero: 'er_tamsin',
-  heroIds: EMBER_ROAD_HEROES,
-  startItems: { ration: 3, er_draught: 1 },
   inWorldDate,
 }

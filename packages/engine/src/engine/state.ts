@@ -1,6 +1,6 @@
 // Game state and the single reducer that applies every player action.
 import { ability, heroDef, item, LOOT_TABLE, member } from './content'
-import { authoredDate, campaign, campaignPages, DEFAULT_CAMPAIGN, isLotteryPage, isPageUnlocked, pageDate } from './campaign'
+import { campaign, campaignEntry, campaignPages, DEFAULT_CAMPAIGN, isLotteryPage, isPageUnlocked, pageDate } from './campaign'
 import { combatRounds, d20Mods, resolveRound, rollRound, startCombat } from './combat'
 import { resolveDeath } from './death'
 import { isD20, isNat1, isNat20, makeSlot, pickBand, slotTotal } from './dice'
@@ -93,7 +93,7 @@ export function initialState(seed = 1): GameState {
     log: [],
     finished: false,
     campaignId: DEFAULT_CAMPAIGN,
-    startDate: authoredDate(campaign(DEFAULT_CAMPAIGN), 0),
+    startDate: campaignEntry(DEFAULT_CAMPAIGN).firstDate,
     journal: [],
   }
 }
@@ -296,7 +296,7 @@ export function reduce(state: GameState, action: Action, injected?: Rng): GameSt
   if (action.type === 'NEW_GAME') {
     const fresh = initialState(action.seed)
     fresh.campaignId = action.campaignId ?? fresh.campaignId
-    fresh.startDate = action.startDate ?? authoredDate(campaign(fresh.campaignId), 0)
+    fresh.startDate = action.startDate ?? campaignEntry(fresh.campaignId).firstDate
     fresh.rulesetId = campaign(fresh.campaignId).rulesetId
     const camp = campaign(fresh.campaignId)
     const heroId = camp.startHero ?? action.heroId

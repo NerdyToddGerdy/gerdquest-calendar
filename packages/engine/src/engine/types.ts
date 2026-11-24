@@ -359,7 +359,12 @@ export interface Day {
   span?: number
 }
 
-export interface Campaign {
+/**
+ * The small, always-loaded part of a campaign: enough to list it, pick a start
+ * date and a hero, and size the calendar, without shipping any pages. The full
+ * `Campaign` (pages + content) is loaded on demand and registered at runtime.
+ */
+export interface CampaignEntry {
   id: string
   title: string
   blurb: string
@@ -367,6 +372,27 @@ export interface Campaign {
   authoredYear: number
   /** Ruleset preset this campaign runs on (see phase 2). */
   rulesetId: RulesetId
+  /** Number of pages in the loaded campaign. */
+  pageCount: number
+  /** Authored date of the first page (ISO). Its weekday is the campaign's anchor weekday. */
+  firstDate: string
+  /** Heroes offered when starting (default: the base heroes). */
+  heroIds?: string[]
+  /** A fixed opening hero (e.g. a prologue character); skips the hero pick. */
+  startHero?: string
+  /** Items given to a new hero (default: 2 rations + 1 Mendwater Vial). */
+  startItems?: Record<string, number>
+  /** d10 table for hidden loot icons (default: the base table). */
+  lootTable?: string[]
+  /**
+   * Pages 0 … prologuePages−1 are the prologue. Rulesets whose lottery is
+   * `afterPrologue` don't offer it on those pages.
+   */
+  prologuePages?: number
+}
+
+/** A loaded campaign: its catalog entry plus pages and content. */
+export interface Campaign extends CampaignEntry {
   pages: Day[]
 }
 
@@ -402,27 +428,11 @@ export interface ContentPack {
 export interface Campaign {
   /** The campaign's own heroes, items, enemies… (ids must be unique across all campaigns). */
   content?: ContentPack
-  /** Heroes offered when starting (default: the base heroes). */
-  heroIds?: string[]
-  /** A fixed opening hero (e.g. a prologue character); skips the hero pick. */
-  startHero?: string
-  /** Items given to a new hero (default: 2 rations + 1 Mendwater Vial). */
-  startItems?: Record<string, number>
-  /** d10 table for hidden loot icons (default: the base table). */
-  lootTable?: string[]
   /** In-world date label for page N (default: "Firstfrost N+1"). */
   inWorldDate?: (pageIndex: number) => string
 }
 
 // ---------- Prologue & vehicles (frontier rules) ----------
-
-export interface Campaign {
-  /**
-   * Pages 0 … prologuePages−1 are the prologue. Rulesets whose lottery is
-   * `afterPrologue` don't offer it on those pages.
-   */
-  prologuePages?: number
-}
 
 /** The six ship compartments; a d6 picks which one a point of damage hits. */
 export type CompartmentId = 'drive' | 'helm' | 'sickbay' | 'guns' | 'bunks' | 'hold'

@@ -3,7 +3,7 @@
 //   questender.slot.<slotId>  → GameState
 // The single-save format from v1 (questender.save.v1) is migrated on first load.
 import { toISO, type ISODate } from '@questender/engine/calendar'
-import { alignedOnOrBefore, campaign, DEFAULT_CAMPAIGN, defaultStartDate, pageDate } from '@questender/engine/campaign'
+import { alignedOnOrBefore, campaign, campaignEntry, DEFAULT_CAMPAIGN, defaultStartDate, listCatalog, loadCampaigns, pageDate } from '@questender/engine/campaign'
 import type { GameState, JournalEntry } from '@questender/engine/types'
 import { loadEntries, sanitizeEntries, type CalendarEntry } from './calendarNotes'
 
@@ -62,11 +62,11 @@ export function normalizeState(raw: GameState, today: ISODate): GameState {
   const s = { ...raw } as GameState & LegacyFields
   if (!s.campaignId) s.campaignId = DEFAULT_CAMPAIGN
   if (!s.startDate) {
-    const c = campaign(s.campaignId)
+    const c = campaignEntry(s.campaignId)
     s.startDate = s.playYear ? alignedOnOrBefore(c, toISO(s.playYear, 1, 1)) : defaultStartDate(c, today)
   }
   delete s.playYear
-  if (!s.rulesetId) s.rulesetId = campaign(s.campaignId).rulesetId
+  if (!s.rulesetId) s.rulesetId = campaignEntry(s.campaignId).rulesetId
   if (!Array.isArray(s.journal)) {
     const c = campaign(s.campaignId)
     const journal: JournalEntry[] = []
@@ -84,6 +84,18 @@ export function normalizeState(raw: GameState, today: ISODate): GameState {
 
 function validState(s: GameState | null): s is GameState {
   return !!s && s.version === 1 && !!s.hero
+}
+
+/**
+ * Campaigns the saved games on this device need loaded before they can be read
+ * (slots, plus a v1 save and its default campaign). Unknown ids are skipped.
+ */
+export function savedCampaignIds(): string[] {
+  const ids = new Set(listSlots().map((m) => m.campaignId))
+  const legacy = read<GameState>(LEGACY_KEY)
+  if (legacy) ids.add(legacy.campaignId || DEFAULT_CAMPAIGN)
+  const known = new Set(listCatalog().map((e) => e.id))
+  return [...ids].filter((id) => known.has(id))
 }
 
 export function listSlots(): SlotMeta[] {
@@ -196,17 +208,37 @@ export function parseSaves(text: string, today: ISODate): GameState[] {
   return list.map((s) => {
     if (!validState(s)) throw new Error('Not a Questender save file.')
     const n = normalizeState(s, today)
-    campaign(n.campaignId) // throws for unknown campaigns
+    campaignEntry(n.campaignId) // throws for unknown campaigns
     return n
   })
 }
 
+/** Campaign ids named by an export file (unparseable or odd files name none). */
+function campaignIdsIn(text: string): string[] {
+  try {
+    const raw = JSON.parse(text) as { campaigns?: unknown; campaignId?: unknown } | null
+    const list = Array.isArray(raw?.campaigns) ? (raw.campaigns as { campaignId?: unknown }[]) : [raw]
+    return list.flatMap((s) => (typeof s?.campaignId === 'string' ? [s.campaignId] : []))
+  } catch {
+    return []
+  }
+}
+
+/** Fetch the packs an export file needs, so the synchronous parse below can use them. */
+async function loadPacksFor(text: string) {
+  const known = new Set(listCatalog().map((e) => e.id))
+  await loadCampaigns(campaignIdsIn(text).filter((id) => known.has(id)))
+}
+
 export async function importSaves(file: File, today: ISODate): Promise<GameState[]> {
-  return parseSaves(await file.text(), today)
+  const text = await file.text()
+  await loadPacksFor(text)
+  return parseSaves(text, today)
 }
 
 /** Read an export file: its campaigns plus any calendar entries. */
 export async function importFile(file: File, today: ISODate): Promise<{ states: GameState[]; calendar: CalendarEntry[] }> {
   const text = await file.text()
+  await loadPacksFor(text)
   return { states: parseSaves(text, today), calendar: parseCalendar(text) }
 }

@@ -4,9 +4,9 @@ import { item } from '@questender/engine/content'
 import { ITEMS } from '@questender/engine/content/items'
 import { ItemTip } from '../src/ui/ItemTip'
 import { itemEffect } from '../src/ui/itemEffect'
-import { CAMPAIGNS } from '@questender/engine/content/campaigns'
+import { listCampaigns } from '@questender/engine/campaign'
 
-const allIds = [...ITEMS.map((i) => i.id), ...CAMPAIGNS.flatMap((c) => c.content?.items?.map((i) => i.id) ?? [])]
+const allIds = [...ITEMS.map((i) => i.id), ...listCampaigns().flatMap((c) => c.content?.items?.map((i) => i.id) ?? [])]
 
 describe('item tooltips', () => {
   it('describes what every item in every campaign does', () => {

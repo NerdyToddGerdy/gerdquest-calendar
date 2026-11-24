@@ -6,7 +6,6 @@
   "description": "Pure Questender game engine and bundled original (free) campaign content. No React, DOM or storage dependencies.",
   "exports": {
     "./content": "./src/engine/content.ts",
-    "./content/campaigns": "./src/content/campaigns/index.ts",
     "./content/*": "./src/content/*.ts",
     "./*": "./src/engine/*.ts"
   },

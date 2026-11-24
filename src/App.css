@@ -1243,3 +1243,5 @@ body {
   font-size: 0.92rem;
 }
 .backup-notice p { margin: 0; }
+/* Placeholder while a campaign pack downloads: keeps its height so nothing jumps. */
+.opening { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; min-height: 40vh; text-align: center; }

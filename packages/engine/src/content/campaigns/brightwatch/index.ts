@@ -1,5 +1,6 @@
+import { BRIGHTWATCH_ENTRY } from './meta'
 import type { Campaign } from '../../../engine/types'
-import { BRIGHTWATCH_CONTENT, TRIAL_HEROES } from './content'
+import { BRIGHTWATCH_CONTENT } from './content'
 import { DAYS } from './days'
 
 /** In-world month names, January → December. */
@@ -14,15 +15,8 @@ function inWorldDate(index: number): string {
 }
 
 export const brightwatch: Campaign = {
-  id: 'brightwatch',
-  title: 'The Lamp at Brightwatch',
-  blurb:
-    'Six wardens, one week each, and the fog that never quite leaves the Lantern Marches. Then you choose who carries the lamp out to sea.',
-  authoredYear: 2024,
-  rulesetId: 'modern',
+  ...BRIGHTWATCH_ENTRY,
   pages: DAYS,
   content: BRIGHTWATCH_CONTENT,
-  heroIds: TRIAL_HEROES,
-  startHero: 'wren',
   inWorldDate,
 }

@@ -8,21 +8,18 @@
 // - Every remaining point of damage rolls a d6 to pick a compartment, which
 //   loses 1 Integrity. At 0 Integrity its crew and upgrade are destroyed;
 //   damage landing on a compartment already at 0 hits the hero instead.
-import { CAMPAIGNS } from '../content/campaigns'
+import { craftDef, crewDef, shipDef, upgradeDef } from './content'
 import { rollD100, isNat1, slotTotal } from './dice'
 import type { Rng } from './rng'
 import type {
   Compartment,
   CompartmentId,
-  CraftDef,
-  CrewDef,
   DogfightState,
   Mod,
   RollSlot,
   Ship,
   ShipDef,
   ShipStats,
-  ShipUpgradeDef,
 } from './types'
 
 export const COMPARTMENTS: CompartmentId[] = ['drive', 'helm', 'sickbay', 'guns', 'bunks', 'hold']
@@ -35,20 +32,7 @@ export const COMPARTMENT_NAMES: Record<CompartmentId, string> = {
   hold: 'Hold',
 }
 
-function registry<T extends { id: string }>(key: 'ships' | 'crew' | 'upgrades' | 'craft', what: string) {
-  const map = new Map<string, T>()
-  for (const c of CAMPAIGNS) for (const x of (c.content?.[key] ?? []) as unknown as T[]) map.set(x.id, x)
-  return (id: string): T => {
-    const v = map.get(id)
-    if (!v) throw new Error(`Unknown ${what}: ${id}`)
-    return v
-  }
-}
-
-export const shipDef = registry<ShipDef>('ships', 'ship')
-export const crewDef = registry<CrewDef>('crew', 'crew member')
-export const upgradeDef = registry<ShipUpgradeDef>('upgrades', 'ship upgrade')
-export const craftDef = registry<CraftDef>('craft', 'enemy craft')
+export { craftDef, crewDef, shipDef, upgradeDef }
 
 export function createShip(def: ShipDef): Ship {
   return {

@@ -6,30 +6,103 @@
 // same weekday as the campaign's first page. Every page then shifts by the
 // same number of days, so weekdays, weekend pages and the Sunday lottery all
 // line up with the real calendar — no need to wait for January.
-import { CAMPAIGNS } from '../content/campaigns'
+import { registerContent } from './content'
 import { addDays, daysBetween, toISO, weekday, type ISODate } from './calendar'
 import { rulesFor } from './ruleset'
-import type { Campaign, Day } from './types'
+import type { Campaign, CampaignEntry, Day } from './types'
 
-const byId = new Map(CAMPAIGNS.map((c) => [c.id, c]))
+const entries = new Map<string, CampaignEntry>()
+const loaded = new Map<string, Campaign>()
+const loaders = new Map<string, () => Promise<Campaign>>()
+const inFlight = new Map<string, Promise<Campaign>>()
 
-export const DEFAULT_CAMPAIGN = CAMPAIGNS[0].id
+/** Campaign a new game starts in when nothing else is chosen. */
+export const DEFAULT_CAMPAIGN = 'brightwatch'
 
 /** How many days back a new campaign aims to start, giving warm-up pages to catch up on. */
 export const WARMUP_DAYS = 7
 
+/** Add a catalog entry (idempotent for the same id; a different entry with a taken id throws). */
+export function registerCatalog(entry: CampaignEntry): void {
+  const prev = entries.get(entry.id)
+  if (prev === entry) return
+  if (prev) throw new Error(`Duplicate campaign id: ${entry.id}`)
+  entries.set(entry.id, entry)
+}
+
+/**
+ * Add a loaded campaign (pages and content). Idempotent for the same object; a
+ * different campaign with a taken id throws. Also catalogs it if needed.
+ */
+export function registerCampaign(c: Campaign): void {
+  if (loaded.get(c.id) === c) return
+  if (loaded.has(c.id)) throw new Error(`Duplicate campaign id: ${c.id}`)
+  if (!entries.has(c.id)) registerCatalog(c)
+  registerContent(c.id, c.content ?? {})
+  loaded.set(c.id, c)
+}
+
+/** Say how to fetch a campaign's pack later. The loader may import() it. */
+export function registerCampaignLoader(id: string, loader: () => Promise<Campaign>): void {
+  loaders.set(id, loader)
+}
+
+/**
+ * Fetch a campaign's pack (if it isn't loaded yet) and register it. Concurrent
+ * calls share one fetch; a failed fetch can be retried by calling again.
+ */
+export function loadCampaign(id: string): Promise<Campaign> {
+  const done = loaded.get(id)
+  if (done) return Promise.resolve(done)
+  const running = inFlight.get(id)
+  if (running) return running
+  const loader = loaders.get(id)
+  if (!loader) return Promise.reject(new Error(`Unknown campaign: ${id}`))
+  const p = loader()
+    .then((c) => {
+      registerCampaign(c)
+      return c
+    })
+    .finally(() => inFlight.delete(id))
+  inFlight.set(id, p)
+  return p
+}
+
+export function loadCampaigns(ids: Iterable<string>): Promise<Campaign[]> {
+  return Promise.all([...new Set(ids)].map(loadCampaign))
+}
+
+export function isCampaignLoaded(id: string): boolean {
+  return loaded.has(id)
+}
+
+/** The small always-available entry for a campaign (throws if it isn't in the catalog). */
+export function campaignEntry(id: string): CampaignEntry {
+  const e = entries.get(id)
+  if (!e) throw new Error(`Unknown campaign: ${id}`)
+  return e
+}
+
+/** Every known campaign, loaded or not. */
+export function listCatalog(): CampaignEntry[] {
+  return [...entries.values()]
+}
+
+/** The full campaign. Throws if it isn't in the catalog, or its pack hasn't been loaded yet. */
 export function campaign(id: string): Campaign {
-  const c = byId.get(id)
-  if (!c) throw new Error(`Unknown campaign: ${id}`)
-  return c
+  const c = loaded.get(id)
+  if (c) return c
+  if (entries.has(id)) throw new Error(`Campaign not loaded yet: ${id} (await loadCampaign first)`)
+  throw new Error(`Unknown campaign: ${id}`)
 }
 
 export function campaignPages(id: string): Day[] {
   return campaign(id).pages
 }
 
+/** Campaigns whose packs are loaded. */
 export function listCampaigns(): Campaign[] {
-  return CAMPAIGNS
+  return [...loaded.values()]
 }
 
 /** Calendar days a page covers (weekend pages cover 2). */
@@ -92,12 +165,12 @@ export function isLotteryPage(c: Campaign, index: number, startDate: ISODate): b
 }
 
 /** Weekday (0 = Sunday) a campaign's first page was authored on. */
-export function anchorWeekday(c: Campaign): number {
-  return weekday(authoredDate(c, 0))
+export function anchorWeekday(c: CampaignEntry): number {
+  return weekday(c.firstDate)
 }
 
 /** The latest date on or before `date` that falls on the campaign's anchor weekday. */
-export function alignedOnOrBefore(c: Campaign, date: ISODate): ISODate {
+export function alignedOnOrBefore(c: CampaignEntry, date: ISODate): ISODate {
   return addDays(date, -((weekday(date) - anchorWeekday(c) + 7) % 7))
 }
 
@@ -105,7 +178,7 @@ export function alignedOnOrBefore(c: Campaign, date: ISODate): ISODate {
  * Start date for a new campaign: the anchor-weekday date nearest to
  * WARMUP_DAYS ago, so there are 4–10 warm-up pages to catch up on.
  */
-export function defaultStartDate(c: Campaign, today: ISODate): ISODate {
+export function defaultStartDate(c: CampaignEntry, today: ISODate): ISODate {
   const target = addDays(today, -WARMUP_DAYS)
   const before = alignedOnOrBefore(c, target)
   const after = addDays(before, 7)
@@ -113,7 +186,7 @@ export function defaultStartDate(c: Campaign, today: ISODate): ISODate {
 }
 
 /** Start dates to offer: the default plus a week earlier / later (never after today). */
-export function startDateOptions(c: Campaign, today: ISODate): ISODate[] {
+export function startDateOptions(c: CampaignEntry, today: ISODate): ISODate[] {
   const d = defaultStartDate(c, today)
   return [addDays(d, 7), d, addDays(d, -7)].filter((x) => x <= today)
 }
