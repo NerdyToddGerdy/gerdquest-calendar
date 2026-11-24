@@ -71,6 +71,8 @@ One existing test (`tests/classic.test.ts`, static Defense) asserted exact Frost
 
 ## Balance pass 2: hero spread, Brightwatch economy, Ember Road finale
 
+> **Starwake now runs a full year** (#49 added October–December). Its current figures, 200 runs: every run finishes, median 1 death-table hit per run, months 1–11 between 3% and 24% of runs hitting the table, December 41% (The Hollow Needle 35.5%, Ashe Calloway 23.5%). See "starwake: full year" in the tables. Starwake was not part of balance pass 2.
+
 A second pass on Brightwatch, Ember Road and Halcyon (200 runs each, seeds 1000..1199, same bot). "Before" is the state after the first tuning pass; Starwake was not touched. The simulator now reports a per-hero table (mean, median, p90 and deaths per run by month) in the generated tables.
 
 ### Headline: before -> after pass 2
@@ -396,9 +398,9 @@ Most lethal pages:
 
 Deaths per hero: sw_tanu 14.12 (34 runs), sw_reyna 7.09 (34 runs), sw_bram 4.12 (33 runs), sw_isadora 11.91 (33 runs), sw_kip 19.39 (33 runs), sw_sel 11.21 (33 runs)
 
-### starwake: after tuning
+### starwake: full year (after #49 added October–December)
 
-200 runs. Finished the year: 100.0%. Death-table hits per run: median 1 (p10 0, p90 5).
+200 runs. Finished the year: 100.0%. Death-table hits per run: median 1 (p10 0, p90 9).
 Prologue (first 7 pages): 0.5% of runs hit 0 HP, 0.01 times per run on average.
 
 | Month | Runs | Deaths | % runs with a death | Level med (p10–p90) | Currency med (p10–p90) | HP % at month end | Heal items (median) |
@@ -412,23 +414,35 @@ Prologue (first 7 pages): 0.5% of runs hit 0 HP, 0.01 times per run on average.
 | 7 | 200 | 71 | 21.5% | 5 (5–5) | 22 (5–38) | 100 (100–100) | 4 |
 | 8 | 200 | 7 | 3.0% | 5 (5–5) | 15 (1–31) | 100 (100–100) | 4 |
 | 9 | 200 | 57 | 23.5% | 6 (6–6) | 43 (18–66) | 55 (46–77) | 3 |
+| 10 | 200 | 42 | 14.0% | 7 (7–7) | 27 (11–54) | 97 (88–100) | 4 |
+| 11 | 200 | 48 | 19.0% | 8 (8–8) | 42 (13–75) | 100 (82–100) | 4 |
+| 12 | 200 | 123 | 41.0% | 8 (8–8) | 44 (6–87) | 100 (97–100) | 4 |
 
 Most lethal pages:
 
 | Page | Month | Enemies | Deaths | % runs |
 |---|---|---|---|---|
+| sw-304 The Hollow Needle | 12 | The Hollow Needle | 71 | 35.5% |
 | sw-233 The Gilt Gull | 9 | The Gilt Gull | 47 | 23.5% |
+| sw-300 Ashe Calloway | 12 | Ashe Calloway | 47 | 23.5% |
 | sw-180 Bosun Harrow Teague | 7 | Bosun Harrow Teague | 39 | 19.5% |
 | sw-48 The Brine Foreman’s Dredge | 2 | The Brine Foreman’s Dredge | 38 | 19.0% |
 | sw-102 Your Reflection | 4 | Your Reflection | 35 | 17.5% |
+| sw-282 The Lantern-Cage | 11 | The Lantern-Cage | 35 | 17.5% |
 | sw-72 The Storm Roc Matriarch | 3 | The Storm Roc Matriarch | 29 | 14.5% |
 | sw-150 The Deepmaw | 6 | The Deepmaw | 28 | 14.0% |
-| sw-168 More Petrels | 7 | Storm Petrel Spirit, Storm Petrel Spirit, Storm Petrel Spirit | 24 | 12.0% |
-| sw-120 The Stern Gallery | 5 | Drowned Marine, Wreck-Wraith | 21 | 10.5% |
-| sw-126 Admiral Veyra Sund | 5 | Admiral Veyra Sund | 10 | 5.0% |
-| sw-24 The Tidewarden | 1 | The Tidewarden | 9 | 4.5% |
+| sw-258 The Cloudback | 10 | The Cloudback | 27 | 13.5% |
 
-Deaths per hero: sw_tanu 2.71 (34 runs), sw_reyna 0.12 (34 runs), sw_bram 0.00 (33 runs), sw_isadora 1.85 (33 runs), sw_kip 2.76 (33 runs), sw_sel 2.15 (33 runs)
+Deaths per hero (death-table hits per run):
+
+| Hero | Runs | Mean | Median | p90 | M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 | M9 | M10 | M11 | M12 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| sw_tanu | 34 | 4.00 | 2.0 | 11.0 | 0.00 | 0.44 | 0.32 | 0.41 | 0.47 | 0.15 | 0.50 | 0.03 | 0.38 | 0.26 | 0.26 | 0.76 |
+| sw_reyna | 34 | 0.12 | 0.0 | 0.7 | 0.00 | 0.06 | 0.00 | 0.06 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| sw_bram | 33 | 0.00 | 0.0 | 0.0 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| sw_isadora | 33 | 2.55 | 2.0 | 6.4 | 0.12 | 0.27 | 0.21 | 0.27 | 0.15 | 0.18 | 0.33 | 0.00 | 0.30 | 0.09 | 0.12 | 0.48 |
+| sw_kip | 33 | 5.09 | 3.0 | 13.0 | 0.18 | 0.21 | 0.27 | 0.30 | 0.21 | 0.42 | 0.39 | 0.18 | 0.58 | 0.36 | 0.67 | 1.30 |
+| sw_sel | 33 | 4.24 | 3.0 | 9.0 | 0.00 | 0.30 | 0.09 | 0.09 | 0.21 | 0.09 | 0.91 | 0.00 | 0.45 | 0.55 | 0.39 | 1.15 |
 
 ### emberroad: after balance pass 2
 
