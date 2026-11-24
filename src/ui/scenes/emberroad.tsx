@@ -3,7 +3,7 @@ import type { EmberScene } from '@questender/engine/types'
 
 // Backgrounds for the Ember Road: a frozen north road, its waystones, and the
 // places along it. Same style as Scene.tsx (400x200 viewBox, layered SVG);
-// every shape here is original to Questender.
+// every shape here is original to GerdQuest Calendar.
 
 export const EMBER_SKIES: Record<EmberScene, [string, string]> = {
   er_road: ['#2a3550', '#b9c4d2'],

@@ -5,7 +5,7 @@ A sea campaign with one chapter per month, twelve in all (313 pages). Months
 and home. Its structure through September follows the user's nine-chapter *Voyage of the Fallen Star* box set:
 a port opening, an island hunt for star-shards, a climb, a strange island, a
 deathly sea, the star's resting place, a forge, a library and a final battle.
-**Every name, character, place and plot beat here is original to Questender.**
+**Every name, character, place and plot beat here is original to GerdQuest Calendar.**
 None of the box set's story, NPCs, places or monsters are reused.
 
 ## The premise
@@ -107,4 +107,4 @@ every ship on the Saltreach finding its way home.
   a reinforced hull, the diving bell and storm-rigging. Its condition matters
   in the Month 7 storm, the Month 9 battle and the voyage beyond.
 
-All characters, places and plot are original to Questender.
+All characters, places and plot are original to GerdQuest Calendar.

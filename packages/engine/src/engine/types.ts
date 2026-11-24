@@ -1,4 +1,4 @@
-// Core type definitions for the Questender rules engine.
+// Core type definitions for the GerdQuest Calendar rules engine.
 
 export type Trait = 'str' | 'dex' | 'con' | 'int' | 'wis' | 'cha'
 export const TRAITS: Trait[] = ['str', 'dex', 'con', 'int', 'wis', 'cha']

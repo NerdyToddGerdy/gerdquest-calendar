@@ -69,7 +69,7 @@ jobs:
           path: dist
 
   # End-to-end: builds once with the test-only date pin and drives the
-  # production bundle (served under /questender/) in Chromium. Runs in parallel
+  # production bundle (served under /gerdquest-calendar/) in Chromium. Runs in parallel
   # with the jobs above. See tests/e2e/ and the README.
   e2e:
     name: e2e

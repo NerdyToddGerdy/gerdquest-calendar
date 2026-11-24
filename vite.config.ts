@@ -6,9 +6,9 @@ import { configDefaults, defineConfig } from 'vitest/config'
 // Where the site lives. Used for absolute URLs that cannot be relative
 // (Open Graph tags, sitemap.xml, robots.txt) and for 404.html, which GitHub
 // Pages serves from any depth. For the planned custom domain, build with
-//   SITE_URL=https://questender.example/ SITE_BASE=/ npm run build
-const SITE_URL = (process.env.SITE_URL ?? 'https://nerdytoddgerdy.github.io/questender/').replace(/\/?$/, '/')
-const SITE_BASE = (process.env.SITE_BASE ?? '/questender/').replace(/\/?$/, '/')
+//   SITE_URL=https://gerdquest.example/ SITE_BASE=/ npm run build
+const SITE_URL = (process.env.SITE_URL ?? 'https://nerdytoddgerdy.github.io/gerdquest-calendar/').replace(/\/?$/, '/')
+const SITE_BASE = (process.env.SITE_BASE ?? '/gerdquest-calendar/').replace(/\/?$/, '/')
 
 // Replaces __SITE_URL__ / __SITE_BASE__ in every page and emits robots.txt and
 // sitemap.xml. In dev both resolve to the local server.
@@ -17,7 +17,7 @@ function sitePlugin(command: string): Plugin {
   const url = build ? SITE_URL : '/'
   const base = build ? SITE_BASE : '/'
   return {
-    name: 'questender-site',
+    name: 'gerdquest-site',
     transformIndexHtml: { order: 'pre', handler: (html) => html.replaceAll('__SITE_URL__', url).replaceAll('__SITE_BASE__', base) },
     generateBundle() {
       if (!build) return
@@ -33,7 +33,7 @@ function sitePlugin(command: string): Plugin {
 
 // https://vite.dev/config/
 // Builds use relative asset paths so the game works from a sub-path
-// such as GitHub Pages (https://<user>.github.io/questender/).
+// such as GitHub Pages (https://<user>.github.io/gerdquest-calendar/).
 // Pages: index.html (landing), play/index.html (the game), 404.html.
 export default defineConfig(({ command }) => ({
   base: command === 'build' ? './' : '/',

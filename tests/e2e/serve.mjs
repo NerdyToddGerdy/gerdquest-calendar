@@ -1,4 +1,4 @@
-// Tiny static server for the e2e suite: mounts a build folder at /questender/
+// Tiny static server for the e2e suite: mounts a build folder at /gerdquest-calendar/
 // (like GitHub Pages) and answers unknown paths with 404.html and status 404.
 // Usage: node tests/e2e/serve.mjs [dir] [port]
 import { createServer } from 'node:http'
@@ -7,7 +7,7 @@ import { extname, join, normalize, resolve } from 'node:path'
 
 const root = resolve(process.argv[2] ?? 'dist-e2e')
 const port = Number(process.argv[3] ?? process.env.E2E_PORT ?? 4173)
-const mount = '/questender/'
+const mount = '/gerdquest-calendar/'
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -36,7 +36,7 @@ async function resolveFile(pathname) {
 
 createServer(async (req, res) => {
   const { pathname } = new URL(req.url ?? '/', 'http://localhost')
-  if (pathname === '/questender') {
+  if (pathname === '/gerdquest-calendar') {
     res.writeHead(301, { location: mount }).end()
     return
   }

@@ -1,4 +1,4 @@
-# Questender: notes for Claude
+# GerdQuest Calendar: notes for Claude
 
 Read `docs/PRINCIPLES.md` before designing features. In particular:
 
@@ -7,7 +7,7 @@ Read `docs/PRINCIPLES.md` before designing features. In particular:
   avatar tokens, borders, keepsakes) are earned only by playing.
 - **The only possible future revenue is buying campaigns** (issue #3). A
   purchased campaign never sells cosmetics or advantages.
-- All story, characters, art and names are original to Questender; never
+- All story, characters, art and names are original to GerdQuest Calendar; never
   reuse third-party content (use only the *structure* of reference material).
 
 Workflow and architecture: `docs/adr/` (trunk-based PRs with CI, the engine

@@ -4,7 +4,7 @@ import type { VerdantScene } from '@questender/engine/types'
 // Backgrounds for The Verdant Accord: deep green forest roads, and the city of
 // Highmarrow built inside the ring of an ancient fallen tree. Same style as
 // Scene.tsx (400x200 viewBox, layered SVG); every shape here is original to
-// Questender.
+// GerdQuest Calendar.
 
 export const VERDANT_SKIES: Record<VerdantScene, [string, string]> = {
   va_road: ['#5f8fae', '#d9d2a8'],

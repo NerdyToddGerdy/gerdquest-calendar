@@ -9,6 +9,16 @@ Settings → What's new. Add every release to both, and bump `package.json`
 
 Versions before 0.5.0 were reconstructed after the fact from the code.
 
+## [0.10.0] — 2026-11-24
+
+### Changed
+- Renamed the game from Questender to **GerdQuest Calendar**: page titles, landing, legal pages,
+  manifest (`short_name` GerdQuest), share image, README, export file names (`gerdquest-…json`).
+- The repository is now `NerdyToddGerdy/gerdquest-calendar` and the site moved to
+  `https://nerdytoddgerdy.github.io/gerdquest-calendar/` (`SITE_URL`/`SITE_BASE` defaults, e2e
+  server path). Saves are unaffected: browser storage is per origin and the storage keys, bundle
+  format and the internal `@questender/engine` package name are unchanged.
+
 ## [0.9.0] — 2026-11-24
 
 ### Added

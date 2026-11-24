@@ -25,7 +25,7 @@ describe('export all / import', () => {
   })
 
   it('rejects junk, empty bundles and bundles with a bad campaign', () => {
-    expect(() => parseSaves('not json', today)).toThrow(/Not a Questender save/)
+    expect(() => parseSaves('not json', today)).toThrow(/Not a GerdQuest Calendar save/)
     expect(() => parseSaves(JSON.stringify(bundleSaves([], today)), today)).toThrow(/no campaigns/)
     const bad = { ...start('brightwatch'), campaignId: 'nope' }
     expect(() => parseSaves(JSON.stringify(bundleSaves([start('halcyon'), bad], today)), today)).toThrow()
