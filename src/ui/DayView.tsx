@@ -4,7 +4,7 @@ import { campaign, isLotteryPage, pageDate, pageEndDate } from '@questender/engi
 import { dayLabel, enemy } from '@questender/engine/content'
 import { rules } from '@questender/engine/ruleset'
 import { nextPageLockedUntil } from '@questender/engine/status'
-import { canAdvance, maxRounds, stepAvailable, stepLocked, stepsDone, type Action } from '@questender/engine/state'
+import { canAdvance, maxRounds, meetsRequirement, stepAvailable, stepLocked, stepsDone, type Action } from '@questender/engine/state'
 import { TRAIT_NAMES } from '@questender/engine/types'
 import type { Day, GameState } from '@questender/engine/types'
 import { HeroPreviewButton } from './HeroPreview'
@@ -114,11 +114,12 @@ export function DayView({ state, day, dispatch, today }: Props) {
                 const isChosen = chosen === oi
                 const isRolling = pend?.type === 'check' && pend.step === si && pend.option === oi
                 if (chosen !== null && !isChosen) return null
+                const locked = !meetsRequirement(state, opt.requires)
                 return (
-                  <div key={oi} className={`option ${isChosen ? 'chosen' : ''}`}>
+                  <div key={oi} className={`option ${isChosen ? 'chosen' : ''} ${locked ? 'legacy-locked' : ''}`}>
                     <button
                       className="option-btn"
-                      disabled={!available}
+                      disabled={!available || locked}
                       onClick={() => dispatch({ type: 'CHOOSE', step: si, option: oi })}
                     >
                       <span>{pickOne && !/^[A-Z]\)/.test(opt.label) ? `${letters[oi]}) ` : ''}{opt.label}</span>
@@ -128,6 +129,7 @@ export function DayView({ state, day, dispatch, today }: Props) {
                           {opt.check.tags?.length ? <small> · {opt.check.tags.join(', ')}</small> : null}
                         </span>
                       )}
+                      {opt.requires && chosen === null && <span className="legacy-req">{legacyLabel(state, opt.requires)}</span>}
                     </button>
                     {chosen === null &&
                       opt.effects?.map((e, ei) => e.type === 'setHero' && <HeroPreviewButton key={ei} heroId={e.heroId} />)}
@@ -236,4 +238,12 @@ export function DayView({ state, day, dispatch, today }: Props) {
       </footer>
     </article>
   )
+}
+
+/** "Legacy: Hero of the Greenway" / "Closed by legacy: …" for a gated option. */
+function legacyLabel(state: GameState, requires: string): string {
+  const negate = requires.startsWith('!')
+  const id = negate ? requires.slice(1) : requires
+  const name = campaign(state.campaignId).legacy?.find((l) => l.id === id)?.name ?? id
+  return negate ? `Closed by legacy: ${name}` : `Legacy: ${name}`
 }
