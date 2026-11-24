@@ -9,6 +9,27 @@ Settings → What's new. Add every release to both, and bump `package.json`
 
 Versions before 0.5.0 were reconstructed after the fact from the code.
 
+## [0.7.0] — 2026-11-24
+
+### Added
+- Runtime campaign registry (`registerCampaign`, `registerCatalog`, `registerCampaignLoader`,
+  `loadCampaign(s)`, `registerContent`) and lazily imported campaign packs: each campaign has a
+  small catalog entry (`meta.ts`) and its pages/content load on demand via
+  `@questender/engine/content/bundled`. Main JS 1,018 kB → 427 kB (#42, refs #3 #15).
+- Web app manifest and icon set, `theme-color` and Apple web-app tags; no service worker yet
+  per ADR 0003 (d) (#41, closes #8).
+- Persistent storage request (`navigator.storage.persist()`), storage status in Settings, and a
+  snoozable backup reminder on the desk (`src/backup.ts`, `src/deviceStorage.ts`) (#41).
+- Balance simulator (`packages/engine/src/sim/`, `npm run sim`) and `docs/balance/REPORT.md` (#44).
+
+### Changed
+- › advances when the selected campaign is done with the viewed date; other campaigns may lag
+  and show "N behind" (`canGoForward`, `pagesOwed` in `desk.ts`) (#40).
+- Enemy numbers retuned across all four campaigns from simulator results (#44).
+- Followers add +1 to a skill the hero already has instead of nothing (#43).
+- Halcyon Surge and Charges are point pools; the death table's drain also empties pools (#43).
+- Contrast fixes in the light theme (accent, muted, good) and for band labels (#43).
+
 ## [0.6.1] — 2026-11-23
 
 ### Changed

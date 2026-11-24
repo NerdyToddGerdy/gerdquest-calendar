@@ -14,6 +14,21 @@ export interface Release {
 
 export const CHANGELOG: Release[] = [
   {
+    version: '0.7.0',
+    date: '2026-11-24',
+    title: 'Play at your own pace',
+    changes: [
+      'The › arrow now moves on as soon as the campaign you’re playing is done for the day. Other campaigns wait for you and show how many pages behind they are.',
+      'Faster start: each campaign now downloads only when you open it.',
+      'Your progress is safer: the game asks your browser to keep it, Settings shows whether it will, and a gentle reminder suggests an Export all backup now and then.',
+      'Add Questender to your home screen: it now has its own icon.',
+      'Fights are fairer: enemies across all four campaigns were rebalanced after thousands of simulated playthroughs, especially early on.',
+      'Followers now strengthen a skill your hero already has (+1) instead of doing nothing.',
+      'Halcyon’s abilities now spend Surge and Charges, refilled when you rest.',
+      'Easier-to-read text in the light theme.',
+    ],
+  },
+  {
     version: '0.6.1',
     date: '2026-11-23',
     title: 'One click per weekend',
