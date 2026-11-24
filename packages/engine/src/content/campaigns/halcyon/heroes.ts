@@ -5,57 +5,57 @@ export const ABILITIES: AbilityDef[] = [
   // Juniper Okafor — prologue courier
   { id: 'hd_knowlanes', name: 'Know the Lanes', kind: 'passive', bonus: 2, tags: ['stealth', 'physical'], text: '+2 to sneaking and running the station’s back corridors.' },
   { id: 'hd_secondlook', name: 'Second Look', kind: 'reroll', per: 'page', uses: 1, text: 'Once per page: reroll a d20 and take the new result.' },
-  { id: 'hd_patchup', name: 'Patch Up', kind: 'heal', per: 'rest', uses: 1, die: 4, bonus: 1, text: 'Once per Rest: recover d4+1 health.' },
+  { id: 'hd_patchup', name: 'Patch Up', kind: 'heal', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 4, bonus: 1, text: '1 Charges: recover d4+1 health.' },
 
   // Marisol Reyes — pilot
   { id: 'hd_flightsense', name: 'Flight Sense', kind: 'passive', bonus: 2, tags: ['piloting', 'perception'], text: '+2 to piloting and spotting trouble.' },
-  { id: 'hd_hardburn', name: 'Hard Burn', kind: 'addDie', per: 'rest', uses: 2, die: 10, slots: ['evasion'], text: 'Twice per Rest: add d10 to a ship’s Evasion roll.' },
+  { id: 'hd_hardburn', name: 'Hard Burn', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 10, slots: ['evasion'], text: '1 Surge: add d10 to a ship’s Evasion roll.' },
   { id: 'hd_steadyhands', name: 'Steady Hands', kind: 'reroll', per: 'page', uses: 1, text: 'Once per page: reroll a d20 and take the new result.' },
-  { id: 'hd_strafe', name: 'Strafing Run', kind: 'addDie', per: 'rest', uses: 2, die: 10, slots: ['aim'], text: 'Twice per Rest: add d10 to a ship’s Aim roll.' },
+  { id: 'hd_strafe', name: 'Strafing Run', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 10, slots: ['aim'], text: '1 Surge: add d10 to a ship’s Aim roll.' },
 
   // Brask Holloway — breacher
   { id: 'hd_heavylifter', name: 'Heavy Lifter', kind: 'passive', bonus: 2, tags: ['physical'], text: '+2 to feats of strength and endurance.' },
-  { id: 'hd_overcharge', name: 'Overcharge', kind: 'addDie', per: 'rest', uses: 2, die: 6, slots: ['damage'], text: 'Twice per Rest: add d6 to a Damage roll.' },
-  { id: 'hd_bulkhead', name: 'Bulkhead Stance', kind: 'addDie', per: 'rest', uses: 2, die: 4, slots: ['defense'], text: 'Twice per Rest: add d4 to a Defense roll.' },
-  { id: 'hd_shrugoff', name: 'Shrug It Off', kind: 'heal', per: 'rest', uses: 1, die: 6, bonus: 1, text: 'Once per Rest: recover d6+1 health.' },
+  { id: 'hd_overcharge', name: 'Overcharge', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 6, slots: ['damage'], text: '1 Surge: add d6 to a Damage roll.' },
+  { id: 'hd_bulkhead', name: 'Bulkhead Stance', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 4, slots: ['defense'], text: '1 Surge: add d4 to a Defense roll.' },
+  { id: 'hd_shrugoff', name: 'Shrug It Off', kind: 'heal', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 6, bonus: 1, text: '1 Charges: recover d6+1 health.' },
 
   // Ilse Varga — field medic
   { id: 'hd_triage', name: 'Triage', kind: 'passive', bonus: 2, tags: ['medical', 'lore'], text: '+2 to medicine and technical knowledge.' },
-  { id: 'hd_stimshot', name: 'Stim Shot', kind: 'heal', per: 'rest', uses: 2, die: 6, bonus: 2, text: 'Twice per Rest: recover d6+2 health.' },
+  { id: 'hd_stimshot', name: 'Stim Shot', kind: 'heal', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 6, bonus: 2, text: '1 Charges: recover d6+2 health.' },
   { id: 'hd_diagnose', name: 'Diagnose', kind: 'reroll', per: 'page', uses: 1, text: 'Once per page: reroll a d20 and take the new result.' },
-  { id: 'hd_adrenal', name: 'Adrenal Spike', kind: 'addDie', per: 'rest', uses: 1, die: 6, slots: ['defense'], text: 'Once per Rest: add d6 to a Defense roll.' },
+  { id: 'hd_adrenal', name: 'Adrenal Spike', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 6, slots: ['defense'], text: '1 Surge: add d6 to a Defense roll.' },
 
   // Kit Sorensen — slicer
   { id: 'hd_backdoor', name: 'Backdoor', kind: 'passive', bonus: 2, tags: ['tech', 'stealth'], text: '+2 to hacking systems and slipping past security.' },
   { id: 'hd_spoof', name: 'Spoof', kind: 'reroll', per: 'page', uses: 1, text: 'Once per page: reroll a d20 and take the new result.' },
-  { id: 'hd_signaljam', name: 'Signal Jam', kind: 'addDie', per: 'rest', uses: 3, die: 4, slots: ['check', 'attack', 'defense'], text: 'Three times per Rest: add d4 to any d20 roll.' },
-  { id: 'hd_overclock', name: 'Overclock', kind: 'addDie', per: 'rest', uses: 2, die: 8, slots: ['damage'], text: 'Twice per Rest: add d8 to a Damage roll.' },
+  { id: 'hd_signaljam', name: 'Signal Jam', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 4, slots: ['check', 'attack', 'defense'], text: '1 Charges: add d4 to any d20 roll.' },
+  { id: 'hd_overclock', name: 'Overclock', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 8, slots: ['damage'], text: '1 Surge: add d8 to a Damage roll.' },
 
   // Ash Tanaka-Bell — gunner
   { id: 'hd_deadeye', name: 'Deadeye', kind: 'passive', bonus: 2, tags: ['perception', 'gunnery'], text: '+2 to spotting and marksmanship checks.' },
-  { id: 'hd_lockon', name: 'Lock-On', kind: 'addDie', per: 'rest', uses: 2, die: 10, slots: ['aim'], text: 'Twice per Rest: add d10 to a ship’s Aim roll.' },
-  { id: 'hd_volley', name: 'Volley', kind: 'addDie', per: 'rest', uses: 2, die: 6, slots: ['damage'], text: 'Twice per Rest: add d6 to a Damage roll.' },
-  { id: 'hd_suppress', name: 'Suppressing Fire', kind: 'addDie', per: 'rest', uses: 2, die: 4, slots: ['defense'], text: 'Twice per Rest: add d4 to a Defense roll.' },
+  { id: 'hd_lockon', name: 'Lock-On', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 10, slots: ['aim'], text: '1 Surge: add d10 to a ship’s Aim roll.' },
+  { id: 'hd_volley', name: 'Volley', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 6, slots: ['damage'], text: '1 Surge: add d6 to a Damage roll.' },
+  { id: 'hd_suppress', name: 'Suppressing Fire', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 4, slots: ['defense'], text: '1 Surge: add d4 to a Defense roll.' },
 
   // Seren Duval — smuggler
   { id: 'hd_smoothtalk', name: 'Smooth Talk', kind: 'passive', bonus: 2, tags: ['social', 'stealth'], text: '+2 to persuasion, lies and sneaking.' },
-  { id: 'hd_fastexit', name: 'Fast Exit', kind: 'addDie', per: 'rest', uses: 1, die: 10, slots: ['evasion'], text: 'Once per Rest: add d10 to a ship’s Evasion roll.' },
+  { id: 'hd_fastexit', name: 'Fast Exit', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 10, slots: ['evasion'], text: '1 Surge: add d10 to a ship’s Evasion roll.' },
   { id: 'hd_luckychip', name: 'Lucky Chip', kind: 'addDie', per: 'page', uses: 1, die: 4, slots: ['check'], text: 'Once per page: add d4 to a non-combat check.' },
-  { id: 'hd_dirtytrick', name: 'Dirty Trick', kind: 'addDie', per: 'rest', uses: 2, die: 6, slots: ['attack', 'damage'], text: 'Twice per Rest: add d6 to an Attack or Damage roll.' },
+  { id: 'hd_dirtytrick', name: 'Dirty Trick', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 6, slots: ['attack', 'damage'], text: '1 Surge: add d6 to an Attack or Damage roll.' },
 
   // Later-level abilities (levels 4 and 7)
   { id: 'hd_barrelroll', name: 'Barrel Roll', kind: 'addDie', per: 'page', uses: 1, die: 8, slots: ['evasion', 'defense'], text: 'Once per page: add d8 to an Evasion or Defense roll.' },
-  { id: 'hd_aceflight', name: 'Ace Flying', kind: 'addDie', per: 'rest', uses: 3, die: 12, slots: ['aim', 'evasion'], text: 'Three times per Rest: add d12 to a ship’s Aim or Evasion roll.' },
-  { id: 'hd_breachcharge', name: 'Breaching Charge', kind: 'addDie', per: 'rest', uses: 2, die: 10, slots: ['damage'], text: 'Twice per Rest: add d10 to a Damage roll.' },
-  { id: 'hd_ironwall', name: 'Iron Wall', kind: 'heal', per: 'rest', uses: 2, die: 8, bonus: 2, text: 'Twice per Rest: recover d8+2 health.' },
-  { id: 'hd_fieldsurgery', name: 'Field Surgery', kind: 'heal', per: 'rest', uses: 2, die: 10, bonus: 2, text: 'Twice per Rest: recover d10+2 health.' },
+  { id: 'hd_aceflight', name: 'Ace Flying', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 12, slots: ['aim', 'evasion'], text: '1 Surge: add d12 to a ship’s Aim or Evasion roll.' },
+  { id: 'hd_breachcharge', name: 'Breaching Charge', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 10, slots: ['damage'], text: '1 Surge: add d10 to a Damage roll.' },
+  { id: 'hd_ironwall', name: 'Iron Wall', kind: 'heal', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 8, bonus: 2, text: '1 Charges: recover d8+2 health.' },
+  { id: 'hd_fieldsurgery', name: 'Field Surgery', kind: 'heal', per: 'rest', uses: 99, cost: { pool: 'charges', amount: 1 }, die: 10, bonus: 2, text: '1 Charges: recover d10+2 health.' },
   { id: 'hd_clinicaleye', name: 'Clinical Eye', kind: 'addDie', per: 'page', uses: 1, die: 6, slots: ['check', 'attack'], text: 'Once per page: add d6 to a check or Attack roll.' },
   { id: 'hd_ghostprotocol', name: 'Ghost Protocol', kind: 'addDie', per: 'page', uses: 1, die: 6, slots: ['check', 'defense', 'evasion'], text: 'Once per page: add d6 to a check, Defense or Evasion roll.' },
-  { id: 'hd_cascade', name: 'Cascade Failure', kind: 'addDie', per: 'rest', uses: 2, die: 12, slots: ['damage', 'aim'], text: 'Twice per Rest: add d12 to a Damage or Aim roll.' },
+  { id: 'hd_cascade', name: 'Cascade Failure', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 12, slots: ['damage', 'aim'], text: '1 Surge: add d12 to a Damage or Aim roll.' },
   { id: 'hd_trickshot', name: 'Trick Shot', kind: 'addDie', per: 'page', uses: 1, die: 6, slots: ['attack', 'aim'], text: 'Once per page: add d6 to an Attack or Aim roll.' },
-  { id: 'hd_broadside', name: 'Broadside', kind: 'addDie', per: 'rest', uses: 2, die: 12, slots: ['aim', 'damage'], text: 'Twice per Rest: add d12 to an Aim or Damage roll.' },
+  { id: 'hd_broadside', name: 'Broadside', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 12, slots: ['aim', 'damage'], text: '1 Surge: add d12 to an Aim or Damage roll.' },
   { id: 'hd_silvertongue', name: 'Silver Tongue', kind: 'reroll', per: 'page', uses: 1, text: 'Once per page: reroll a d20 and take the new result.' },
-  { id: 'hd_allin', name: 'All In', kind: 'addDie', per: 'rest', uses: 2, die: 10, slots: ['check', 'attack', 'damage', 'evasion'], text: 'Twice per Rest: add d10 to a check, Attack, Damage or Evasion roll.' },
+  { id: 'hd_allin', name: 'All In', kind: 'addDie', per: 'rest', uses: 99, cost: { pool: 'surge', amount: 1 }, die: 10, slots: ['check', 'attack', 'damage', 'evasion'], text: '1 Surge: add d10 to a check, Attack, Damage or Evasion roll.' },
 ]
 
 export const HEROES: HeroDef[] = [
@@ -72,6 +72,7 @@ export const HEROES: HeroDef[] = [
     dmgDie: 6,
     weapon: 'Shock baton',
     glint: 5,
+    pools: { charges: 1 },
     abilities: ['hd_knowlanes', 'hd_secondlook', 'hd_patchup'],
     levels: { 2: { maxHp: 3, atk: 1 } },
   },
@@ -88,8 +89,9 @@ export const HEROES: HeroDef[] = [
     dmgDie: 6,
     weapon: 'Needle pistol',
     glint: 6,
+    pools: { surge: 2 },
     abilities: ['hd_flightsense', 'hd_hardburn', 'hd_steadyhands'],
-    levels: { 2: { maxHp: 3, def: 1, ability: 'hd_strafe' }, 3: { maxHp: 3, traits: { dex: 1 } }, 4: { maxHp: 3, atk: 1, ability: 'hd_barrelroll' }, 5: { maxHp: 3, dmgDie: 8, traits: { wis: 1 } }, 6: { maxHp: 3, def: 1, atk: 1 }, 7: { maxHp: 4, ability: 'hd_aceflight' }, 8: { maxHp: 4, atk: 1, dmgDie: 10, traits: { dex: 1 } } },
+    levels: { 2: { maxHp: 3, def: 1, pools: { surge: 2 }, ability: 'hd_strafe' }, 3: { maxHp: 3, traits: { dex: 1 } }, 4: { maxHp: 3, atk: 1, ability: 'hd_barrelroll' }, 5: { maxHp: 3, dmgDie: 8, traits: { wis: 1 } }, 6: { maxHp: 3, def: 1, atk: 1 }, 7: { maxHp: 4, pools: { surge: 3 }, ability: 'hd_aceflight' }, 8: { maxHp: 4, atk: 1, dmgDie: 10, traits: { dex: 1 } } },
   },
   {
     id: 'hd_brask',
@@ -104,8 +106,9 @@ export const HEROES: HeroDef[] = [
     dmgDie: 8,
     weapon: 'Breaching maul',
     glint: 4,
+    pools: { surge: 4 },
     abilities: ['hd_heavylifter', 'hd_overcharge', 'hd_bulkhead'],
-    levels: { 2: { maxHp: 4, atk: 1, ability: 'hd_shrugoff' }, 3: { maxHp: 4, traits: { str: 1 } }, 4: { maxHp: 4, def: 1, ability: 'hd_breachcharge' }, 5: { maxHp: 4, dmgDie: 10, traits: { con: 1 } }, 6: { maxHp: 4, atk: 1 }, 7: { maxHp: 5, def: 1, ability: 'hd_ironwall' }, 8: { maxHp: 5, atk: 1, dmgDie: 12, traits: { str: 1 } } },
+    levels: { 2: { maxHp: 4, atk: 1, pools: { charges: 1 }, ability: 'hd_shrugoff' }, 3: { maxHp: 4, traits: { str: 1 } }, 4: { maxHp: 4, def: 1, pools: { surge: 2 }, ability: 'hd_breachcharge' }, 5: { maxHp: 4, dmgDie: 10, traits: { con: 1 } }, 6: { maxHp: 4, atk: 1 }, 7: { maxHp: 5, def: 1, pools: { charges: 2 }, ability: 'hd_ironwall' }, 8: { maxHp: 5, atk: 1, dmgDie: 12, traits: { str: 1 } } },
   },
   {
     id: 'hd_ilse',
@@ -120,8 +123,9 @@ export const HEROES: HeroDef[] = [
     dmgDie: 6,
     weapon: 'Dart gun',
     glint: 6,
+    pools: { charges: 2 },
     abilities: ['hd_triage', 'hd_stimshot', 'hd_diagnose'],
-    levels: { 2: { maxHp: 3, def: 1, ability: 'hd_adrenal' }, 3: { maxHp: 3, traits: { int: 1 } }, 4: { maxHp: 3, atk: 1, ability: 'hd_clinicaleye' }, 5: { maxHp: 3, dmgDie: 8, traits: { wis: 1 } }, 6: { maxHp: 3, def: 1, atk: 1 }, 7: { maxHp: 4, ability: 'hd_fieldsurgery' }, 8: { maxHp: 4, atk: 1, dmgDie: 10, traits: { con: 1 } } },
+    levels: { 2: { maxHp: 3, def: 1, pools: { surge: 1 }, ability: 'hd_adrenal' }, 3: { maxHp: 3, traits: { int: 1 } }, 4: { maxHp: 3, atk: 1, ability: 'hd_clinicaleye' }, 5: { maxHp: 3, dmgDie: 8, traits: { wis: 1 } }, 6: { maxHp: 3, def: 1, atk: 1 }, 7: { maxHp: 4, pools: { charges: 2 }, ability: 'hd_fieldsurgery' }, 8: { maxHp: 4, atk: 1, dmgDie: 10, traits: { con: 1 } } },
   },
   {
     id: 'hd_kit',
@@ -136,8 +140,9 @@ export const HEROES: HeroDef[] = [
     dmgDie: 6,
     weapon: 'Arc pistol',
     glint: 7,
+    pools: { charges: 3 },
     abilities: ['hd_backdoor', 'hd_spoof', 'hd_signaljam'],
-    levels: { 2: { maxHp: 3, atk: 1, ability: 'hd_overclock' }, 3: { maxHp: 3, traits: { int: 1 } }, 4: { maxHp: 3, def: 1, ability: 'hd_ghostprotocol' }, 5: { maxHp: 3, dmgDie: 8, traits: { dex: 1 } }, 6: { maxHp: 3, atk: 1, def: 1 }, 7: { maxHp: 4, ability: 'hd_cascade' }, 8: { maxHp: 4, atk: 1, dmgDie: 10, traits: { int: 1 } } },
+    levels: { 2: { maxHp: 3, atk: 1, pools: { surge: 2 }, ability: 'hd_overclock' }, 3: { maxHp: 3, traits: { int: 1 } }, 4: { maxHp: 3, def: 1, ability: 'hd_ghostprotocol' }, 5: { maxHp: 3, dmgDie: 8, traits: { dex: 1 } }, 6: { maxHp: 3, atk: 1, def: 1 }, 7: { maxHp: 4, pools: { surge: 2 }, ability: 'hd_cascade' }, 8: { maxHp: 4, atk: 1, dmgDie: 10, traits: { int: 1 } } },
   },
   {
     id: 'hd_ash',
@@ -152,8 +157,9 @@ export const HEROES: HeroDef[] = [
     dmgDie: 8,
     weapon: 'Rail carbine',
     glint: 5,
+    pools: { surge: 4 },
     abilities: ['hd_deadeye', 'hd_lockon', 'hd_volley'],
-    levels: { 2: { maxHp: 3, def: 1, ability: 'hd_suppress' }, 3: { maxHp: 3, traits: { dex: 1 } }, 4: { maxHp: 3, atk: 1, ability: 'hd_trickshot' }, 5: { maxHp: 4, dmgDie: 10, traits: { wis: 1 } }, 6: { maxHp: 3, def: 1 }, 7: { maxHp: 4, atk: 1, ability: 'hd_broadside' }, 8: { maxHp: 4, atk: 1, dmgDie: 12, traits: { con: 1 } } },
+    levels: { 2: { maxHp: 3, def: 1, pools: { surge: 2 }, ability: 'hd_suppress' }, 3: { maxHp: 3, traits: { dex: 1 } }, 4: { maxHp: 3, atk: 1, ability: 'hd_trickshot' }, 5: { maxHp: 4, dmgDie: 10, traits: { wis: 1 } }, 6: { maxHp: 3, def: 1 }, 7: { maxHp: 4, atk: 1, pools: { surge: 2 }, ability: 'hd_broadside' }, 8: { maxHp: 4, atk: 1, dmgDie: 12, traits: { con: 1 } } },
   },
   {
     id: 'hd_seren',
@@ -168,8 +174,9 @@ export const HEROES: HeroDef[] = [
     dmgDie: 6,
     weapon: 'Holdout blaster',
     glint: 9,
+    pools: { surge: 1 },
     abilities: ['hd_smoothtalk', 'hd_fastexit', 'hd_luckychip'],
-    levels: { 2: { maxHp: 3, atk: 1, ability: 'hd_dirtytrick' }, 3: { maxHp: 3, traits: { cha: 1 } }, 4: { maxHp: 3, def: 1, ability: 'hd_silvertongue' }, 5: { maxHp: 3, dmgDie: 8, traits: { dex: 1 } }, 6: { maxHp: 3, atk: 1, def: 1 }, 7: { maxHp: 4, ability: 'hd_allin' }, 8: { maxHp: 4, atk: 1, dmgDie: 10, traits: { cha: 1 } } },
+    levels: { 2: { maxHp: 3, atk: 1, pools: { surge: 2 }, ability: 'hd_dirtytrick' }, 3: { maxHp: 3, traits: { cha: 1 } }, 4: { maxHp: 3, def: 1, ability: 'hd_silvertongue' }, 5: { maxHp: 3, dmgDie: 8, traits: { dex: 1 } }, 6: { maxHp: 3, atk: 1, def: 1 }, 7: { maxHp: 4, pools: { surge: 2 }, ability: 'hd_allin' }, 8: { maxHp: 4, atk: 1, dmgDie: 10, traits: { cha: 1 } } },
   },
 ]
 

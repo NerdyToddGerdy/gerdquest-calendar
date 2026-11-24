@@ -2,9 +2,11 @@ import { describe, expect, it } from 'vitest'
 import { weekday } from '@questender/engine/calendar'
 import { authoredDate, campaign, pageDate } from '@questender/engine/campaign'
 import { resolveRound, rollRound, startCombat } from '@questender/engine/combat'
-import { heroDef } from '@questender/engine/content'
+import { heroDef, member } from '@questender/engine/content'
 import { resolveDeath } from '@questender/engine/death'
-import { createHero, levelUp, stat } from '@questender/engine/hero'
+import { createHero, levelUp, passiveBonus, stat, usesLeft } from '@questender/engine/hero'
+import { hireFollower, releaseFollower } from '@questender/engine/followers'
+import { bundleSaves, parseSaves } from '../src/save'
 import { abilityReady } from '@questender/engine/pools'
 import { CLASSIC } from '@questender/engine/ruleset'
 import { makeRng, scriptedRng } from '@questender/engine/rng'
@@ -126,6 +128,60 @@ describe('followers', () => {
     expect(s.hero!.abilities).toContain('er_ab_bless')
     s = act(s, { type: 'DISMISS', index: 0 })
     expect(s.hero!.abilities).not.toContain('er_ab_bless')
+  })
+})
+
+describe('followers who duplicate a skill the hero already has', () => {
+  const withSkills = (ids: string[], glint = 40) => {
+    const s = at(6)
+    return { ...s, hero: { ...s.hero!, glint, abilities: [...s.hero!.abilities, ...ids] } }
+  }
+
+  it('adds +1 to a limited ability instead of nothing, and dismissing removes exactly that', () => {
+    let s = withSkills(['er_ab_grit'])
+    const before = s.hero!.abilities.length
+    s = act(s, { type: 'HIRE', member: 'er_f_grit' })
+    expect(s.hero!.abilities.length).toBe(before) // nothing lent twice
+    expect(s.party[0].granted).toEqual([])
+    expect(s.party[0].boosted).toEqual(['er_ab_grit'])
+    expect(usesLeft(s.hero!, ability('er_ab_grit'))).toBe(3)
+    s = act(s, { type: 'REST' }) // upkeep paid, boost stays
+    expect(s.party).toHaveLength(1)
+    expect(usesLeft(s.hero!, ability('er_ab_grit'))).toBe(3)
+    s = act(s, { type: 'DISMISS', index: 0 })
+    expect(s.hero!.abilities).toContain('er_ab_grit')
+    expect(s.hero!.abilityBoost ?? {}).toEqual({})
+    expect(usesLeft(s.hero!, ability('er_ab_grit'))).toBe(2)
+  })
+
+  it('adds +1 to a passive bonus on checks', () => {
+    const trap = ability('er_ab_trapcraft')
+    expect(trap.kind === 'passive' && trap.bonus).toBe(2)
+    const s = withSkills(['er_ab_trapcraft'])
+    const hired = hireFollower(s.hero!, s.party, member('er_f_lio'))
+    expect(passiveBonus(hired.hero, trap)).toBe(3)
+    expect(passiveBonus(releaseFollower(hired.hero, hired.party[0]), trap)).toBe(2)
+  })
+
+  it('an unpaid follower leaves and takes only their boost', () => {
+    let s = withSkills(['er_ab_grit'], 40)
+    s = act(s, { type: 'HIRE', member: 'er_f_grit' })
+    s = { ...s, hero: { ...s.hero!, glint: 0 } }
+    s = act(s, { type: 'REST' })
+    expect(s.party).toHaveLength(0)
+    expect(s.hero!.abilities).toContain('er_ab_grit')
+    expect(usesLeft(s.hero!, ability('er_ab_grit'))).toBe(2)
+  })
+
+  it('the extra use survives death drain, and the boost survives a save round trip', () => {
+    let s = act(withSkills(['er_ab_grit']), { type: 'HIRE', member: 'er_f_grit' })
+    const drained = resolveDeath(s.hero!, scriptedRng([6, 1]), CLASSIC.death, 'gold').hero
+    expect(usesLeft(drained, ability('er_ab_grit'))).toBe(0) // all three uses (including the boosted one) are spent
+    s = parseSaves(JSON.stringify(bundleSaves([s], '2026-11-23')), '2026-11-23')[0]
+    expect(s.party[0].boosted).toEqual(['er_ab_grit'])
+    expect(usesLeft(s.hero!, ability('er_ab_grit'))).toBe(3)
+    s = act(act(s, { type: 'REST' }), { type: 'DISMISS', index: 0 })
+    expect(usesLeft(s.hero!, ability('er_ab_grit'))).toBe(2)
   })
 })
 

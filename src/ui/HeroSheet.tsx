@@ -1,5 +1,5 @@
 import { ability, item, member } from '@questender/engine/content'
-import { maxHp, stat, usesLeft, woundName } from '@questender/engine/hero'
+import { abilityBoost, maxHp, maxUses, stat, usesLeft, woundName } from '@questender/engine/hero'
 import { rules } from '@questender/engine/ruleset'
 import { isFollower } from '@questender/engine/followers'
 import { abilityReady, costLabel, POOL_NAMES } from '@questender/engine/pools'
@@ -97,15 +97,18 @@ export function HeroSheet({ state, dispatch }: { state: GameState; dispatch: (a:
       <ul className="abilities">
         {hero.abilities.map(ability).map((a) => {
           const left = usesLeft(hero, a)
+          const boost = abilityBoost(hero, a.id)
+          const total = maxUses(hero, a)
           return (
             <li key={a.id}>
               <div>
                 <b>{a.name}</b> <span className="muted small">{a.text}</span>
+                {boost > 0 && <span className="tag good" title="A follower who shares this skill adds +1 while they stay."> +{boost} follower</span>}
               </div>
               {a.kind !== 'passive' && a.cost && <span className="tag">{costLabel(a)}</span>}
               {a.kind !== 'passive' && !a.cost && (
-                <div className="pips" aria-label={`${left} of ${a.uses} uses left`}>
-                  {[...Array(a.uses)].map((_, i) => (
+                <div className="pips" aria-label={`${left} of ${total} uses left`}>
+                  {[...Array(total)].map((_, i) => (
                     <span key={i} className={i < left ? 'on' : ''} />
                   ))}
                   <small>/{a.per}</small>
