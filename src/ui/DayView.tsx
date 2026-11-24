@@ -1,3 +1,4 @@
+import { legacyLabel } from './legacyLabel'
 import { WEEKDAY_NAMES, daysBetween, formatShort, parseISO, weekday } from '@questender/engine/calendar'
 import type { ISODate } from '@questender/engine/calendar'
 import { campaign, isLotteryPage, pageDate, pageEndDate } from '@questender/engine/campaign'
@@ -129,7 +130,7 @@ export function DayView({ state, day, dispatch, today }: Props) {
                           {opt.check.tags?.length ? <small> · {opt.check.tags.join(', ')}</small> : null}
                         </span>
                       )}
-                      {opt.requires && chosen === null && <span className="legacy-req">{legacyLabel(state, opt.requires)}</span>}
+                      {opt.requires && chosen === null && <span className="legacy-req">{legacyLabel(state, opt.requires, locked)}</span>}
                     </button>
                     {chosen === null &&
                       opt.effects?.map((e, ei) => e.type === 'setHero' && <HeroPreviewButton key={ei} heroId={e.heroId} />)}
@@ -238,12 +239,4 @@ export function DayView({ state, day, dispatch, today }: Props) {
       </footer>
     </article>
   )
-}
-
-/** "Legacy: Hero of the Greenway" / "Closed by legacy: …" for a gated option. */
-function legacyLabel(state: GameState, requires: string): string {
-  const negate = requires.startsWith('!')
-  const id = negate ? requires.slice(1) : requires
-  const name = campaign(state.campaignId).legacy?.find((l) => l.id === id)?.name ?? id
-  return negate ? `Closed by legacy: ${name}` : `Legacy: ${name}`
 }

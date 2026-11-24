@@ -4,8 +4,9 @@ import { describe, expect, it } from 'vitest'
 import { addDays, weekday } from '@questender/engine/calendar'
 import { authoredDate, campaign, pageSpan } from '@questender/engine/campaign'
 import { ability, enemy, heroDef, item, member } from '@questender/engine/content'
-import { canAdvance, initialState, meetsRequirement, reduce } from '@questender/engine/state'
+import { canAdvance, fatalFightLegacy, initialState, meetsRequirement, reduce } from '@questender/engine/state'
 import { VERDANT_SCENES, type Day, type Effect, type GameState } from '@questender/engine/types'
+import { legacyLabel } from '../src/ui/legacyLabel'
 import { VERDANT_ART, VERDANT_SKIES } from '../src/ui/scenes/verdant'
 
 const va = campaign('verdant')
@@ -173,6 +174,20 @@ describe('Legacy marks in the engine', () => {
   })
 })
 
+describe('Locked option label', () => {
+  const start = reduce(initialState(), { type: 'NEW_GAME', seed: 3, campaignId: 'verdant', startDate: '2026-01-03' })
+
+  it('names only the chapter, never the outcome the player did not get', () => {
+    expect(legacyLabel(start, 'va_l1_win', true)).toBe('Needs a different Chapter 1 ending')
+    expect(legacyLabel(start, 'va_l3_loss', true)).toBe('Needs a different Chapter 3 ending')
+    for (const l of va.legacy!) expect(legacyLabel(start, l.id, true)).not.toContain(l.name)
+  })
+
+  it('names the mark you hold once the option is open', () => {
+    expect(legacyLabel(start, 'va_l1_win', false)).toBe('Legacy: Hero of the Greenway')
+  })
+})
+
 describe('Legacy on a fatal boss fight', () => {
   it('falling to a chapter boss still records the chapter’s lost mark', () => {
     const boss = va.pages.findIndex((p) => p.note?.startsWith('A single foe'))
@@ -185,6 +200,22 @@ describe('Legacy on a fatal boss fight', () => {
     }
     // Either the hero fell (loss) or, rarely, won outright (win); a mark must be recorded.
     expect(s.legacy?.[0]).toMatch(/^va_l1_(win|loss)$/)
+  })
+
+  // The last foe can fall the same round the hero drops: the fight is won, so only
+  // the WIN list's marks apply (never the lose mark, and no other win effects).
+  const combat = {
+    win: [{ type: 'legacy', id: 'va_l1_win' }, { type: 'glint', amount: 50 }] as Effect[],
+    lose: [{ type: 'legacy', id: 'va_l1_loss' }, { type: 'glint', amount: 7 }] as Effect[],
+  }
+
+  it('a fight lost while the hero falls records only the lose list’s legacy marks', () => {
+    expect(fatalFightLegacy(combat, false)).toEqual([{ type: 'legacy', id: 'va_l1_loss' }])
+  })
+
+  it('a fight won on the very round the hero falls records only the win list’s legacy marks', () => {
+    expect(fatalFightLegacy(combat, true)).toEqual([{ type: 'legacy', id: 'va_l1_win' }])
+    expect(fatalFightLegacy({}, true)).toEqual([])
   })
 })
 

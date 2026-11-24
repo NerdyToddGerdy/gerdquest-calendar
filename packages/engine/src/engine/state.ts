@@ -130,6 +130,16 @@ export function stepLocked(s: GameState, step: number): boolean {
 }
 
 /** True if this run satisfies a legacy requirement ("mark" or "!mark"). No requirement = always. */
+/**
+ * The only effects that apply when the hero falls in a fight: legacy marks.
+ * A fight lost (or left unfinished) records the lose list's marks; if the last
+ * foe fell the same round, the fight was won and only the win list's marks
+ * apply, so a chapter always records exactly one mark.
+ */
+export function fatalFightLegacy(c: { win?: Effect[]; lose?: Effect[] }, won: boolean): Effect[] {
+  return ((won ? c.win : c.lose) ?? []).filter((e) => e.type === 'legacy')
+}
+
 export function meetsRequirement(s: Pick<GameState, 'legacy'>, requires: string | undefined): boolean {
   if (!requires) return true
   const negate = requires.startsWith('!')
@@ -529,7 +539,9 @@ function step(s: Draft, day: Day, action: Action, rng: Rng): boolean {
         checkDeath(s, rng)
         // Dying already ends the fight; don't also apply the win/lose outcome,
         // except its legacy marks: falling to a chapter's boss still loses the chapter.
-        if (died) applyEffects(s, c.lose?.filter((e) => e.type === 'legacy'), rng)
+        // If the last foe fell the same round the hero did, the fight was won:
+        // only the win list's marks apply, so a chapter records exactly one mark.
+        if (died) applyEffects(s, fatalFightLegacy(c, s.progress.combat.won), rng)
         if (s.progress.combat.done && !died) {
           if (s.progress.combat.won) {
             log(s, c.winText)
