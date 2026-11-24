@@ -1,8 +1,12 @@
 // Game state and the single reducer that applies every player action.
 import { ability, heroDef, item, LOOT_TABLE, member } from './content'
+import { stylesUnlocked, hasRerollKeepsake } from './rewards'
+import { weekStart } from './calendar'
 import { campaign, campaignEntry, campaignPages, DEFAULT_CAMPAIGN, isLotteryPage, isPageUnlocked, pageDate } from './campaign'
 import { combatRounds, d20Mods, resolveRound, rollRound, startCombat } from './combat'
 import { resolveDeath } from './death'
+import { addFeat, FEAT_BOSS_CRIT, FEAT_NAT1_WON, isBossPage } from './feats'
+import { chestLoot } from './chest'
 import { isD20, isNat1, isNat20, makeSlot, pickBand, slotTotal } from './dice'
 import { lottery, sellPrice, travel } from './economy'
 import {
@@ -59,6 +63,14 @@ export type Action =
   | { type: 'UNEQUIP'; slot: GearSlot }
   | { type: 'REST'; wound?: WoundKind }
   | { type: 'LOTTERY' }
+  /** Well rested: on the first page opened after 3+ days away. `date` is the real date of the return. */
+  | { type: 'WELCOME_BACK'; date: string }
+  /** Open the weekly chest (week = that week's Monday). The desk decides whether it may be opened. */
+  | { type: 'OPEN_CHEST'; week: string }
+  /** Lucky tuppence keepsake: reroll a pending d20 for free. The desk limits it to once a week. */
+  | { type: 'KEEPSAKE_REROLL'; slot: string; today: string }
+  /** Choose a cosmetic for this run (null = default). Must be unlocked by days played. */
+  | { type: 'SET_STYLE'; category: string; id: string | null }
   /** `today` is the player's local ISO date; the next page must have unlocked by then. */
   | { type: 'NEXT_DAY'; today: string }
   | { type: 'TOGGLE_PARTY_DICE' }
@@ -176,6 +188,22 @@ export function pendingSlots(s: GameState): RollSlot[] {
   if (s.pending.type === 'check') return [s.pending.slot]
   if (s.pending.type === 'combat' || s.pending.type === 'dogfight') return s.pending.slots
   return []
+}
+
+/** Well rested applies once per return, to a page nothing has been done on yet. */
+export function canWelcomeBack(s: GameState, date: string): boolean {
+  return !!s.hero && s.welcomedOn !== date && !s.pending && !s.finished && s.progress.steps.every((x) => x === null)
+}
+
+/**
+ * The dates on which this run completed a page: each journalled page's date,
+ * plus the page being played now once it is complete. Catch-up counts; the
+ * date is the page's own, not a streak.
+ */
+export function playedDates(s: GameState): string[] {
+  const dates = new Set(s.journal.map((j) => j.date))
+  if (s.hero && !s.finished && canAdvance(s)) dates.add(pageDate(campaign(s.campaignId), s.dayIndex, s.startDate))
+  return [...dates].sort()
 }
 
 // ---------------------------------------------------------------------------
@@ -315,6 +343,15 @@ export function reduce(state: GameState, action: Action, injected?: Rng): GameSt
     const dates = state.noteDates ?? []
     const noteDates = action.date && !dates.includes(action.date) ? [...dates, action.date].sort() : dates
     return { ...state, notes: action.text, noteDates }
+  }
+
+  // Looks are the player's choice and can change any time, but only among unlocked ones.
+  if (action.type === 'SET_STYLE') {
+    const style = { ...(state.style ?? {}) }
+    if (action.id === null) delete style[action.category]
+    else if (stylesUnlocked(state.campaignId, playedDates(state).length).some((x) => x.id === action.id && x.category === action.category)) style[action.category] = action.id
+    else return state
+    return { ...state, style }
   }
 
   const rng = injected ?? makeRng(state.rng)
@@ -530,6 +567,8 @@ function step(s: Draft, day: Day, action: Action, rng: Rng): boolean {
         const rounds = combatRounds(c.rounds, c.enemies.length, r.combat.groups)
         const staticDefense = r.combat.defense === 'static' ? 10 + stat(s.hero, 'def') : undefined
         const res = resolveRound(s.progress.combat!, pend.slots, rounds, { boons: r.boons, soloStun: r.combat.soloStun, staticDefense })
+        const foesBefore = s.progress.combat!.enemies
+        if (pend.slots.some((x) => x.id.endsWith(':atk') || x.id.endsWith(':def') ? isNat1(x) : false)) s.progress.nat1 = true
         s.pending = null
         s.progress.combat = res.combat
         res.lines.forEach((l) => log(s, l))
@@ -544,6 +583,11 @@ function step(s: Draft, day: Day, action: Action, rng: Rng): boolean {
         if (died) applyEffects(s, fatalFightLegacy(c, s.progress.combat.won), rng)
         if (s.progress.combat.done && !died) {
           if (s.progress.combat.won) {
+            if (s.progress.nat1) addFeat(s, FEAT_NAT1_WON)
+            // The final blow: a natural 20 attack that felled a foe in the last round of a boss fight.
+            const felled = (i: number) => !foesBefore[i].defeated && s.progress.combat!.enemies[i].defeated
+            const crit = pend.slots.some((x) => x.id.endsWith(':atk') && isNat20(x) && felled(Number(x.id.split(':')[0])))
+            if (crit && isBossPage(campaign(s.campaignId), s.dayIndex)) addFeat(s, FEAT_BOSS_CRIT)
             log(s, c.winText)
             applyEffects(s, c.win, rng)
           } else {
@@ -687,8 +731,46 @@ function step(s: Draft, day: Day, action: Action, rng: Rng): boolean {
       if (!isLotteryPage(campaign(s.campaignId), s.dayIndex, s.startDate) || s.progress.lottery || s.pending) return false
       const { roll, amount } = lottery(rng)
       s.progress.lottery = true
+      if (amount < 0) s.lotteryLosses = (s.lotteryLosses ?? 0) + 1
       s.hero = { ...s.hero, glint: Math.max(0, s.hero.glint + amount) }
       log(s, `Sunday lottery: rolled ${roll}. You ${amount >= 0 ? 'win' : 'lose'} ${Math.abs(amount)} ${rules(s).currencyName}.`)
+      return true
+    }
+
+    case 'WELCOME_BACK': {
+      if (!canWelcomeBack(s, action.date)) return false
+      s.welcomedOn = action.date
+      if (!rules(s).boons) {
+        // Rulesets without Boons get a small bonus to every roll for the page instead.
+        log(s, 'Well rested: the page kept your place while you were away. +1 to all rolls for the rest of today.')
+        applyEffects(s, [{ type: 'pageBonus', stat: 'roll', amount: 1 }], rng)
+      } else if (s.hero.boon) {
+        log(s, 'Well rested: the page kept your place while you were away. (You already hold a Boon.)')
+      } else {
+        s.hero = { ...s.hero, boon: true }
+        log(s, 'Well rested: the page kept your place while you were away. You gain a Boon: add a d4 to a future d20 roll.')
+      }
+      return true
+    }
+
+    case 'OPEN_CHEST': {
+      if ((s.chestWeeks ?? []).includes(action.week) || s.pending) return false
+      const loot = chestLoot(s.campaignId)
+      s.chestWeeks = [...(s.chestWeeks ?? []), action.week]
+      s.hero = addItem({ ...s.hero, glint: s.hero.glint + loot.currency }, loot.itemId)
+      log(s, `The week's chest: ${loot.currency} ${rules(s).currencyName} and ${item(loot.itemId).name}.`)
+      return true
+    }
+
+    case 'KEEPSAKE_REROLL': {
+      const week = weekStart(action.today)
+      if (!hasRerollKeepsake(s.campaignId, playedDates(s).length) || s.perkWeek === week) return false
+      const slot = findSlot(s, action.slot)
+      if (!slot || !isD20(slot)) return false
+      s.perkWeek = week
+      const before = slot.natural
+      slot.natural = rng.int(slot.die)
+      log(s, `Keepsake: rerolled ${slot.label} (${before} → ${slot.natural}).`)
       return true
     }
 

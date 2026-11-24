@@ -3,7 +3,8 @@ import { readFileSync } from 'node:fs'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { APP_VERSION, CHANGELOG } from '../src/changelog'
-import { campaign } from '@questender/engine/campaign'
+import { campaign, pageDate } from '@questender/engine/campaign'
+import type { GameState } from '@questender/engine/types'
 import { initialState, reduce } from '@questender/engine/state'
 import { CalendarView } from '../src/ui/CalendarView'
 import { Settings } from '../src/ui/Settings'
@@ -36,14 +37,27 @@ describe('changelog', () => {
 })
 
 describe('Settings menu', () => {
-  const html = (campaigns = 1) =>
-    renderToStaticMarkup(<Settings theme="light" onTheme={() => {}} campaigns={campaigns} onImport={() => {}} onExportAll={() => {}} onClose={() => {}} />)
+  const html = (campaigns = 1, slots: { id: string; state: GameState }[] = []) =>
+    renderToStaticMarkup(<Settings theme="light" onTheme={() => {}} campaigns={campaigns} slots={slots} onDispatch={() => {}} onImport={() => {}} onExportAll={() => {}} onClose={() => {}} />)
 
   it('offers appearance, import/export and what’s new', () => {
     const out = html()
     for (const label of ['System', 'Light', 'Dark', 'Export all campaigns', 'Import from file…', 'What’s new', `v${APP_VERSION}`]) expect(out).toContain(label)
     expect(out).toMatch(/aria-checked="true"[^>]*>Light</)
     for (const r of CHANGELOG) expect(out).toContain(r.title)
+  })
+
+  it('shows each campaign’s looks: unlocked ones by name, locked ones as ???', () => {
+    const c = campaign('brightwatch')
+    const base = reduce(initialState(), { type: 'NEW_GAME', heroId: 'wren', seed: 1, campaignId: 'brightwatch', startDate: '2026-01-05' })
+    const journal = Array.from({ length: 7 }, (_, page) => ({ page, date: pageDate(c, page, base.startDate), lines: [] }))
+    const out = html(1, [{ id: 'a', state: { ...base, journal, dayIndex: 7 } }])
+    expect(out).toContain('Campaign looks')
+    expect(out).toContain('Lamp-gold edge')
+    expect(out).not.toContain('Fog chart')
+    expect(out).toContain('???')
+    expect(out).toContain('Play 30 days in this campaign.')
+    expect(out).not.toMatch(/price|buy|premium|purchase/i)
   })
 
   it('Export all is disabled with no campaigns', () => {

@@ -631,3 +631,25 @@ export interface GameState {
   /** Legacy marks earned so far in this run, oldest first. */
   legacy?: string[]
 }
+
+// ---------- Return rewards and achievements ----------
+
+export interface GameState {
+  /** The real date this run last gave its "well rested" welcome-back reward (once per return). */
+  welcomedOn?: string
+  /** Mon-Sun weeks (their Monday) whose chest was opened in this run. */
+  chestWeeks?: string[]
+  /** Sunday lotteries lost in this run. */
+  lotteryLosses?: number
+  /** Notable moments in this run (see engine/feats.ts). */
+  feats?: string[]
+  /** The look chosen for this run among the styles it has unlocked (see engine/rewards.ts). Absent = default. */
+  style?: Record<string, string>
+  /** The Monday of the week this run's keepsake reroll was last used (once a week). */
+  perkWeek?: string
+}
+
+export interface DayProgress {
+  /** A natural 1 came up in this page's fight. */
+  nat1?: boolean
+}
