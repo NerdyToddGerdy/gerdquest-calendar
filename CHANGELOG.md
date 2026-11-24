@@ -9,6 +9,32 @@ Settings → What's new. Add every release to both, and bump `package.json`
 
 Versions before 0.5.0 were reconstructed after the fact from the code.
 
+## [0.9.0] — 2026-11-24
+
+### Added
+- The Verdant Accord chapters 5–8 (May–Aug): Highmarrow Burns, The Saltward Passage, The Ashen
+  Isle, The Kindling Height. 208 pages; chapters 7–8 decide their legacy by a choice step;
+  catalog marks the campaign as partial (#57).
+- Return rewards and achievements (#56): per-campaign days played (no streaks), themed keepsakes
+  and looks (page edge, paper, dice) at milestones, "Well rested" return boon, a weekly chest,
+  19 achievements on a new Shelf tab, toasts. Data-driven cosmetics registry.
+- Avatar tokens (#56): hero portrait close-ups earned by playing a hero, themed borders from
+  campaign milestones, picker next to Settings; stored in the device progress record and Export all.
+- Playwright end-to-end suite and `e2e` CI job against the production build under `/questender/`;
+  test-only `?today=` pin compiled out of the Pages build (#53).
+- `docs/PRINCIPLES.md` and root `CLAUDE.md`: no microtransactions; campaigns are the only
+  potential revenue (#55).
+
+### Changed
+- Accessibility: hidden finds labelled neutrally, dice faces announced, jsx-a11y lint rules,
+  image/svg naming test (#52). Dependabot ignores @types/node majors.
+- Verdant review fixes: legacy mark when a hero wins and falls in the same fight, neutral
+  locked-option label, chapters 1 and 4 softened (#54).
+
+### Fixed
+- Pip's shared pickpocket ability moved to base content (Verdant crashed without Ember Road loaded).
+- The desk no longer freezes when the viewed date is past a finished campaign's last page (#57).
+
 ## [0.8.0] — 2026-11-24
 
 ### Added
