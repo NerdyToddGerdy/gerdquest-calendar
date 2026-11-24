@@ -1259,3 +1259,6 @@ body {
 .legacy-req { display: block; font-size: 0.78em; color: var(--theme-ink, var(--accent)); margin-top: 2px; }
 .option.legacy-locked .option-btn { opacity: 0.55; }
 ul.legacy { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 4px; }
+
+.settings-legal { display: flex; justify-content: center; gap: 20px; }
+.settings-legal a { color: var(--accent); }
