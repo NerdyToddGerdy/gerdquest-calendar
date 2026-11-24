@@ -51,3 +51,7 @@ CI uploads `playwright-report/` and `test-results/` as an artifact. The `e2e` jo
 in `.github/workflows/ci.yml` runs on pull requests and before every Pages deploy.
 
 Pushing to `main` deploys to GitHub Pages via `.github/workflows/pages.yml`.
+
+## Principles
+
+Questender has no microtransactions: cosmetics are earned by playing, never bought. The only possible future revenue is buying campaigns. See [docs/PRINCIPLES.md](docs/PRINCIPLES.md).
