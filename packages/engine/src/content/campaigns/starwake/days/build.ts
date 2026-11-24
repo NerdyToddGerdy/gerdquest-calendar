@@ -3,7 +3,7 @@
 //
 // Drafts carry no dates: `datePages` walks the real 2022 calendar from Jan 1,
 // gives each draft the next date, and makes Saturday pages cover Saturday +
-// Sunday. It throws (so every test fails loudly) if a draft lands in the
+// Sunday (except Dec 31, the year's last day). It throws (so every test fails loudly) if a draft lands in the
 // wrong month, or a weekend draft (`wk`) misses a Saturday.
 import { addDays, parseISO, weekday } from '../../../../engine/calendar'
 import type { Day } from '../../../../engine/types'
@@ -13,6 +13,7 @@ export { boss, buff, check, check3, curse, dmg, fight, gold, haven, heal, item, 
 export type { Draft, Outcome } from '../../emberroad/days/build'
 
 export const YEAR = 2022
+const LAST_DAY = '2022-12-31'
 
 export function datePages(start: string, months: [number, Draft[]][]): Day[] {
   const out: Day[] = []
@@ -26,8 +27,10 @@ export function datePages(start: string, months: [number, Draft[]][]): Day[] {
       if (sat !== !!draft.wk) throw new Error(`Starwake: "${draft.title}" lands on ${d}; weekend pages must fall on Saturdays and only there`)
       const { wk: _wk, ...rest } = draft
       void _wk
-      out.push({ ...rest, id: `sw-${n++}`, month: m, day, ...(sat ? { span: 2 } : {}) })
-      d = addDays(d, sat ? 2 : 1)
+      // The year's final Saturday (Dec 31) covers only itself.
+      const span = sat && d !== LAST_DAY ? 2 : 1
+      out.push({ ...rest, id: `sw-${n++}`, month: m, day, ...(span === 2 ? { span } : {}) })
+      d = addDays(d, span)
     }
   }
   return out

@@ -8,7 +8,7 @@ export const STARWAKE_ENTRY: CampaignEntry = {
     'The star that held the night sky in place has fallen into the sea. Sail the Saltreach for its shards before a corsair-prince cages it. Classic rules.',
   authoredYear: 2022,
   rulesetId: 'classic',
-  pageCount: 234,
+  pageCount: 313,
   firstDate: '2022-01-01',
   startHero: 'sw_greta',
   heroIds: ['sw_bram', 'sw_isadora', 'sw_kip', 'sw_sel', 'sw_tanu', 'sw_reyna'],

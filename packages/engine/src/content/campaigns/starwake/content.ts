@@ -1,5 +1,5 @@
 // The Starwake — original heroes, abilities, items, enemies and followers for
-// a classic-rules sea campaign (Months 1–9; Months 10–13 come later).
+// a classic-rules sea campaign (the full year, January to December).
 import type { AbilityDef, ContentPack, EnemyDef, HeroDef, ItemDef, LevelSpec, MemberDef } from '../../../engine/types'
 
 const abilities: AbilityDef[] = [
@@ -53,16 +53,32 @@ const abilities: AbilityDef[] = [
   { id: 'sw_ab_patchup', name: 'Patch Up', kind: 'heal', per: 'rest', uses: 1, die: 6, bonus: 2, text: 'Once per Rest: stitch yourself up — recover d6+2 health.' },
   { id: 'sw_ab_whaleshot', name: 'Whale-Shot', kind: 'addDie', per: 'rest', uses: 1, die: 10, slots: ['damage'], text: 'Once per Rest: add d10 to a Damage roll.' },
 
+  // Level 7–8 (Months 10–12)
+  { id: 'sw_ab_hardtack', name: 'Hardtack and Grit', kind: 'heal', per: 'rest', uses: 1, die: 8, bonus: 3, text: 'Once per Rest: chew through it — recover d8+3 health.' },
+  { id: 'sw_ab_capsize', name: 'Capsize', kind: 'addDie', per: 'rest', uses: 1, die: 12, slots: ['damage'], text: 'Once per Rest: add d12 to a Damage roll.' },
+  { id: 'sw_ab_moonpull', name: 'Moonpull', kind: 'heal', per: 'rest', uses: 99, die: 8, bonus: 3, cost: { pool: 'spell', amount: 3 }, text: '3 Spell: the tide takes your hurts — recover d8+3 health.' },
+  { id: 'sw_ab_starfall', name: 'Starfall', kind: 'addDie', per: 'rest', uses: 99, die: 12, slots: ['attack', 'damage'], cost: { pool: 'spell', amount: 4 }, text: '4 Spell: add d12 to an Attack or Damage roll.' },
+  { id: 'sw_ab_cutpurse', name: 'Cutpurse’s Luck', kind: 'addDie', per: 'rest', uses: 2, die: 8, slots: ['attack'], text: 'Twice per Rest: add d8 to an Attack roll.' },
+  { id: 'sw_ab_finisher', name: 'Finishing Stroke', kind: 'addDie', per: 'rest', uses: 1, die: 12, slots: ['damage'], text: 'Once per Rest: add d12 to a Damage roll.' },
+  { id: 'sw_ab_mercy', name: 'Sea-Mother’s Mercy', kind: 'heal', per: 'rest', uses: 99, die: 10, bonus: 2, cost: { pool: 'spell', amount: 3 }, text: '3 Spell: recover d10+2 health.' },
+  { id: 'sw_ab_longnightbell', name: 'Longnight Bell', kind: 'addDie', per: 'rest', uses: 99, die: 12, slots: ['damage'], cost: { pool: 'spell', amount: 4 }, text: '4 Spell: add d12 to a Damage roll.' },
+  { id: 'sw_ab_pearlgrip', name: 'Pearl Grip', kind: 'heal', per: 'rest', uses: 99, die: 10, bonus: 2, cost: { pool: 'chi', amount: 2 }, text: '2 Chi: recover d10+2 health.' },
+  { id: 'sw_ab_tidebreaker', name: 'Tidebreaker', kind: 'addDie', per: 'rest', uses: 99, die: 12, slots: ['damage'], cost: { pool: 'chi', amount: 4 }, text: '4 Chi: add d12 to a Damage roll.' },
+  { id: 'sw_ab_saltsalve', name: 'Salt and Stitches', kind: 'heal', per: 'rest', uses: 1, die: 8, bonus: 3, text: 'Once per Rest: recover d8+3 health.' },
+  { id: 'sw_ab_leviathanspear', name: 'Leviathan Spear', kind: 'addDie', per: 'rest', uses: 2, die: 10, slots: ['damage'], text: 'Twice per Rest: add d10 to a Damage roll.' },
+
   // Lent by followers
   { id: 'sw_ab_mouser', name: 'Biscuit’s Nose', kind: 'passive', bonus: 2, tags: ['perception'], text: '+2 to spotting danger (from Biscuit).' },
   { id: 'sw_ab_hotmeal', name: 'Hot Meal', kind: 'heal', per: 'rest', uses: 1, die: 4, bonus: 1, text: 'Once per Rest (from Fenwick): recover d4+1 health.' },
   { id: 'sw_ab_pickswing', name: 'Pick Swing', kind: 'addDie', per: 'rest', uses: 2, die: 4, slots: ['attack'], text: 'Twice per Rest (from Jory): add d4 to an Attack roll.' },
   { id: 'sw_ab_otterpilot', name: 'Otter Pilot', kind: 'passive', bonus: 2, tags: ['travel'], text: '+2 to travel and sailing checks (from Tully).' },
   { id: 'sw_ab_divelore', name: 'Diver’s Notes', kind: 'passive', bonus: 2, tags: ['lore'], text: '+2 to lore checks (from Vessa).' },
+  { id: 'sw_ab_masonseye', name: 'Mason’s Eye', kind: 'passive', bonus: 2, tags: ['lore', 'physical'], text: '+2 to lore and physical checks (from Ismay).' },
+  { id: 'sw_ab_gunnery', name: 'Gunner’s Eye', kind: 'addDie', per: 'rest', uses: 2, die: 6, slots: ['attack'], text: 'Twice per Rest (from Kestrel): add d6 to an Attack roll.' },
   { id: 'sw_ab_springtrap', name: 'Spring-Loaded', kind: 'addDie', per: 'rest', uses: 1, die: 6, slots: ['damage'], text: 'Once per Rest (from Aunt Calibra): add d6 to a Damage roll.' },
 ]
 
-/** Levels 2–6 (Months 1–9). Months 10–13 will add 7+. */
+/** Levels 2–8: level 7 lands in October, level 8 in November. */
 const LEVELS: Record<string, Record<number, LevelSpec>> = {
   sw_bram: {
     2: { maxHp: 4, atk: 1, traits: { con: 1 }, ability: 'sw_ab_secondwind' },
@@ -70,6 +86,8 @@ const LEVELS: Record<string, Record<number, LevelSpec>> = {
     4: { maxHp: 4, traits: { str: 1 }, ability: 'sw_ab_bellow' },
     5: { maxHp: 4, atk: 1, dmgDie: 10 },
     6: { maxHp: 4, def: 1, ability: 'sw_ab_anchorblow' },
+    7: { maxHp: 5, def: 1, ability: 'sw_ab_hardtack' },
+    8: { maxHp: 5, atk: 1, dmgDie: 12, traits: { str: 1 }, ability: 'sw_ab_capsize' },
   },
   sw_isadora: {
     2: { maxHp: 3, def: 1, pools: { spell: 2 }, ability: 'sw_ab_seabalm' },
@@ -77,6 +95,8 @@ const LEVELS: Record<string, Record<number, LevelSpec>> = {
     4: { maxHp: 3, traits: { int: 1 }, ability: 'sw_ab_kelpwrap' },
     5: { maxHp: 3, atk: 1, dmgDie: 8, pools: { spell: 1 } },
     6: { maxHp: 3, def: 1, pools: { spell: 2 }, ability: 'sw_ab_maelstrom' },
+    7: { maxHp: 3, def: 1, pools: { spell: 2 }, ability: 'sw_ab_moonpull' },
+    8: { maxHp: 3, atk: 1, dmgDie: 10, pools: { spell: 2 }, traits: { int: 1 }, ability: 'sw_ab_starfall' },
   },
   sw_kip: {
     2: { maxHp: 3, atk: 1, traits: { dex: 1 }, ability: 'sw_ab_lowblow' },
@@ -84,6 +104,8 @@ const LEVELS: Record<string, Record<number, LevelSpec>> = {
     4: { maxHp: 3, traits: { cha: 1 }, ability: 'sw_ab_dirtytrick' },
     5: { maxHp: 3, atk: 1, dmgDie: 8 },
     6: { maxHp: 3, def: 1, ability: 'sw_ab_knifework' },
+    7: { maxHp: 3, atk: 1, traits: { dex: 1 }, ability: 'sw_ab_cutpurse' },
+    8: { maxHp: 4, def: 1, dmgDie: 10, ability: 'sw_ab_finisher' },
   },
   sw_sel: {
     2: { maxHp: 3, pools: { spell: 1 }, ability: 'sw_ab_fairwind' },
@@ -91,6 +113,8 @@ const LEVELS: Record<string, Record<number, LevelSpec>> = {
     4: { maxHp: 3, traits: { wis: 1 }, ability: 'sw_ab_harborhymn' },
     5: { maxHp: 4, atk: 1, dmgDie: 8, pools: { spell: 1 } },
     6: { maxHp: 3, def: 1, pools: { spell: 2 }, ability: 'sw_ab_starsong' },
+    7: { maxHp: 3, def: 1, pools: { spell: 1 }, ability: 'sw_ab_mercy' },
+    8: { maxHp: 4, atk: 1, dmgDie: 10, pools: { spell: 2 }, traits: { cha: 1 }, ability: 'sw_ab_longnightbell' },
   },
   sw_tanu: {
     2: { maxHp: 3, pools: { chi: 1 }, ability: 'sw_ab_riptide' },
@@ -98,6 +122,8 @@ const LEVELS: Record<string, Record<number, LevelSpec>> = {
     4: { maxHp: 3, traits: { dex: 1 }, ability: 'sw_ab_deepbreath' },
     5: { maxHp: 4, atk: 1, dmgDie: 8, pools: { chi: 1 } },
     6: { maxHp: 3, def: 1, pools: { chi: 2 }, ability: 'sw_ab_greatwave' },
+    7: { maxHp: 3, def: 1, pools: { chi: 1 }, ability: 'sw_ab_pearlgrip' },
+    8: { maxHp: 4, atk: 1, dmgDie: 10, pools: { chi: 1 }, traits: { str: 1 }, ability: 'sw_ab_tidebreaker' },
   },
   sw_reyna: {
     2: { maxHp: 3, def: 1, ability: 'sw_ab_lashline' },
@@ -105,6 +131,8 @@ const LEVELS: Record<string, Record<number, LevelSpec>> = {
     4: { maxHp: 3, traits: { wis: 1 }, ability: 'sw_ab_patchup' },
     5: { maxHp: 4, def: 1, dmgDie: 10 },
     6: { maxHp: 3, atk: 1, ability: 'sw_ab_whaleshot' },
+    7: { maxHp: 4, def: 1, ability: 'sw_ab_saltsalve' },
+    8: { maxHp: 4, atk: 1, dmgDie: 12, ability: 'sw_ab_leviathanspear' },
   },
 }
 
@@ -177,6 +205,10 @@ const items: ItemDef[] = [
   { id: 'sw_galekite', name: 'Gale Kite', kind: 'upgrade', bonus: { roll: 2 }, tags: ['physical'], stackMax: 1, price: 16, text: 'A folding hermit’s kite. +2 on climbing, leaping and other physical checks.' },
   { id: 'sw_divingbell', name: 'Diving Bell', kind: 'upgrade', bonus: { wis: 3 }, tags: ['travel'], stackMax: 1, price: 24, text: 'Brass bell rigged under the Second Chance. +3 Wisdom on travel checks.' },
   { id: 'sw_staretch', name: 'Star-Etched Edge', kind: 'upgrade', bonus: { dmg: 1 }, stackMax: 2, price: 14, text: 'A blade etched with Wend’s light. +1 to Damage rolls. Stacks up to 2 times.' },
+  { id: 'sw_cloudhoney', name: 'Cloud-Honey Tonic', kind: 'heal', die: 12, bonus: 4, price: 14, text: 'Recover d12+4 health. Not usable during combat rounds.' },
+  { id: 'sw_starflare', name: 'Star-Flare', kind: 'slotDie', die: 8, slots: ['damage'], price: 8, text: 'A stairwright’s signal rocket, thrown instead of fired. Add d8 to a Damage roll.' },
+  { id: 'sw_chisel', name: 'Stairwright’s Chisel', kind: 'upgrade', bonus: { dmg: 1 }, stackMax: 1, price: 18, text: 'Star-glass cuts star-glass. +1 to Damage rolls.' },
+  { id: 'sw_badge', name: 'Stairwright’s Badge', kind: 'upgrade', bonus: { def: 1 }, stackMax: 1, price: 18, text: 'A guild badge, still warm from the stair. +1 Defense.' },
   // Equipment
   { id: 'sw_tricorn', name: 'Oiled Tricorn', kind: 'gear', slot: 'head', bonus: { def: 1 }, price: 9, text: '+1 Defense.' },
   { id: 'sw_peacoat', name: 'Wool Peacoat', kind: 'gear', slot: 'body', bonus: { maxHp: 2 }, price: 10, text: '+2 max health.' },
@@ -188,6 +220,10 @@ const items: ItemDef[] = [
   { id: 'sw_stormblade', name: 'Stormglass Blade', kind: 'gear', slot: 'hands', bonus: { atk: 2 }, magical: true, price: 32, text: 'Magical. +2 Attack. Lightning sleeps in the glass.' },
   { id: 'sw_lens', name: 'Astronomer’s Lens', kind: 'gear', slot: 'head', bonus: { def: 1, int: 2 }, magical: true, price: 28, text: 'Magical. +1 Defense, +2 Intellect.' },
   { id: 'sw_keepersextant', name: 'The Keeper’s Sextant', kind: 'gear', slot: 'trinket', bonus: { atk: 2, wis: 2 }, magical: true, price: 40, text: 'Magical. +2 Attack, +2 Wisdom. The Starwell Sextant, rebuilt with the true Night Chart inside.' },
+  { id: 'sw_skysilk', name: 'Skysilk Cloak', kind: 'gear', slot: 'body', bonus: { maxHp: 4, def: 1 }, magical: true, price: 34, text: 'Magical. +4 max health, +1 Defense. Woven from the Cloudback’s shed hide; it never quite touches the ground.' },
+  { id: 'sw_cagegauntlets', name: 'Cage-Warden’s Gauntlets', kind: 'gear', slot: 'hands', bonus: { atk: 1, def: 1 }, magical: true, price: 34, text: 'Magical. +1 Attack, +1 Defense. Brass and star-glass, built to hold something that does not want to be held.' },
+  { id: 'sw_gildedrapier', name: 'Ashe’s Gilded Rapier', kind: 'gear', slot: 'hands', bonus: { atk: 2, dmg: 1 }, magical: true, price: 44, text: 'Magical. +2 Attack, +1 Damage. Still too pretty to be as sharp as it is.' },
+  { id: 'sw_longnightcloak', name: 'Longnight Mantle', kind: 'gear', slot: 'body', bonus: { maxHp: 5, def: 1, wis: 1 }, magical: true, price: 40, text: 'Magical. +5 max health, +1 Defense, +1 Wisdom. Woven at the feast from a thread of every star that climbed.' },
 ]
 
 /** ac = Attack to hit · toughness = Damage to defeat · hits = its attack vs your 10 + Defense · dmg = damage. */
@@ -238,6 +274,23 @@ const enemies: EnemyDef[] = [
   { id: 'sw_boarder', name: 'Corsair Boarder', ac: 16, toughness: 8, hits: 17, dmg: 5, text: 'Swinging across on a line with a knife in their teeth.' },
   { id: 'sw_needlelight', name: 'Needle-Light', ac: 17, toughness: 7, hits: 17, dmg: 5, text: 'A splinter of stolen starlight from the Hollow Needle, sharp enough to cut.' },
   { id: 'sw_giltgull', name: 'The Gilt Gull', ac: 19, toughness: 13, hits: 20, dmg: 7, text: 'Ashe Calloway’s flagship, and Ashe himself at the rail with a smile and a rapier.' },
+  // Month 10: the Upper Sea
+  { id: 'sw_gleaner', name: 'Star-Gleaner', ac: 16, toughness: 7, hits: 17, dmg: 4, text: 'A scavenger-spirit that picks wrecks clean of anything still shining.' },
+  { id: 'sw_skyray', name: 'Sky-Ray', ac: 17, toughness: 8, hits: 17, dmg: 4, text: 'A manta the size of a rowboat, swimming through the air on wings of cloud.' },
+  { id: 'sw_quarryman', name: 'Gull’s Teeth Quarryman', ac: 17, toughness: 9, hits: 18, dmg: 5, text: 'One of Ashe’s stair-breakers, in gold and grey, with a pickaxe and no questions.' },
+  { id: 'sw_bargeguard', name: 'Barge Guard', ac: 17, toughness: 9, hits: 18, dmg: 5, text: 'A harpoon-gun crew-hand, paid to keep the Cloudback hauling.' },
+  { id: 'sw_cloudback', name: 'The Cloudback', ac: 18, toughness: 14, hits: 19, dmg: 6, text: 'A sky-whale a hundred paces long, chained to Ashe’s quarry barges and mad with the weight of them.' },
+  // Month 11: the Landings
+  { id: 'sw_shardecho', name: 'Shard-Echo', ac: 17, toughness: 9, hits: 18, dmg: 5, text: 'A shape the shard remembers: whatever it met in the place it fell.' },
+  { id: 'sw_cagewarden', name: 'Cage-Warden', ac: 18, toughness: 10, hits: 19, dmg: 5, text: 'A brass-and-glass jailer from Ashe’s workshops, with an empty lantern-cage for a chest.' },
+  { id: 'sw_gunner', name: 'Corsair Gunner', ac: 17, toughness: 8, hits: 19, dmg: 6, text: 'A long pistol, a short temper and a very good eye.' },
+  { id: 'sw_cageengine', name: 'The Lantern-Cage', ac: 19, toughness: 15, hits: 20, dmg: 8, text: 'Ashe’s great engine of brass ribs and star-glass bars, built to close around Wend and never open.' },
+  // Month 12: the Crown
+  { id: 'sw_gildduelist', name: 'Gilt Duelist', ac: 18, toughness: 11, hits: 19, dmg: 7, text: 'The Gilt Gull’s best blades: they fence as if every fight were being watched.' },
+  { id: 'sw_hollowshade', name: 'Hollow Shade', ac: 18, toughness: 10, hits: 20, dmg: 7, text: 'A shape cut out of the light, with nothing inside it.' },
+  { id: 'sw_longnightwisp', name: 'Longnight Wisp', ac: 18, toughness: 9, hits: 19, dmg: 7, text: 'A cold flicker that follows climbers up the stair and tries to snuff their lamps.' },
+  { id: 'sw_ashe', name: 'Ashe Calloway', ac: 20, toughness: 17, hits: 21, dmg: 8, text: 'The Corsair-Prince at the stair’s last gate, rapier in one hand and the Hollow Needle in the other, still smiling.' },
+  { id: 'sw_hollowneedle', name: 'The Hollow Needle', ac: 20, toughness: 18, hits: 22, dmg: 9, text: 'The keystone of the stair, cut hollow long ago. It wants to be filled, and it is not particular with what.' },
 ]
 
 const follower = (m: Omit<MemberDef, 'kind' | 'maxHp' | 'abilities'>): MemberDef => ({ kind: 'critter', maxHp: 1, abilities: [], ...m })
@@ -249,6 +302,8 @@ const members: MemberDef[] = [
   follower({ id: 'sw_f_tully', name: 'Mossy Tully', fee: 10, follower: { upkeep: 2, grants: ['sw_ab_otterpilot'] }, text: 'An otter-folk ferryman who knows every channel in the marsh, and several that aren’t.' }),
   follower({ id: 'sw_f_vessa', name: 'Vessa Quill', fee: 14, follower: { upkeep: 3, grants: ['sw_ab_divelore'] }, text: 'A diver-scholar who used to work for Ashe. She knows what he plans, and wants it stopped.' }),
   follower({ id: 'sw_f_calibra', name: 'Aunt Calibra', fee: 16, follower: { upkeep: 4, grants: ['sw_ab_springtrap'] }, text: 'The Orrery’s oldest clockmaker, who builds traps for fun.' }),
+  follower({ id: 'sw_f_ismay', name: 'Ismay Tolliver', fee: 14, follower: { upkeep: 3, grants: ['sw_ab_masonseye'] }, text: 'The last stairwright of the Upper Sea. She has been waiting two hundred years to finish a job.' }),
+  follower({ id: 'sw_f_kestrel', name: 'Kestrel Marrow', fee: 16, follower: { upkeep: 4, grants: ['sw_ab_gunnery'] }, text: 'A gunner who walked off Ashe’s flagship in the middle of a battle, and has opinions about it.' }),
 ]
 
 export const STARWAKE_CONTENT: ContentPack = { abilities, heroes, items, enemies, members }

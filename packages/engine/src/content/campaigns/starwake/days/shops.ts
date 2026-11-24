@@ -51,4 +51,17 @@ export const SHOP_STORM: Stock = [
   { id: 'sw_tarredgrip', price: 10 },
 ]
 
+/** The Upper Sea: stairwright goods, cloud-honey and star-flares. */
+export const SHOP_SKY: Stock = [
+  { id: 'ration', price: 2 },
+  { id: 'sw_pearltonic', price: 12 },
+  { id: 'sw_cloudhoney', price: 14 },
+  { id: 'sw_starflare', price: 8 },
+  { id: 'sw_keg', price: 10 },
+  { id: 'sw_sharkoil', price: 7 },
+  { id: 'sw_coralsalve', price: 10 },
+  { id: 'sw_coffee', price: 5 },
+  { id: 'sw_tarredgrip', price: 10 },
+]
+
 export const with_ = (stock: Stock, ...extra: Stock): Stock => [...stock, ...extra]

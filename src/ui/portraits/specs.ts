@@ -97,4 +97,8 @@ export const PORTRAITS: Record<string, PortraitSpec> = {
   sw_teague: fig({ build: 'broad', skin: SKIN.rose, hair: HAIR.black, hairStyle: 'bald', beard: true, outfit: '#4a4a52', trim: '#c9a45a', prop: 'axe', scale: 1.08 }),
   sw_orrery: beast({ shape: 'machine', body: '#4a3d6a', accent: '#e8b25a', eye: '#ffd88a' }),
   sw_giltgull: beast({ shape: 'ship', body: '#3a3a42', accent: '#e8c87a', eye: '#ffd88a' }),
+  sw_cloudback: beast({ shape: 'serpent', body: '#8a96c8', accent: '#e8f0ff', eye: '#ffd88a', wings: true }),
+  sw_cageengine: beast({ shape: 'machine', body: '#4a3a2a', accent: '#cfe0ff', eye: '#ffd88a' }),
+  sw_ashe: fig({ build: 'slim', skin: SKIN.fair, hair: HAIR.black, hairStyle: 'long', outfit: '#c9a45a', trim: '#3a3a42', prop: 'sword', head: 'tricorn', headColor: '#2a2a30', cloak: '#3a3a42', glow: '#e8f4ff' }),
+  sw_hollowneedle: beast({ shape: 'fog', body: '#1d2448', accent: '#e8f0ff', eye: '#ffffff', crown: true }),
 }

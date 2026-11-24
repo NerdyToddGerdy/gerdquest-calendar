@@ -3,8 +3,8 @@ import type { Campaign } from '../../../engine/types'
 import { STARWAKE_CONTENT } from './content'
 import { DAYS } from './days/index'
 
-/** The Saltreach calendar: one in-world month per chapter. Months 10–13 come later. */
-const MONTHS = ['Driftmoon', 'Brinemoon', 'Galemoon', 'Reedmoon', 'Stillmoon', 'Deepmoon', 'Thundermoon', 'Gearmoon', 'Rimmoon']
+/** The Saltreach calendar: one in-world month per chapter. Skymoon, Mendmoon and Longnight carry the voyage home. */
+const MONTHS = ['Driftmoon', 'Brinemoon', 'Galemoon', 'Reedmoon', 'Stillmoon', 'Deepmoon', 'Thundermoon', 'Gearmoon', 'Rimmoon', 'Skymoon', 'Mendmoon', 'Longnight']
 
 function inWorldDate(i: number): string {
   const d = DAYS[i]
