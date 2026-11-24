@@ -104,7 +104,8 @@ export default function App() {
   /**
    * The › arrow: move to the next date that shows something new (Saturday
    * goes straight to Monday when every campaign is on a weekend page),
-   * turning the page in every campaign whose page ends on a date passed.
+   * turning the page in every campaign that completed the page ending on a
+   * date passed (campaigns that lag stay where they are).
    */
   const forward = () => {
     const next = nextDeskDate(
