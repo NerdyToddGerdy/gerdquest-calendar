@@ -947,6 +947,8 @@ button:disabled { opacity: 1; color: var(--muted); background: transparent; bord
 .tab.not-started { opacity: 0.72; }
 .tab.not-started > span:nth-child(2) { font-style: normal; }
 .tab-when { font-size: 0.78rem; color: var(--muted); }
+.tab-behind { font-size: 0.78rem; font-weight: 600; color: var(--bad); }
+.forward-hint { margin: 0.35rem 0 0; text-align: center; }
 .mark.none { color: var(--muted); }
 @media (max-width: 600px) {
   .cal-mark { width: 12px; height: 12px; border-width: 1.5px; font-size: 0.5rem; }
