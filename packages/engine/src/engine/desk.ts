@@ -98,7 +98,9 @@ export function nextDeskDate(states: GameState[], date: ISODate, today: ISODate)
 /** The last date the page(s) showing on `date` cover, across every campaign (a weekend page runs to Sunday). */
 export function deskSpanEnd(states: GameState[], date: ISODate): ISODate {
   let d = date
-  while (states.length && samePages(states, addDays(d, 1), d)) d = addDays(d, 1)
+  // Past every campaign's last page all dates look alike (index = pages.length), so the range ends there.
+  const live = (day: ISODate) => states.some((s) => pageIndexOn(s, day) < campaign(s.campaignId).pages.length)
+  while (states.length && live(d) && samePages(states, addDays(d, 1), d)) d = addDays(d, 1)
   return d
 }
 

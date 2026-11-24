@@ -390,7 +390,23 @@ export function CampaignPanel({ slot, viewDate, today, dispatch, onDate, onDelet
       </article>
     )
   } else {
-    main = (
+    const partial = !!c.chaptersWritten && !!c.chaptersPlanned && c.chaptersWritten < c.chaptersPlanned
+    // The Verdant Accord's running tally from Chapter 5: marks that kept the Accord against marks that let the Wilds in.
+    const late = c.id === 'verdant' ? (state.legacy ?? []).filter((m) => Number(/^va_l(\d+)_/.exec(m)?.[1] ?? 0) >= 5) : []
+    const kept = late.filter((m) => m.endsWith('_win')).length
+    main = partial ? (
+      <article className="day notice">
+        <h2>The story so far</h2>
+        <p className="narrative">
+          {c.title} is still being written: {c.chaptersWritten} of {c.chaptersPlanned} chapters are ready. {state.hero!.name}’s tale continues when the next chapter arrives. Look back through the Journal in the meantime.
+        </p>
+        {late.length > 0 && (
+          <p className="muted small">
+            The tally since Chapter 5: Accord kept {kept}, Wilds let in {late.length - kept}.
+          </p>
+        )}
+      </article>
+    ) : (
       <article className="day notice">
         <h2>The end of {c.title}</h2>
         <p className="narrative">{state.hero!.name}’s story in this campaign is complete. Look back through the Journal.</p>

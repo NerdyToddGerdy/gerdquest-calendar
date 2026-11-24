@@ -71,6 +71,7 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
                 <p className="small">{c.blurb}</p>
                 <span className="muted small">
                   {c.pageCount} pages · {c.rulesetId} rules
+                  {c.chaptersPlanned && c.chaptersWritten && c.chaptersWritten < c.chaptersPlanned ? ` · chapters 1–${c.chaptersWritten} of ${c.chaptersPlanned} so far, more coming` : ''}
                 </span>
               </div>
             </button>

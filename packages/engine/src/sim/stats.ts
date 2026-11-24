@@ -43,6 +43,8 @@ export interface Summary {
   prologue: { pages: number; meanZeroHp: number; runPct: number }
   topPages: { id: string; title: string; enemies: string[]; month: number; deaths: number; runPct: number }[]
   topCauses: { cause: string; deaths: number }[]
+  /** The fights the hero lost most often (lost = the fight ended without every foe down). */
+  hardestFights?: { id: string; title: string; month: number; fights: number; lostPct: number }[]
   byHero: { hero: string; runs: number; deathsPerRun: number; median?: number; p90?: number; perMonth?: number[] }[]
 }
 
@@ -84,6 +86,19 @@ export function summarize(campaignId: string, runs: RunRecord[]): Summary {
     .slice(0, 10)
     .map(([page, e]) => ({ id: info[page].id, title: info[page].title, enemies: info[page].enemies, month: info[page].month, deaths: e.deaths, runPct: pct(e.runs.size, runs.length) }))
 
+  const tally = new Map<number, { fights: number; lost: number }>()
+  for (const r of runs) for (const [page, won] of r.fights ?? []) {
+    const e = tally.get(page) ?? { fights: 0, lost: 0 }
+    e.fights++
+    if (!won) e.lost++
+    tally.set(page, e)
+  }
+  const hardestFights = [...tally.entries()]
+    .filter(([, e]) => e.fights >= Math.max(5, runs.length / 4))
+    .map(([page, e]) => ({ id: info[page].id, title: info[page].title, month: info[page].month, fights: e.fights, lostPct: pct(e.lost, e.fights) }))
+    .sort((a, b) => b.lostPct - a.lostPct)
+    .slice(0, 10)
+
   const prologueZero = runs.map((r) => r.deaths.filter((d) => d.page < pro).length)
   const heroes = [...new Set(runs.map((r) => r.heroId))]
   return {
@@ -95,6 +110,7 @@ export function summarize(campaignId: string, runs: RunRecord[]): Summary {
     months,
     prologue: { pages: pro, meanZeroHp: prologueZero.reduce((a, b) => a + b, 0) / Math.max(1, runs.length), runPct: pct(prologueZero.filter((n) => n > 0).length, runs.length) },
     topPages,
+    hardestFights,
     topCauses: [...causes.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10).map(([cause, deaths]) => ({ cause, deaths })),
     byHero: heroes.map((hero) => {
       const rs = runs.filter((r) => r.heroId === hero)
@@ -125,6 +141,10 @@ export function renderSummary(sm: Summary, title: string): string {
   for (const m of sm.months) L.push(`| ${m.month} | ${m.runs} | ${m.deaths} | ${f(m.deathRunPct, 1)}% | ${sp(m.level)} | ${sp(m.glint)} | ${sp(m.hpPct)} | ${f(m.healItems)} |`)
   L.push('', 'Most lethal pages:', '', '| Page | Month | Enemies | Deaths | % runs |', '|---|---|---|---|---|')
   for (const p of sm.topPages) L.push(`| ${p.id} ${p.title} | ${p.month} | ${p.enemies.join(', ') || 'hazard'} | ${p.deaths} | ${f(p.runPct, 1)}% |`)
+  if (sm.hardestFights?.length) {
+    L.push('', 'Hardest fights (share of attempts that ended without every foe down):', '', '| Page | Month | Fights | Lost |', '|---|---|---|---|')
+    for (const h of sm.hardestFights) L.push(`| ${h.id} ${h.title} | ${h.month} | ${h.fights} | ${f(h.lostPct, 1)}% |`)
+  }
   L.push('', 'Deaths per hero (death-table hits per run):', '')
   L.push(`| Hero | Runs | Mean | Median | p90 | ${sm.months.map((m) => `M${m.month}`).join(' | ')} |`)
   L.push(`|---|---|---|---|---|${sm.months.map(() => '---').join('|')}|`)

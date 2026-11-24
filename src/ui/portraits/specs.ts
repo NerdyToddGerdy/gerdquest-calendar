@@ -116,4 +116,12 @@ export const PORTRAITS: Record<string, PortraitSpec> = {
   va_sluicemother: beast({ shape: 'serpent', body: '#3a4a3a', accent: '#7a8a5a', eye: '#e8d07a' }),
   va_waxwarden: fig({ build: 'robed', skin: '#e8dcc0', hair: '#e8dcc0', hairStyle: 'bald', outfit: '#d8ccb0', trim: '#b8a880', prop: 'censer', glow: '#ffd88a', head: 'crown', headColor: '#f0c060', scale: 1.1 }),
   va_brassgardener: beast({ shape: 'construct', body: '#a8864a', accent: '#4f6a3a', eye: '#9fe08a' }),
+  va_clockchamp: beast({ shape: 'construct', body: '#b89a52', accent: '#5a8a4a', eye: '#ffd88a' }),
+  va_briarknight: fig({ build: 'armored', skin: '#7a5a3a', hair: HAIR.brown, hairStyle: 'bald', outfit: '#3f5a2e', trim: '#d8d0b0', prop: 'sword', head: 'helm', headColor: '#4a3a24', cloak: '#2a3a20' }),
+  va_thunderheron: beast({ shape: 'bird', body: '#6a7a92', accent: '#f2e8a0', eye: '#fff4a0', crown: true }),
+  va_greyleviathan: beast({ shape: 'serpent', body: '#4a5664', accent: '#9aa8b8', eye: '#ffe8a0' }),
+  va_kilnborn: beast({ shape: 'construct', body: '#3a2a22', accent: '#e8642a', eye: '#fff0b0', crown: true }),
+  va_gardener2: beast({ shape: 'construct', body: '#9a7a44', accent: '#6a8a5a', eye: '#9fe08a' }),
+  va_gardener3: beast({ shape: 'machine', body: '#7a6a4a', accent: '#c8b898', eye: '#e8f0a0' }),
+  va_elder: beast({ shape: 'plant', body: '#2a2a22', accent: '#f0e8e0', eye: '#e8ffd0', crown: true }),
 }

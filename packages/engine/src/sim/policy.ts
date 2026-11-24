@@ -108,7 +108,11 @@ function bandScore(s: GameState, opt: Option, total: number, nat1: boolean): num
 
 function optionScore(s: GameState, opt: Option, brain: Brain, choiceIdx: number, choices: number): number {
   const pick = (opt.effects ?? []).some((e) => e.type === 'setHero')
-  const heroBias = pick && choiceIdx === brain.pref % Math.max(1, choices) ? 1000 : 0
+  let heroBias = pick && choiceIdx === brain.pref % Math.max(1, choices) ? 1000 : 0
+  // Choice-decided legacy (an option that records a mark): rotate between the
+  // two endings by run, so the sim plays both the honoured and the broken bargain.
+  const mark = (opt.effects ?? []).find((e) => e.type === 'legacy')
+  if (mark && mark.id.endsWith('_win') === (brain.pref % 2 === 0)) heroBias += 1000
   if (!opt.check) return effectsScore(s, opt.effects) + heroBias
   const bonus = checkMods(s, opt).reduce((n, m) => n + m.value, 0)
   const boons = rules(s).boons

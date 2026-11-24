@@ -32,6 +32,8 @@ export interface RunRecord {
   pages: number
   deaths: Death[]
   months: MonthSnap[]
+  /** Every fight that ran to its end: the page and whether the hero won it. */
+  fights: [page: number, won: boolean][]
 }
 
 export interface PageInfo {
@@ -69,7 +71,7 @@ export function simulate(campaignId: string, seed: number): RunRecord {
   const heroes = campaignHeroes(c)
   const startHero = c.startHero ?? heroes[seed % heroes.length].id
   let st: GameState = reduce(initialState(seed), { type: 'NEW_GAME', seed, campaignId, heroId: startHero })
-  const rec: RunRecord = { campaignId, seed, heroId: startHero, finished: false, stuckAt: null, pages: 0, deaths: [], months: [] }
+  const rec: RunRecord = { campaignId, seed, heroId: startHero, finished: false, stuckAt: null, pages: 0, deaths: [], months: [], fights: [] }
 
   const dispatch = (a: Action): GameState => {
     // The log and journal only grow; clearing them keeps cloning cheap and shows exactly what this action did.
@@ -93,6 +95,8 @@ export function simulate(campaignId: string, seed: number): RunRecord {
     const i = st.dayIndex
     const played = playPage(st, dispatch, brain)
     st = played.s
+    const fought = st.progress.combat
+    if (fought?.done && c.pages[i].combat) rec.fights.push([i, fought.won])
     if (!played.ok) {
       rec.stuckAt = i
       break

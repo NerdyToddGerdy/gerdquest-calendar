@@ -581,3 +581,71 @@ Deaths per hero (death-table hits per run):
 | isolde | 33 | 1.73 | 2.0 | 3.8 | 0.03 | 0.03 | 0.06 | 0.18 | 0.18 | 0.36 | 0.18 | 0.18 | 0.12 | 0.03 | 0.03 | 0.33 |
 | corin | 33 | 2.67 | 3.0 | 4.0 | 0.03 | 0.12 | 0.00 | 0.09 | 0.09 | 0.30 | 0.06 | 0.42 | 0.45 | 0.06 | 0.00 | 1.03 |
 | bw-ottilie | 33 | 1.24 | 1.0 | 2.0 | 0.09 | 0.09 | 0.00 | 0.03 | 0.00 | 0.03 | 0.00 | 0.09 | 0.00 | 0.03 | 0.00 | 0.88 |
+
+## Verdant Accord: chapters 5–8 (May to August)
+
+Chapters 5 to 8 (208 pages, Jan 1 to Aug 31) were tuned with `SIM_RUNS=100 SIM_CAMPAIGNS=verdant npm run sim`. Targets: 10–30% of runs hit the death table each month, chapter bosses won about 25–45% of the time, no stuck runs, currency neither flooded nor starved.
+
+- Every one of the 100 runs finishes the year (no bot stalls). The bot rotates between the two endings of the choice-decided chapters (7 and 8) by run, so both are played.
+- Chapter 5 to 8 death rates are 29%, 27%, 16% and 19% of runs. Chapters 1 to 4 are unchanged (14%, 25%, 13%, 9%). Boss win rates: Protect the Steward 30%, Thunder-Heron (stage one) 36%, Grey Leviathan 32%, Kiln-Born 27%, Elder of Thorns 28%.
+- Currency at the end of each month climbs from 7 (May) to 42 (August), in line with the other campaigns (26–49 in their later months). Raw gold rewards in chapters 5–8 were cut to 60% of the first draft, and the sim showed money piling up (median 71 by August) before that.
+- What was tuned: enemy stats one step above chapter 4 and rising by chapter; a free heal (Ottoline's tonic, Pike's stew) before the Steward and Leviathan fights; alpine complications cost 3 health, not 2; the Pennant fight is two foes, not three; Leviathan toughness 10 after a first draft at 13 killed 57% of runs.
+- As in the other campaigns, hero strength varies a lot: Brannoc (and Kestrel) almost never fall, while Odo, Sorrel, Pip and Aldous account for nearly all death-table hits (see the per-hero table).
+- Sim changes: runs now record each fight's result, the report has a "Hardest fights" table, and the bot picks choice-step legacy endings by run parity.
+
+### verdant: chapters 1–8 (100 runs)
+
+100 runs. Finished the year: 100.0%. Death-table hits per run: median 1 (p10 0, p90 5).
+Prologue (first 7 pages): 0.0% of runs hit 0 HP, 0.00 times per run on average.
+
+| Month | Runs | Deaths | % runs with a death | Level med (p10–p90) | Currency med (p10–p90) | HP % at month end | Heal items (median) |
+|---|---|---|---|---|---|---|---|
+| 1 | 100 | 14 | 14.0% | 2 (2–2) | 2 (0–10) | 100 (100–100) | 3 |
+| 2 | 100 | 29 | 25.0% | 3 (3–3) | 3 (0–7) | 86 (84–100) | 3 |
+| 3 | 100 | 13 | 13.0% | 4 (4–4) | 6 (1–9) | 100 (100–100) | 3 |
+| 4 | 100 | 10 | 9.0% | 5 (5–5) | 4 (0–8) | 100 (100–100) | 3 |
+| 5 | 100 | 38 | 29.0% | 6 (6–6) | 7 (2–27) | 100 (100–100) | 4 |
+| 6 | 100 | 40 | 27.0% | 6 (6–6) | 11 (2–46) | 100 (100–100) | 6 |
+| 7 | 100 | 16 | 16.0% | 7 (7–7) | 34 (16–57) | 95 (89–100) | 8 |
+| 8 | 100 | 21 | 19.0% | 7 (7–7) | 42 (14–58) | 100 (100–100) | 11 |
+
+Most lethal pages:
+
+| Page | Month | Enemies | Deaths | % runs |
+|---|---|---|---|---|
+| va-150 The Grey Leviathan | 6 | The Grey Leviathan | 26 | 26.0% |
+| va-204 The Elder of Thorns | 8 | The Elder of Thorns | 19 | 19.0% |
+| va-126 Protect the Steward | 5 | Crane’s Clockwork Champion, Thornwake Briar Knight | 18 | 18.0% |
+| va-48 The Sluice-Mother | 2 | The Sluice-Mother | 16 | 16.0% |
+| va-108 The Barricade at the Fair Plaza | 5 | Exchange Looter, Thornwake Raider | 14 | 14.0% |
+| va-180 The Kiln-Born | 7 | The Kiln-Born | 14 | 14.0% |
+| va-40 The Flood-Boat Chase | 2 | Timber Smuggler, Timber Smuggler, Timber Smuggler | 13 | 13.0% |
+| va-149 The Thunder-Heron | 6 | The Thunder-Heron | 12 | 12.0% |
+| va-24 Old Knucklebark | 1 | Old Knucklebark | 11 | 11.0% |
+| va-84 Clockwork in the Belfry | 4 | Clockwork Footman, Clockwork Footman | 9 | 9.0% |
+
+Hardest fights (share of attempts that ended without every foe down):
+
+| Page | Month | Fights | Lost |
+|---|---|---|---|
+| va-102 The Brass Gardener | 4 | 100 | 76.0% |
+| va-48 The Sluice-Mother | 2 | 100 | 75.0% |
+| va-84 Clockwork in the Belfry | 4 | 100 | 75.0% |
+| va-180 The Kiln-Born | 7 | 100 | 73.0% |
+| va-204 The Elder of Thorns | 8 | 100 | 72.0% |
+| va-126 Protect the Steward | 5 | 100 | 70.0% |
+| va-150 The Grey Leviathan | 6 | 100 | 68.0% |
+| va-72 The Wax Warden | 3 | 100 | 67.0% |
+| va-108 The Barricade at the Fair Plaza | 5 | 100 | 65.0% |
+| va-149 The Thunder-Heron | 6 | 100 | 64.0% |
+
+Deaths per hero (death-table hits per run):
+
+| Hero | Runs | Mean | Median | p90 | M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| va_kestrel | 17 | 0.18 | 0.0 | 1.0 | 0.12 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.06 |
+| va_odo | 17 | 2.88 | 2.0 | 5.4 | 0.12 | 1.00 | 0.18 | 0.00 | 0.47 | 0.82 | 0.24 | 0.06 |
+| va_brannoc | 17 | 0.00 | 0.0 | 0.0 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 | 0.00 |
+| va_sorrel | 17 | 2.71 | 3.0 | 5.0 | 0.29 | 0.18 | 0.06 | 0.29 | 0.65 | 0.76 | 0.18 | 0.29 |
+| va_pip | 16 | 2.81 | 3.0 | 4.5 | 0.31 | 0.31 | 0.25 | 0.13 | 0.56 | 0.13 | 0.44 | 0.69 |
+| va_aldous | 16 | 2.38 | 2.0 | 4.5 | 0.00 | 0.25 | 0.31 | 0.19 | 0.63 | 0.69 | 0.13 | 0.19 |
