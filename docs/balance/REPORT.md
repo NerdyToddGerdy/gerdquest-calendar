@@ -31,10 +31,12 @@ Notes on reading the numbers:
 |---|---|---|---|---|---|
 | Brightwatch (modern) | 2 -> 1 | 25% -> 8% | 4.5% -> 4.5% | 3% -> 42% | 13% -> 11% |
 | Ember Road (classic) | 10 -> 1 | 83% -> 8% | 0.0% -> 0.0% | 32% -> 26% | 60% -> 15% |
-| Halcyon (frontier) | 17 -> 2 | 66% -> 3% | 0.0% -> 0.0% | 83% -> 41% | 76% -> 22% |
+| Halcyon (frontier) | 17 -> 2 | 66% -> 3% | 0.0% -> 0.0% | 83% -> 37% | 76% -> 20% |
 | Starwake (classic, months 1-9) | 12 -> 1 | 52% -> 5% | 14.5% -> 0.5% | 79% -> 24% | 75% -> 15% |
 
 Targets: first month under 10%, steady 10-30% pressure mid-year, final boss month 30-50%. Brightwatch and Halcyon land in the band in December; Ember Road and Starwake finish a little under it (26% and 24%, mostly because heroes arrive in better shape once mid-year fights stop killing them). Currency is covered in the tables: the bot keeps 3 healing items on hand in every campaign, though Halcyon, Ember Road and Starwake run lean (median 10-45 currency at month end) while Brightwatch is comfortable and floods slightly late in the year (100+ from month 10).
+
+Halcyon figures were re-run after Surge and Charges became point pools (#43); the other campaigns were unchanged by that.
 
 ## Before tuning (findings that motivated it)
 
@@ -254,40 +256,40 @@ Deaths per hero: hd_ash 11.15 (34 runs), hd_seren 19.74 (34 runs), hd_tamsin 31.
 
 ### halcyon: after tuning
 
-200 runs. Finished the year: 100.0%. Death-table hits per run: median 2 (p10 0, p90 8).
+200 runs. Finished the year: 100.0%. Death-table hits per run: median 2 (p10 0, p90 7).
 Prologue (first 6 pages): 0.0% of runs hit 0 HP, 0.00 times per run on average.
 
 | Month | Runs | Deaths | % runs with a death | Level med (p10–p90) | Currency med (p10–p90) | HP % at month end | Heal items (median) |
 |---|---|---|---|---|---|---|---|
-| 1 | 200 | 7 | 3.0% | 2 (2–2) | 23 (16–30) | 100 (100–100) | 4 |
-| 2 | 200 | 14 | 7.0% | 2 (2–2) | 9 (5–12) | 100 (86–100) | 3 |
-| 3 | 200 | 2 | 1.0% | 3 (3–3) | 25 (18–29) | 84 (50–100) | 4 |
-| 4 | 200 | 33 | 16.5% | 3 (3–3) | 8 (5–9) | 100 (90–100) | 4 |
-| 5 | 200 | 105 | 39.5% | 4 (4–4) | 8 (4–9) | 95 (87–100) | 3 |
-| 6 | 200 | 52 | 26.0% | 4 (4–4) | 28 (14–38) | 63 (50–87) | 6 |
-| 7 | 200 | 10 | 5.0% | 5 (5–5) | 13 (10–15) | 100 (100–100) | 6 |
-| 8 | 200 | 56 | 25.0% | 5 (5–5) | 55 (36–66) | 61 (42–86) | 6 |
-| 9 | 200 | 62 | 27.5% | 6 (6–6) | 11 (7–13) | 100 (100–100) | 6 |
-| 10 | 200 | 68 | 29.5% | 6 (6–6) | 12 (10–17) | 100 (100–100) | 5 |
-| 11 | 200 | 111 | 41.0% | 7 (7–7) | 23 (13–40) | 100 (91–100) | 7 |
-| 12 | 200 | 93 | 41.0% | 8 (8–8) | 43 (23–85) | 100 (100–100) | 6 |
+| 1 | 200 | 7 | 3.0% | 2 (2–2) | 24 (17–30) | 100 (100–100) | 4 |
+| 2 | 200 | 9 | 4.5% | 2 (2–2) | 9 (6–12) | 100 (86–100) | 4 |
+| 3 | 200 | 0 | 0.0% | 3 (3–3) | 26 (18–29) | 87 (53–100) | 4 |
+| 4 | 200 | 30 | 15.0% | 3 (3–3) | 8 (6–9) | 100 (90–100) | 4 |
+| 5 | 200 | 106 | 39.5% | 4 (4–4) | 8 (4–9) | 95 (88–100) | 3 |
+| 6 | 200 | 34 | 17.0% | 4 (4–4) | 31 (18–39) | 68 (46–91) | 6 |
+| 7 | 200 | 9 | 4.5% | 5 (5–5) | 13 (11–15) | 100 (100–100) | 6 |
+| 8 | 200 | 50 | 21.0% | 5 (5–5) | 59 (36–68) | 68 (48–88) | 7 |
+| 9 | 200 | 57 | 26.5% | 6 (6–6) | 11 (7–23) | 100 (100–100) | 6 |
+| 10 | 200 | 65 | 28.5% | 6 (6–6) | 12 (10–46) | 100 (100–100) | 6 |
+| 11 | 200 | 107 | 41.0% | 7 (7–7) | 24 (16–52) | 100 (93–100) | 8 |
+| 12 | 200 | 85 | 37.0% | 8 (8–8) | 54 (30–102) | 100 (100–100) | 7 |
 
 Most lethal pages:
 
 | Page | Month | Enemies | Deaths | % runs |
 |---|---|---|---|---|
-| hd-thalefight Auditor-General Maren Thale | 12 | Auditor-General Maren Thale, Ledger Honor Guard | 81 | 40.5% |
-| hd-executorfight Thale’s Executor | 11 | Thale’s Executor, Siege Trooper | 80 | 40.0% |
-| hd-sentinelfight The Choir Sentinel | 5 | The Choir Sentinel | 78 | 39.0% |
-| hd-wardenfight The Choir Warden | 9 | The Choir Warden | 55 | 27.5% |
-| hd-quellfight Harbormaster Quell | 10 | Harbormaster Quell, Combine Elite | 54 | 27.0% |
-| hd-bloomfight The Bloom | 6 | The Bloom, Spore Swarm | 52 | 26.0% |
-| hd-fanefight Iolo Fane, Bounty Hunter | 8 | Iolo Fane, Bounty Hunter, Bounty Hound | 49 | 24.5% |
-| hd-selafight Mother Sela Quin | 4 | Mother Sela Quin, Storm Raider | 33 | 16.5% |
-| hd-breach3 The Third Breach | 11 | Siege Trooper, Siege Trooper, Combine Elite | 23 | 11.5% |
-| hd-shards Living Shards | 5 | Relic Guardian, Relic Guardian, Navy Marine | 23 | 11.5% |
+| hd-executorfight Thale’s Executor | 11 | Thale’s Executor, Siege Trooper | 79 | 39.5% |
+| hd-sentinelfight The Choir Sentinel | 5 | The Choir Sentinel | 79 | 39.5% |
+| hd-thalefight Auditor-General Maren Thale | 12 | Auditor-General Maren Thale, Ledger Honor Guard | 73 | 36.5% |
+| hd-quellfight Harbormaster Quell | 10 | Harbormaster Quell, Combine Elite | 55 | 27.5% |
+| hd-wardenfight The Choir Warden | 9 | The Choir Warden | 49 | 24.5% |
+| hd-fanefight Iolo Fane, Bounty Hunter | 8 | Iolo Fane, Bounty Hunter, Bounty Hound | 41 | 20.5% |
+| hd-bloomfight The Bloom | 6 | The Bloom, Spore Swarm | 34 | 17.0% |
+| hd-selafight Mother Sela Quin | 4 | Mother Sela Quin, Storm Raider | 30 | 15.0% |
+| hd-breach3 The Third Breach | 11 | Siege Trooper, Siege Trooper, Combine Elite | 26 | 13.0% |
+| hd-shards Living Shards | 5 | Relic Guardian, Relic Guardian, Navy Marine | 26 | 13.0% |
 
-Deaths per hero: hd_ash 0.32 (34 runs), hd_seren 3.82 (34 runs), hd_tamsin 6.24 (33 runs), hd_brask 0.00 (33 runs), hd_ilse 1.09 (33 runs), hd_kit 6.97 (33 runs)
+Deaths per hero: hd_ash 0.00 (34 runs), hd_seren 2.41 (34 runs), hd_tamsin 6.24 (33 runs), hd_brask 0.00 (33 runs), hd_ilse 1.24 (33 runs), hd_kit 6.97 (33 runs)
 
 ### starwake: before tuning
 
@@ -356,4 +358,3 @@ Most lethal pages:
 | sw-24 The Tidewarden | 1 | The Tidewarden | 9 | 4.5% |
 
 Deaths per hero: sw_tanu 2.71 (34 runs), sw_reyna 0.12 (34 runs), sw_bram 0.00 (33 runs), sw_isadora 1.85 (33 runs), sw_kip 2.76 (33 runs), sw_sel 2.15 (33 runs)
-
