@@ -31,6 +31,7 @@
 .c-ember { --tone: #d0583c; }
 .c-halcyon { --tone: #3f8fbf; }
 .c-starwake { --tone: #4aa58a; }
+.c-verdant { --tone: #6f9e3a; }
 
 .closing { text-align: center; }
 .closing p { color: var(--muted); max-width: 32em; margin: 0 auto 24px; }
@@ -57,3 +58,4 @@
   body.has-sticky .site-footer { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
 }
 @media (prefers-reduced-motion: reduce) { .sticky-cta { transition: none; } }
+@media (min-width: 761px) { .campaigns li:last-child:nth-child(odd) { grid-column: 1 / -1; } }
