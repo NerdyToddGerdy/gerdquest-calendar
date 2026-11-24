@@ -1,0 +1,61 @@
+/* Landing page only. Builds on site.css. */
+.hero { padding: 24px 0 64px; }
+.hero .wrap { display: grid; gap: 40px; grid-template-columns: 1.2fr 1fr; align-items: center; }
+.hero h1 { margin-bottom: 20px; }
+.lede { font-size: 1.2rem; max-width: 34em; color: var(--muted); margin-bottom: 28px; }
+.hero .note { margin-top: 14px; font-size: 0.95rem; color: var(--muted); }
+
+.leaf { justify-self: center; width: min(100%, 300px); transform: rotate(2.5deg); }
+.leaf svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 14px 24px var(--shadow)); }
+.leaf .paper { fill: var(--panel); stroke: var(--line); stroke-width: 2; }
+.leaf .head { fill: var(--accent); }
+.leaf text { font-family: var(--display); font-weight: 700; }
+.leaf .head-t { fill: var(--accent-ink); font-size: 26px; }
+.leaf .num { fill: var(--text); font-size: 150px; }
+.leaf .small { fill: var(--muted); font-size: 18px; font-family: var(--body); font-weight: 400; }
+.leaf .ring { fill: var(--bg); stroke: var(--line); stroke-width: 2; }
+
+.band { padding: 56px 0; border-top: 1px solid var(--line); }
+.band h2 { margin-bottom: 28px; }
+.steps { display: grid; gap: 20px; grid-template-columns: repeat(3, 1fr); margin: 0; padding: 0; list-style: none; }
+.steps li { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 22px; }
+.steps h3 { margin-bottom: 8px; }
+.steps p { color: var(--muted); }
+
+.campaigns { display: grid; gap: 20px; grid-template-columns: repeat(2, 1fr); margin: 0; padding: 0; list-style: none; }
+.campaigns li { background: var(--panel); border: 1px solid var(--line); border-left: 6px solid var(--tone, var(--accent)); border-radius: 12px; padding: 22px; }
+.campaigns h3 { margin-bottom: 4px; }
+.campaigns .theme { color: var(--tone-text, var(--accent)); font-weight: 600; margin-bottom: 10px; }
+.campaigns p:last-child { color: var(--muted); }
+.c-brightwatch { --tone: #d9a441; }
+.c-ember { --tone: #d0583c; }
+.c-halcyon { --tone: #3f8fbf; }
+.c-starwake { --tone: #4aa58a; }
+.c-verdant { --tone: #6f9e3a; }
+
+.closing { text-align: center; }
+.closing p { color: var(--muted); max-width: 32em; margin: 0 auto 24px; }
+
+.sticky-cta { display: none; }
+
+@media (max-width: 760px) {
+  .hero .wrap { grid-template-columns: 1fr; gap: 28px; }
+  .leaf { width: min(70%, 240px); order: -1; justify-self: start; margin-left: 8px; }
+  .steps, .campaigns { grid-template-columns: 1fr; }
+  .hero .btn { width: 100%; }
+
+  /* Phones: a bottom bar appears once the main button has scrolled away.
+     Without JS it stays hidden and the hero button is the only CTA. */
+  .sticky-cta {
+    display: block; position: fixed; inset: auto 0 0 0; z-index: 10;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: var(--bg); border-top: 1px solid var(--line);
+    transform: translateY(110%); visibility: hidden;
+    transition: transform 0.2s ease, visibility 0.2s;
+  }
+  .sticky-cta.on { transform: none; visibility: visible; }
+  .sticky-cta .btn { width: 100%; }
+  body.has-sticky .site-footer { padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) { .sticky-cta { transition: none; } }
+@media (min-width: 761px) { .campaigns li:last-child:nth-child(odd) { grid-column: 1 / -1; } }

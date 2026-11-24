@@ -84,6 +84,7 @@ Concrete budgets:
 
 ## Consequences
 
+- Implemented (landing PR): multi-page build with `index.html` (landing), `play/index.html` (game), `404.html`, shared `public/site.css`.
 - Done in this change: `@questender/engine` workspace package, imports rewritten to `@questender/engine/...`, purity test, engine typecheck script. Behaviour, UI and CSS are untouched.
 - The bot (#1) and Lambdas (#3) can depend on `@questender/engine` directly. Until the registry refactor lands, they get the bundled free campaigns with it and cannot load packs at runtime.
 - GitHub Pages workflow: `npm ci`, `npx vitest run` and `npm run build` with `path: dist` all still work unchanged (verified locally). With the multi-page split, `dist` will contain several HTML files and still deploys as is.
