@@ -113,13 +113,13 @@ const heroes: HeroDef[] = [
   hero({
     id: 'va_sorrel', name: 'Sorrel Vey', title: 'Hedge-Witch', color: '#7fb86a', weapon: 'Rowan wand', glint: 6,
     blurb: 'She keeps a garden of things that shouldn’t grow in winter. This year they are flowering, and she wants to know why.',
-    traits: { str: -1, dex: 0, con: 0, int: 2, wis: 2, cha: 0 }, maxHp: 9, atk: 3, def: 1, dmgDie: 6, pools: { spell: 4 },
+    traits: { str: -1, dex: 0, con: 0, int: 2, wis: 2, cha: 0 }, maxHp: 10, atk: 3, def: 2, dmgDie: 6, pools: { spell: 4 },
     abilities: ['va_ab_herblore', 'va_ab_thornlash', 'va_ab_hedgesight'],
   }),
   hero({
     id: 'va_pip', name: 'Pip Larkspur', title: 'Road Urchin', color: '#b08ad0', weapon: 'Sling and a bent knife', glint: 8,
     blurb: 'Pip has ridden every caravan out of Cobbleford, mostly as a stowaway. This time Agathe caught them and made them sign on properly.',
-    traits: { str: 0, dex: 3, con: 0, int: 1, wis: -1, cha: 2 }, maxHp: 10, atk: 3, def: 2, dmgDie: 6,
+    traits: { str: 0, dex: 3, con: 0, int: 1, wis: -1, cha: 2 }, maxHp: 12, atk: 3, def: 3, dmgDie: 6,
     abilities: ['pickpocket', 'va_ab_lightstep', 'va_ab_scarper'],
   }),
   hero({
@@ -137,7 +137,7 @@ const heroes: HeroDef[] = [
   hero({
     id: 'va_odo', name: 'Odo Brindle', title: 'Wandering Monk', color: '#a8c46a', weapon: 'Bare hands and a walking stick', glint: 3,
     blurb: 'Odo trained among the moss-shrines of the deep woods. When the shrine bells began ringing on their own, his teachers sent him out to find out why.',
-    traits: { str: 1, dex: 2, con: 1, int: 0, wis: 2, cha: -1 }, maxHp: 11, atk: 3, def: 3, dmgDie: 6, pools: { chi: 3 },
+    traits: { str: 1, dex: 2, con: 1, int: 0, wis: 2, cha: -1 }, maxHp: 12, atk: 3, def: 3, dmgDie: 6, pools: { chi: 3 },
     abilities: ['va_ab_stillroot', 'va_ab_palm', 'va_ab_breath'],
   }),
 ]
@@ -175,13 +175,13 @@ const enemies: EnemyDef[] = [
   { id: 'va_highwayman', name: 'Greenway Highwayman', ac: 12, toughness: 5, hits: 13, dmg: 3, text: 'A masked rider with a crossbow and very polite manners.' },
   { id: 'va_wolf', name: 'Hollow Wolf', ac: 12, toughness: 4, hits: 13, dmg: 2, text: 'Grey, thin and too quiet. Moss grows in the hollows of its ribs.' },
   { id: 'va_briargob', name: 'Briar Goblin', ac: 12, toughness: 3, hits: 12, dmg: 2, text: 'A goblin in a coat of woven thorns. It steals buttons, spoons and boots.' },
-  { id: 'va_knucklebark', name: 'Old Knucklebark', ac: 13, toughness: 7, hits: 15, dmg: 4, text: 'A bridge-troll with bark for skin and a toll-ring on one knuckle. He says the forest told him to close the road.' },
+  { id: 'va_knucklebark', name: 'Old Knucklebark', ac: 13, toughness: 6, hits: 14, dmg: 3, text: 'A bridge-troll with bark for skin and a toll-ring on one knuckle. He says the forest told him to close the road.' },
   // Chapter 2 — the Drowned Mill
   { id: 'va_smuggler', name: 'Timber Smuggler', ac: 12, toughness: 6, hits: 14, dmg: 3, text: 'A raftsman with a hook-pole and no paperwork.' },
   { id: 'va_ratswarm', name: 'Millrow Rat Swarm', ac: 13, toughness: 4, hits: 13, dmg: 2, text: 'The flood drove every rat in Millrow upstairs, and they are hungry.' },
   { id: 'va_bogling', name: 'Bogling', ac: 13, toughness: 5, hits: 14, dmg: 3, text: 'A knee-high thing of mud and reeds that came downriver with the roots.' },
   { id: 'va_enforcer', name: 'Copperleaf Enforcer', ac: 13, toughness: 7, hits: 14, dmg: 4, text: 'An Exchange “debt-collector” in a good coat, with a club inside it.' },
-  { id: 'va_sluicemother', name: 'The Sluice-Mother', ac: 14, toughness: 8, hits: 16, dmg: 5, text: 'An eel as thick as a mill-beam, nesting in the jammed millrace. She has had a lot of babies.' },
+  { id: 'va_sluicemother', name: 'The Sluice-Mother', ac: 14, toughness: 8, hits: 16, dmg: 4, text: 'An eel as thick as a mill-beam, nesting in the jammed millrace. She has had a lot of babies.' },
   // Chapter 3 — under the cobbles
   { id: 'va_cutpurse', name: 'Gutterlight Cutpurse', ac: 13, toughness: 5, hits: 14, dmg: 3, text: 'Quick hands, quicker feet, and a lamp that burns green.' },
   { id: 'va_gutterlizard', name: 'Gutter Lizard', ac: 13, toughness: 7, hits: 15, dmg: 4, text: 'A pale lizard as long as a rowboat, raised on kitchen scraps and the occasional thief.' },
@@ -190,10 +190,10 @@ const enemies: EnemyDef[] = [
   { id: 'va_waxwarden', name: 'The Wax Warden', ac: 15, toughness: 9, hits: 16, dmg: 5, text: 'A towering guardian of candle-wax with a crown of lit wicks. Each blow you land, it melts and pours itself back.' },
   // Chapter 4 — the Spring Fair
   { id: 'va_fairbruiser', name: 'Fair Bruiser', ac: 14, toughness: 7, hits: 15, dmg: 4, text: 'A prize-fighter who has been paid to lose, and has decided not to.' },
-  { id: 'va_footman', name: 'Clockwork Footman', ac: 15, toughness: 7, hits: 16, dmg: 4, text: 'A brass servant in livery, wound tight and polite until it isn’t.' },
-  { id: 'va_manorguard', name: 'Crane’s House Guard', ac: 15, toughness: 8, hits: 16, dmg: 5, text: 'Copperleaf colors, a halberd and a pension worth protecting.' },
-  { id: 'va_topiary', name: 'Topiary Hound', ac: 14, toughness: 6, hits: 16, dmg: 4, text: 'A hedge clipped into the shape of a hound. It has been clipped wrong.' },
-  { id: 'va_brassgardener', name: 'The Brass Gardener', ac: 15, toughness: 10, hits: 17, dmg: 5, text: 'Crane’s clockwork groundskeeper: eight feet of brass with shears for hands and a gardener’s patience.' },
+  { id: 'va_footman', name: 'Clockwork Footman', ac: 15, toughness: 7, hits: 15, dmg: 3, text: 'A brass servant in livery, wound tight and polite until it isn’t.' },
+  { id: 'va_manorguard', name: 'Crane’s House Guard', ac: 15, toughness: 7, hits: 15, dmg: 4, text: 'Copperleaf colors, a halberd and a pension worth protecting.' },
+  { id: 'va_topiary', name: 'Topiary Hound', ac: 14, toughness: 6, hits: 15, dmg: 3, text: 'A hedge clipped into the shape of a hound. It has been clipped wrong.' },
+  { id: 'va_brassgardener', name: 'The Brass Gardener', ac: 15, toughness: 10, hits: 16, dmg: 5, text: 'Crane’s clockwork groundskeeper: eight feet of brass with shears for hands and a gardener’s patience.' },
 ]
 
 const follower = (m: Omit<MemberDef, 'kind' | 'maxHp' | 'abilities'>): MemberDef => ({ kind: 'critter', maxHp: 1, abilities: [], ...m })
