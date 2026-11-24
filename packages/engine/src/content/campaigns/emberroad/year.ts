@@ -32,7 +32,7 @@ export const YEAR_ABILITIES: AbilityDef[] = [
 /** Levels 3–8 for every chosen hero. */
 export const YEAR_LEVELS: Record<string, Record<number, LevelSpec>> = {
   er_garrick: {
-    3: { maxHp: 4, def: 1 },
+    3: { maxHp: 4 },
     4: { maxHp: 4, traits: { str: 1 }, ability: 'er_ab_anvilvoice' },
     5: { maxHp: 4, atk: 1, dmgDie: 10 },
     6: { maxHp: 4, def: 1, ability: 'er_ab_earthshaker' },
@@ -48,12 +48,12 @@ export const YEAR_LEVELS: Record<string, Record<number, LevelSpec>> = {
     8: { maxHp: 4, def: 1, pools: { spell: 2 } },
   },
   er_pell: {
-    3: { maxHp: 3, def: 1 },
-    4: { maxHp: 3, traits: { cha: 1 }, ability: 'er_ab_cheapshot' },
-    5: { maxHp: 3, atk: 1, dmgDie: 8 },
-    6: { maxHp: 3, def: 1, ability: 'er_ab_vanish' },
-    7: { maxHp: 4, atk: 1, traits: { dex: 1 } },
-    8: { maxHp: 4, def: 1 },
+    3: { maxHp: 4, def: 1 },
+    4: { maxHp: 4, traits: { cha: 1 }, ability: 'er_ab_cheapshot' },
+    5: { maxHp: 4, atk: 1, dmgDie: 8 },
+    6: { maxHp: 4, def: 1, ability: 'er_ab_vanish' },
+    7: { maxHp: 5, atk: 1, traits: { dex: 1 } },
+    8: { maxHp: 5, def: 1 },
   },
   er_odalys: {
     3: { maxHp: 3, pools: { spell: 1 } },
@@ -146,11 +146,11 @@ export const YEAR_ENEMIES: EnemyDef[] = [
   { id: 'er_unlitsaint', name: 'The Unlit Saint', ac: 19, toughness: 15, hits: 20, dmg: 7, text: 'The first keeper ever to let a stone go dark — and the Hush’s first saint.' },
   // Nov
   { id: 'er_rimeknight', name: 'Rime Knight', ac: 19, toughness: 11, hits: 20, dmg: 7, text: 'A knight of the Long Dark, armor grown from frost.' },
-  { id: 'er_wintergiant', name: 'Winter Giant', ac: 17, toughness: 14, hits: 19, dmg: 7, text: 'A giant walking south ahead of the cold.' },
+  { id: 'er_wintergiant', name: 'Winter Giant', ac: 17, toughness: 15, hits: 19, dmg: 8, text: 'A giant walking south ahead of the cold.' },
   { id: 'er_abbess', name: 'Abbess Maud Sallow', ac: 20, toughness: 17, hits: 21, dmg: 8, text: 'The Hush’s voice that never speaks. Her silence puts out torches at forty paces.' },
   // Dec
   { id: 'er_shard', name: 'Shard of the Long Dark', ac: 20, toughness: 12, hits: 20, dmg: 7, text: 'A splinter of the old winter, shaped like whoever looks at it.' },
-  { id: 'er_longdark', name: 'The Long Dark', ac: 21, toughness: 18, hits: 22, dmg: 8, text: 'Not a creature: a season that learned to want.' },
+  { id: 'er_longdark', name: 'The Long Dark', ac: 21, toughness: 19, hits: 22, dmg: 9, text: 'Not a creature: a season that learned to want.' },
 ]
 
 const follower = (m: Omit<MemberDef, 'kind' | 'maxHp' | 'abilities'>): MemberDef => ({ kind: 'critter', maxHp: 1, abilities: [], ...m })

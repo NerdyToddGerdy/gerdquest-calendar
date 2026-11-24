@@ -15,6 +15,9 @@ const MARKET = [
   { id: 'dawndew', price: 12 },
   { id: 'bw-coralCrown', price: 36 },
   { id: 'bw-stridersBoots', price: 34 },
+  { id: 'bw-bellWhet', price: 30 },
+  { id: 'bw-lampGrip', price: 32 },
+  { id: 'bw-oilskinLiner', price: 34 },
 ]
 
 export const OCT: Day[] = [

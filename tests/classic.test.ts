@@ -48,7 +48,7 @@ describe('Ember Road structure', () => {
     s = { ...s, dayIndex: 3, progress: newProgress(er.pages[3]) }
     s = act(s, { type: 'CHOOSE', step: 0, option: 1 })
     expect(s.hero!.defId).toBe('er_ysolde')
-    expect(s.hero!.pools).toEqual({ spell: 4 })
+    expect(s.hero!.pools).toEqual({ spell: 5 })
     expect(s.hero!.inventory).toEqual({ ration: 3, er_draught: 1 }) // Tamsin's pack carries over
   })
 })
@@ -71,11 +71,11 @@ describe('static Defense (2022 rules)', () => {
 
   it('the reducer uses static Defense under classic rules', () => {
     const hound = enemy('er_frosthound')
-    let s = at(2) // two frost hounds; Garrick Def 4 → 14 ≥ their attack
+    let s = at(2) // two frost hounds; Garrick Def 3 → 13 ≥ their attack
     s = act(s, { type: 'ROLL_ROUND' }, [2, 1, 2, 1]) // both attacks miss
     expect(s.pending?.type === 'combat' && s.pending.slots.length).toBe(4) // attack + damage per hound, no Defense
     s = act(s, { type: 'CONFIRM' })
-    expect(s.hero!.hp).toBe(14 - 2 * Math.floor(hound.dmg / 2)) // each hound's damage halved
+    expect(s.hero!.hp).toBe(12 - 2 * Math.floor(hound.dmg / 2)) // each hound's damage halved
   })
 })
 
@@ -85,9 +85,9 @@ describe('point pools', () => {
     s = act(s, { type: 'ROLL_ROUND' }, [15, 3, 15, 3]) // two cultists
     const lance = ability('er_ab_rimelance')
     s = act(s, { type: 'USE_ABILITY', ability: 'er_ab_rimelance', slot: '0:dmg' }, [5])
-    expect(s.hero!.pools!.spell).toBe(2)
+    expect(s.hero!.pools!.spell).toBe(3)
     s = act(s, { type: 'USE_ABILITY', ability: 'er_ab_rimelance', slot: '1:dmg' }, [5])
-    expect(s.hero!.pools!.spell).toBe(0)
+    expect(s.hero!.pools!.spell).toBe(1)
     expect(abilityReady(s.hero!, lance)).toBe(false)
     expect(act(s, { type: 'USE_ABILITY', ability: 'er_ab_rimelance', slot: '1:dmg' }, [5])).toBe(s)
   })
@@ -100,7 +100,7 @@ describe('point pools', () => {
     let s2 = at(24, 'er_ysolde')
     s2 = { ...s2, hero: { ...s2.hero!, pools: { spell: 1 } } }
     s2 = act(s2, { type: 'CHOOSE', step: 0, option: 0 }) // level up
-    expect(s2.hero!.poolMax).toEqual({ spell: 6 })
+    expect(s2.hero!.poolMax).toEqual({ spell: 7 })
     expect(s2.hero!.pools).toEqual({ spell: 3 })
     expect(levelUp(createHero(heroDef('er_kesh')), heroDef('er_kesh').levels[2]).hp).toBe(14)
   })

@@ -36,6 +36,8 @@ Notes on reading the numbers:
 
 Targets: first month under 10%, steady 10-30% pressure mid-year, final boss month 30-50%. Brightwatch and Halcyon land in the band in December; Ember Road and Starwake finish a little under it (26% and 24%, mostly because heroes arrive in better shape once mid-year fights stop killing them). Currency is covered in the tables: the bot keeps 3 healing items on hand in every campaign, though Halcyon, Ember Road and Starwake run lean (median 10-45 currency at month end) while Brightwatch is comfortable and floods slightly late in the year (100+ from month 10).
 
+Pass 2 numbers (hero spread, Brightwatch economy, Ember Road finale) are in the section below; the table above is the pass-1 result.
+
 Halcyon figures were re-run after Surge and Charges became point pools (#43); the other campaigns were unchanged by that.
 
 ## Before tuning (findings that motivated it)
@@ -62,10 +64,79 @@ One existing test (`tests/classic.test.ts`, static Defense) asserted exact Frost
 
 ## Remaining issues
 
-- Hero spread: in every campaign one or two heroes (Garrick, Brask, Wren, Bram) take under 0.5 deaths a run while others take 3-8. Fix at the hero level (abilities, HP, gear) rather than by enemies.
+- Hero spread: addressed in pass 2 (above). Ash and Brask sit close to a threshold, so small changes to their Defense or Surge swing them a lot; Corin is still the most fragile Brightwatch hero.
 - Ember Road, Halcyon and Starwake economies are tight: median currency stays at 10-45. The bot buys healing and gear as it goes, so this is mostly spending, but a few more rewards or cheaper gear would help the weaker heroes.
-- Ember Road and Starwake December/September bosses are slightly gentler than the 30-50% target.
+- Starwake's September boss month is slightly gentler than the 30-50% target (Ember Road was fixed in pass 2).
 - Death-table hits per run are also driven by classic's "lose all gold" entry; consider whether that is intended.
+
+## Balance pass 2: hero spread, Brightwatch economy, Ember Road finale
+
+A second pass on Brightwatch, Ember Road and Halcyon (200 runs each, seeds 1000..1199, same bot). "Before" is the state after the first tuning pass; Starwake was not touched. The simulator now reports a per-hero table (mean, median, p90 and deaths per run by month) in the generated tables.
+
+### Headline: before -> after pass 2
+
+| Campaign | Death-table hits per run (median) | Month 1: % runs with a death | Final month: % runs with a death | Months 2 to 11: average % runs with a death | Median currency, months 4-9 | Median currency, months 10-12 |
+|---|---|---|---|---|---|---|
+| Brightwatch (modern) | 1 -> 1 | 8.5% -> 5.5% | 42.0% -> 43.0% | 11.3% -> 7.7% | 52-94 -> 53-99 | 116-172 -> 52-94 |
+| Ember Road (classic) | 1 -> 1 | 8.5% -> 6.0% | 25.5% -> 37.0% | 15.3% -> 10.2% | 20-45 -> 26-49 | 22-33 -> 28-38 |
+| Halcyon (frontier) | 2 -> 2 | 3.0% -> 1.0% | 37.0% -> 33.0% | 19.8% -> 13.0% | 8-59 -> 8-57 | 12-54 -> 12-54 |
+
+Final-month rates now sit in the 30-50% band for all three campaigns (Brightwatch 43%, Ember Road 37%, Halcyon 33%), the first month stays under 10%, and the mid-year average dropped a little in each campaign because the weak heroes are sturdier.
+
+### Deaths per hero (death-table hits per run over the year)
+
+| Campaign | Hero | Before: mean / median / p90 | After: mean / median / p90 |
+|---|---|---|---|
+| brightwatch | bw-hask | 3.03 / 3.0 / 5 | 2.09 / 2.0 / 4 |
+| brightwatch | bw-jory | 0.32 / 0.0 / 1 | 0.44 / 0.0 / 1 |
+| brightwatch | wren | 0.73 / 1.0 / 2 | 0.70 / 1.0 / 2 |
+| brightwatch | isolde | 2.45 / 2.0 / 5 | 1.73 / 2.0 / 4 |
+| brightwatch | corin | 4.39 / 4.0 / 6 | 2.67 / 3.0 / 4 |
+| brightwatch | bw-ottilie | 0.91 / 1.0 / 2 | 1.24 / 1.0 / 2 |
+| emberroad | er_kesh | 1.91 / 2.0 / 4 | 2.00 / 2.0 / 4 |
+| emberroad | er_wenna | 0.29 / 0.0 / 1 | 1.53 / 1.0 / 3 |
+| emberroad | er_garrick | 0.03 / 0.0 / 0 | 0.76 / 0.0 / 2 |
+| emberroad | er_ysolde | 2.79 / 2.0 / 5 | 1.27 / 1.0 / 3 |
+| emberroad | er_pell | 5.21 / 5.0 / 8 | 1.97 / 2.0 / 4 |
+| emberroad | er_odalys | 2.52 / 2.0 / 5 | 1.97 / 2.0 / 4 |
+| halcyon | hd_ash | 0.00 / 0.0 / 0 | 1.56 / 1.5 / 3 |
+| halcyon | hd_seren | 2.41 / 2.0 / 4 | 2.41 / 2.0 / 4 |
+| halcyon | hd_tamsin | 6.24 / 6.0 / 10 | 2.52 / 2.0 / 4 |
+| halcyon | hd_brask | 0.00 / 0.0 / 0 | 1.45 / 1.0 / 3 |
+| halcyon | hd_ilse | 1.24 / 1.0 / 3 | 1.24 / 1.0 / 3 |
+| halcyon | hd_kit | 6.97 / 7.0 / 9 | 1.15 / 1.0 / 2 |
+
+Every hero now has a median of 0-3 deaths a year and a mean between 0.4 and 2.7, against 0-7 before. Jory (0.44), Garrick (0.76) and Wren (0.70) are still the sturdiest and Corin (2.67), Seren (2.41) and Marisol (2.52) the most fragile; those gaps are the heroes' identities (tank against glass cannon), and the per-month columns in the tables at the end show where each hero's deaths fall. Hask, Isolde, Corin and Wren are Brightwatch heroes; Wren was left alone (the engine tests build on her).
+
+### What changed and why
+
+Hero changes (starting stats, level gains and pools only; no names, text or ability rules):
+
+| Hero | Change |
+|---|---|
+| Pell (Ember Road) | max health 10 -> 13, Defense 2 -> 3, +1 max health on each level 3 to 8 |
+| Ysolde (Ember Road) | max health 9 -> 10, Spell pool 4 -> 5 |
+| Odalys (Ember Road) | max health 11 -> 12 |
+| Garrick (Ember Road) | max health 14 -> 12, Defense 4 -> 3, no Defense on level 3 |
+| Wenna (Ember Road) | max health 12 -> 10 |
+| Marisol, the Halcyon pilot | max health 9 -> 12, Defense 2 -> 3, Surge pool 2 -> 3 |
+| Kit (Halcyon) | max health 9 -> 12, Defense 1 -> 2, Charges pool 3 -> 4 |
+| Ash (Halcyon) | max health 11 -> 9, Surge pool 4 -> 2, no Defense on level 6, max health +3 instead of +4 on levels 7 and 8 |
+| Brask (Halcyon) | max health 13 -> 9, Defense 3 -> 2, Surge pool 4 -> 2, max health -1 on levels 3 and 5, no Defense on level 7 |
+| Corin (Brightwatch) | max health 10 -> 14, Defense 2 -> 3, +1 max health on levels 3, 5 and 7 |
+| Hask (Brightwatch) | max health 10 -> 12 |
+| Isolde (Brightwatch) | max health 9 -> 11, Defense 1 -> 2 |
+| Jory (Brightwatch) | max health 14 -> 11 |
+
+Ash and Brask were at 0.0 deaths a year: they are right at a cliff (one point of Defense moved Ash from about 2 deaths to 0.3), so their numbers are the most sensitive in the set.
+
+Other changes:
+
+- Brightwatch economy: three one-per-hero upgrades join the October, November and December markets (Bell-Bronze Whetstone +1 Damage for 30, Lamp-Keeper's Grip +1 Attack for 32, Storm Oilskin Liner +1 Defense for 34), and December rewards were trimmed (the "run out of pockets" gift 15 -> 10 glint, the victory purse after the Pale Heir 20 -> 14, and the Longest Night victory purse 30 -> 20). Median currency in months 10 to 12 went from 116-172 to 52-94, now in line with months 4 to 9 (53-99), and months 1 to 9 are unchanged.
+- Brightwatch finale: with sturdier heroes December fell to 28%, so The Pale Tide went to toughness 16, hits 21, damage 14 (was 15, 20, 12), which restored 43%.
+- Ember Road finale: The Long Dark went to toughness 19, hits 22, damage 9 (was 18, 22, 8) and the Winter Giant to Attack threshold 17, toughness 15, hits 19, damage 8 (was 17, 14, 19, 7). Only December enemies changed, so months 2 to 11 are not harder; the final month rose from 25.5% to 37%.
+
+Tests: `tests/classic.test.ts` and `tests/frontier.test.ts` hard-code hero starting stats (Ysolde's Spell pool 5, Garrick's 12 max health and Defense 3, and the Halcyon level-1 pools for Marisol, Brask, Kit and Ash), so those expected values were updated to the new stats. The rules they check are unchanged.
 
 ## Tables
 
@@ -358,3 +429,141 @@ Most lethal pages:
 | sw-24 The Tidewarden | 1 | The Tidewarden | 9 | 4.5% |
 
 Deaths per hero: sw_tanu 2.71 (34 runs), sw_reyna 0.12 (34 runs), sw_bram 0.00 (33 runs), sw_isadora 1.85 (33 runs), sw_kip 2.76 (33 runs), sw_sel 2.15 (33 runs)
+
+### emberroad: after balance pass 2
+
+200 runs. Finished the year: 100.0%. Death-table hits per run: median 1 (p10 0, p90 3).
+Prologue (first 7 pages): 0.0% of runs hit 0 HP, 0.00 times per run on average.
+
+| Month | Runs | Deaths | % runs with a death | Level med (p10–p90) | Currency med (p10–p90) | HP % at month end | Heal items (median) |
+|---|---|---|---|---|---|---|---|
+| 1 | 200 | 12 | 6.0% | 2 (2–2) | 6 (4–9) | 100 (100–100) | 3 |
+| 2 | 200 | 28 | 14.0% | 2 (2–2) | 7 (4–19) | 100 (84–100) | 3 |
+| 3 | 200 | 21 | 9.5% | 3 (3–3) | 21 (6–38) | 100 (94–100) | 4 |
+| 4 | 200 | 19 | 9.5% | 4 (4–4) | 35 (8–49) | 100 (95–100) | 4 |
+| 5 | 200 | 25 | 12.5% | 4 (4–4) | 36 (15–67) | 100 (91–100) | 3 |
+| 6 | 200 | 1 | 0.5% | 5 (5–5) | 49 (23–82) | 100 (100–100) | 3 |
+| 7 | 200 | 7 | 3.5% | 5 (5–5) | 41 (21–79) | 100 (100–100) | 3 |
+| 8 | 200 | 12 | 6.0% | 6 (6–6) | 26 (4–82) | 100 (100–100) | 3 |
+| 9 | 200 | 4 | 2.0% | 7 (7–7) | 26 (13–82) | 58 (44–78) | 4 |
+| 10 | 200 | 33 | 16.0% | 7 (7–7) | 30 (3–95) | 100 (100–100) | 4 |
+| 11 | 200 | 67 | 29.0% | 8 (8–8) | 38 (1–119) | 100 (96–100) | 3 |
+| 12 | 200 | 88 | 37.0% | 8 (8–8) | 28 (2–121) | 100 (100–100) | 3 |
+
+Most lethal pages:
+
+| Page | Month | Enemies | Deaths | % runs |
+|---|---|---|---|---|
+| er-304 The Long Dark | 12 | The Long Dark | 64 | 32.0% |
+| er-270 Shards in the Snow | 11 | Shard of the Long Dark, Rime Knight | 35 | 17.5% |
+| er-282 Abbess Maud Sallow | 11 | Abbess Maud Sallow | 32 | 16.0% |
+| er-258 The Unlit Saint | 10 | The Unlit Saint | 31 | 15.5% |
+| er-48 The Kennelmaster | 2 | The Kennelmaster | 28 | 14.0% |
+| er-126 The Glass Colossus | 5 | The Glass Colossus | 25 | 12.5% |
+| er-96 The Moss Shepherd | 4 | The Moss Shepherd | 19 | 9.5% |
+| er-72 Old Glasswater | 3 | Old Glasswater | 18 | 9.0% |
+| er-24 The Hollow Warden | 1 | The Hollow Warden | 12 | 6.0% |
+| er-204 The Vigilant | 8 | The Vigilant | 12 | 6.0% |
+
+Deaths per hero (death-table hits per run):
+
+| Hero | Runs | Mean | Median | p90 | M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 | M9 | M10 | M11 | M12 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| er_kesh | 34 | 2.00 | 2.0 | 4.0 | 0.15 | 0.32 | 0.29 | 0.38 | 0.24 | 0.03 | 0.06 | 0.00 | 0.06 | 0.15 | 0.24 | 0.09 |
+| er_wenna | 34 | 1.53 | 1.0 | 3.0 | 0.03 | 0.06 | 0.06 | 0.06 | 0.00 | 0.00 | 0.03 | 0.03 | 0.00 | 0.12 | 0.29 | 0.85 |
+| er_garrick | 33 | 0.76 | 0.0 | 2.0 | 0.06 | 0.00 | 0.03 | 0.00 | 0.03 | 0.00 | 0.03 | 0.06 | 0.03 | 0.09 | 0.12 | 0.30 |
+| er_ysolde | 33 | 1.27 | 1.0 | 2.8 | 0.12 | 0.18 | 0.06 | 0.03 | 0.15 | 0.00 | 0.00 | 0.06 | 0.00 | 0.18 | 0.33 | 0.15 |
+| er_pell | 33 | 1.97 | 2.0 | 3.8 | 0.00 | 0.06 | 0.00 | 0.00 | 0.09 | 0.00 | 0.06 | 0.03 | 0.03 | 0.15 | 0.58 | 0.97 |
+| er_odalys | 33 | 1.97 | 2.0 | 4.0 | 0.00 | 0.21 | 0.18 | 0.09 | 0.24 | 0.00 | 0.03 | 0.18 | 0.00 | 0.30 | 0.45 | 0.27 |
+
+### halcyon: after balance pass 2
+
+200 runs. Finished the year: 100.0%. Death-table hits per run: median 2 (p10 0, p90 3).
+Prologue (first 6 pages): 0.0% of runs hit 0 HP, 0.00 times per run on average.
+
+| Month | Runs | Deaths | % runs with a death | Level med (p10–p90) | Currency med (p10–p90) | HP % at month end | Heal items (median) |
+|---|---|---|---|---|---|---|---|
+| 1 | 200 | 2 | 1.0% | 2 (2–2) | 23 (17–30) | 100 (100–100) | 4 |
+| 2 | 200 | 3 | 1.5% | 2 (2–2) | 9 (6–12) | 100 (87–100) | 4 |
+| 3 | 200 | 0 | 0.0% | 3 (3–3) | 25 (18–29) | 83 (55–100) | 4 |
+| 4 | 200 | 22 | 11.0% | 3 (3–3) | 8 (7–9) | 100 (91–100) | 4 |
+| 5 | 200 | 48 | 23.5% | 4 (4–4) | 8 (5–9) | 96 (87–100) | 3 |
+| 6 | 200 | 16 | 8.0% | 4 (4–4) | 29 (18–39) | 64 (45–87) | 6 |
+| 7 | 200 | 1 | 0.5% | 5 (5–5) | 13 (11–15) | 100 (100–100) | 6 |
+| 8 | 200 | 22 | 10.5% | 5 (5–5) | 57 (43–69) | 61 (44–88) | 6 |
+| 9 | 200 | 18 | 8.5% | 6 (6–6) | 11 (10–13) | 100 (100–100) | 6 |
+| 10 | 200 | 47 | 23.5% | 6 (6–6) | 12 (10–34) | 100 (100–100) | 5 |
+| 11 | 200 | 89 | 43.0% | 7 (7–7) | 23 (16–45) | 100 (92–100) | 7 |
+| 12 | 200 | 77 | 33.0% | 8 (8–8) | 54 (30–96) | 100 (100–100) | 6 |
+
+Most lethal pages:
+
+| Page | Month | Enemies | Deaths | % runs |
+|---|---|---|---|---|
+| hd-executorfight Thale’s Executor | 11 | Thale’s Executor, Siege Trooper | 79 | 39.5% |
+| hd-thalefight Auditor-General Maren Thale | 12 | Auditor-General Maren Thale, Ledger Honor Guard | 65 | 32.5% |
+| hd-quellfight Harbormaster Quell | 10 | Harbormaster Quell, Combine Elite | 47 | 23.5% |
+| hd-sentinelfight The Choir Sentinel | 5 | The Choir Sentinel | 47 | 23.5% |
+| hd-selafight Mother Sela Quin | 4 | Mother Sela Quin, Storm Raider | 22 | 11.0% |
+| hd-fanefight Iolo Fane, Bounty Hunter | 8 | Iolo Fane, Bounty Hunter, Bounty Hound | 20 | 10.0% |
+| hd-wardenfight The Choir Warden | 9 | The Choir Warden | 17 | 8.5% |
+| hd-bloomfight The Bloom | 6 | The Bloom, Spore Swarm | 16 | 8.0% |
+| hd-finalnotice The Final Notice | 12 | The Final Notice, Combine Lancer | 9 | 4.5% |
+| hd-breach3 The Third Breach | 11 | Siege Trooper, Siege Trooper, Combine Elite | 9 | 4.5% |
+
+Deaths per hero (death-table hits per run):
+
+| Hero | Runs | Mean | Median | p90 | M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 | M9 | M10 | M11 | M12 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| hd_ash | 34 | 1.56 | 1.5 | 3.0 | 0.03 | 0.00 | 0.00 | 0.00 | 0.03 | 0.09 | 0.00 | 0.00 | 0.32 | 0.26 | 0.53 | 0.29 |
+| hd_seren | 34 | 2.41 | 2.0 | 4.0 | 0.00 | 0.03 | 0.00 | 0.41 | 0.56 | 0.15 | 0.03 | 0.26 | 0.06 | 0.24 | 0.38 | 0.29 |
+| hd_tamsin | 33 | 2.52 | 2.0 | 4.0 | 0.00 | 0.03 | 0.00 | 0.00 | 0.48 | 0.03 | 0.00 | 0.00 | 0.03 | 0.39 | 0.85 | 0.70 |
+| hd_brask | 33 | 1.45 | 1.0 | 2.8 | 0.03 | 0.03 | 0.00 | 0.09 | 0.03 | 0.00 | 0.00 | 0.06 | 0.03 | 0.18 | 0.48 | 0.52 |
+| hd_ilse | 33 | 1.24 | 1.0 | 3.0 | 0.00 | 0.00 | 0.00 | 0.00 | 0.06 | 0.06 | 0.00 | 0.24 | 0.09 | 0.18 | 0.21 | 0.39 |
+| hd_kit | 33 | 1.15 | 1.0 | 2.0 | 0.00 | 0.00 | 0.00 | 0.15 | 0.27 | 0.15 | 0.00 | 0.09 | 0.00 | 0.15 | 0.21 | 0.12 |
+
+### brightwatch: after balance pass 2
+
+200 runs. Finished the year: 100.0%. Death-table hits per run: median 1 (p10 0, p90 3).
+Prologue (first 7 pages): 4.5% of runs hit 0 HP, 0.04 times per run on average.
+
+| Month | Runs | Deaths | % runs with a death | Level med (p10–p90) | Currency med (p10–p90) | HP % at month end | Heal items (median) |
+|---|---|---|---|---|---|---|---|
+| 1 | 200 | 11 | 5.5% | 1 (1–1) | 8 (5–8) | 100 (75–100) | 1 |
+| 2 | 200 | 12 | 6.0% | 2 (2–2) | 7 (2–11) | 93 (79–100) | 3 |
+| 3 | 200 | 5 | 2.5% | 2 (2–2) | 32 (18–43) | 100 (100–100) | 5 |
+| 4 | 200 | 16 | 7.5% | 3 (3–3) | 53 (23–70) | 100 (95–100) | 5 |
+| 5 | 200 | 14 | 6.0% | 4 (4–4) | 73 (38–97) | 100 (96–100) | 5 |
+| 6 | 200 | 37 | 14.0% | 5 (5–5) | 78 (38–106) | 100 (100–100) | 4 |
+| 7 | 200 | 10 | 4.5% | 5 (5–5) | 99 (42–144) | 100 (100–100) | 5 |
+| 8 | 200 | 35 | 16.0% | 6 (6–6) | 70 (19–131) | 100 (97–100) | 5 |
+| 9 | 200 | 38 | 17.0% | 7 (7–7) | 75 (9–166) | 100 (100–100) | 5 |
+| 10 | 200 | 5 | 2.5% | 8 (8–8) | 59 (27–114) | 91 (73–100) | 5 |
+| 11 | 200 | 2 | 1.0% | 8 (8–8) | 52 (23–133) | 100 (100–100) | 5 |
+| 12 | 200 | 110 | 43.0% | 8 (8–8) | 94 (21–189) | 100 (100–100) | 5 |
+
+Most lethal pages:
+
+| Page | Month | Enemies | Deaths | % runs |
+|---|---|---|---|---|
+| d21-longest-night The Longest Night | 12 | The Pale Tide | 73 | 34.0% |
+| j21-shepherd The Abyssal Shepherd | 6 | The Abyssal Shepherd | 25 | 10.5% |
+| s13-breaker The Bell-Breaker | 9 | The Bell-Breaker | 23 | 10.5% |
+| g16-fogwyrm The Young Fogwyrm | 8 | The Young Fogwyrm | 18 | 8.5% |
+| d23-dawn Dawn | 12 | hazard | 13 | 6.5% |
+| g15-dusk Dusk | 8 | hazard | 13 | 6.5% |
+| a12-storm Storm on the Moor | 4 | hazard | 9 | 4.5% |
+| d24-homeward Homeward | 12 | hazard | 9 | 4.5% |
+| w6-pale-herald The Pale Herald | 2 | The Pale Herald | 8 | 4.0% |
+| drowned-keeper The Drowned Keeper | 1 | The Drowned Keeper, Brine Crab | 8 | 4.0% |
+
+Deaths per hero (death-table hits per run):
+
+| Hero | Runs | Mean | Median | p90 | M1 | M2 | M3 | M4 | M5 | M6 | M7 | M8 | M9 | M10 | M11 | M12 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| bw-hask | 34 | 2.09 | 2.0 | 3.7 | 0.06 | 0.03 | 0.06 | 0.12 | 0.15 | 0.38 | 0.06 | 0.29 | 0.44 | 0.00 | 0.03 | 0.47 |
+| bw-jory | 34 | 0.44 | 0.0 | 1.0 | 0.09 | 0.06 | 0.03 | 0.00 | 0.00 | 0.00 | 0.00 | 0.03 | 0.09 | 0.00 | 0.00 | 0.15 |
+| wren | 33 | 0.70 | 1.0 | 2.0 | 0.03 | 0.03 | 0.00 | 0.06 | 0.00 | 0.03 | 0.00 | 0.03 | 0.03 | 0.03 | 0.00 | 0.45 |
+| isolde | 33 | 1.73 | 2.0 | 3.8 | 0.03 | 0.03 | 0.06 | 0.18 | 0.18 | 0.36 | 0.18 | 0.18 | 0.12 | 0.03 | 0.03 | 0.33 |
+| corin | 33 | 2.67 | 3.0 | 4.0 | 0.03 | 0.12 | 0.00 | 0.09 | 0.09 | 0.30 | 0.06 | 0.42 | 0.45 | 0.06 | 0.00 | 1.03 |
+| bw-ottilie | 33 | 1.24 | 1.0 | 2.0 | 0.09 | 0.09 | 0.00 | 0.03 | 0.00 | 0.03 | 0.00 | 0.09 | 0.00 | 0.03 | 0.00 | 0.88 |

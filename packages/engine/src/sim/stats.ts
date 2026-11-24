@@ -43,7 +43,7 @@ export interface Summary {
   prologue: { pages: number; meanZeroHp: number; runPct: number }
   topPages: { id: string; title: string; enemies: string[]; month: number; deaths: number; runPct: number }[]
   topCauses: { cause: string; deaths: number }[]
-  byHero: { hero: string; runs: number; deathsPerRun: number }[]
+  byHero: { hero: string; runs: number; deathsPerRun: number; median?: number; p90?: number; perMonth?: number[] }[]
 }
 
 export function summarize(campaignId: string, runs: RunRecord[]): Summary {
@@ -98,7 +98,15 @@ export function summarize(campaignId: string, runs: RunRecord[]): Summary {
     topCauses: [...causes.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10).map(([cause, deaths]) => ({ cause, deaths })),
     byHero: heroes.map((hero) => {
       const rs = runs.filter((r) => r.heroId === hero)
-      return { hero, runs: rs.length, deathsPerRun: rs.reduce((n, r) => n + r.deaths.length, 0) / rs.length }
+      const counts = rs.map((r) => r.deaths.length)
+      return {
+        hero,
+        runs: rs.length,
+        deathsPerRun: counts.reduce((a, b) => a + b, 0) / rs.length,
+        median: percentile(counts, 0.5),
+        p90: percentile(counts, 0.9),
+        perMonth: monthNums.map((mo) => rs.reduce((n, r) => n + r.deaths.filter((d) => d.month === mo).length, 0) / rs.length),
+      }
     }),
   }
 }
@@ -117,6 +125,10 @@ export function renderSummary(sm: Summary, title: string): string {
   for (const m of sm.months) L.push(`| ${m.month} | ${m.runs} | ${m.deaths} | ${f(m.deathRunPct, 1)}% | ${sp(m.level)} | ${sp(m.glint)} | ${sp(m.hpPct)} | ${f(m.healItems)} |`)
   L.push('', 'Most lethal pages:', '', '| Page | Month | Enemies | Deaths | % runs |', '|---|---|---|---|---|')
   for (const p of sm.topPages) L.push(`| ${p.id} ${p.title} | ${p.month} | ${p.enemies.join(', ') || 'hazard'} | ${p.deaths} | ${f(p.runPct, 1)}% |`)
-  L.push('', 'Deaths per hero: ' + sm.byHero.map((h) => `${h.hero} ${f(h.deathsPerRun, 2)} (${h.runs} runs)`).join(', '), '')
+  L.push('', 'Deaths per hero (death-table hits per run):', '')
+  L.push(`| Hero | Runs | Mean | Median | p90 | ${sm.months.map((m) => `M${m.month}`).join(' | ')} |`)
+  L.push(`|---|---|---|---|---|${sm.months.map(() => '---').join('|')}|`)
+  for (const h of sm.byHero) L.push(`| ${h.hero} | ${h.runs} | ${f(h.deathsPerRun, 2)} | ${h.median === undefined ? '' : f(h.median, 1)} | ${h.p90 === undefined ? '' : f(h.p90, 1)} | ${(h.perMonth ?? sm.months.map(() => NaN)).map((x) => (Number.isNaN(x) ? '' : f(x, 2))).join(' | ')} |`)
+  L.push('')
   return L.join('\n')
 }
