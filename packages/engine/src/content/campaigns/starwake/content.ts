@@ -74,7 +74,7 @@ const abilities: AbilityDef[] = [
   { id: 'sw_ab_otterpilot', name: 'Otter Pilot', kind: 'passive', bonus: 2, tags: ['travel'], text: '+2 to travel and sailing checks (from Tully).' },
   { id: 'sw_ab_divelore', name: 'Diver’s Notes', kind: 'passive', bonus: 2, tags: ['lore'], text: '+2 to lore checks (from Vessa).' },
   { id: 'sw_ab_masonseye', name: 'Mason’s Eye', kind: 'passive', bonus: 2, tags: ['lore', 'physical'], text: '+2 to lore and physical checks (from Ismay).' },
-  { id: 'sw_ab_gunnery', name: 'Gunner’s Eye', kind: 'addDie', per: 'rest', uses: 2, die: 6, slots: ['attack'], text: 'Twice per Rest (from Kestrel): add d6 to an Attack roll.' },
+  { id: 'sw_ab_gunnery', name: 'Gunner’s Eye', kind: 'addDie', per: 'rest', uses: 2, die: 6, slots: ['attack'], text: 'Twice per Rest (from Hallam): add d6 to an Attack roll.' },
   { id: 'sw_ab_springtrap', name: 'Spring-Loaded', kind: 'addDie', per: 'rest', uses: 1, die: 6, slots: ['damage'], text: 'Once per Rest (from Aunt Calibra): add d6 to a Damage roll.' },
 ]
 
@@ -303,7 +303,7 @@ const members: MemberDef[] = [
   follower({ id: 'sw_f_vessa', name: 'Vessa Quill', fee: 14, follower: { upkeep: 3, grants: ['sw_ab_divelore'] }, text: 'A diver-scholar who used to work for Ashe. She knows what he plans, and wants it stopped.' }),
   follower({ id: 'sw_f_calibra', name: 'Aunt Calibra', fee: 16, follower: { upkeep: 4, grants: ['sw_ab_springtrap'] }, text: 'The Orrery’s oldest clockmaker, who builds traps for fun.' }),
   follower({ id: 'sw_f_ismay', name: 'Ismay Tolliver', fee: 14, follower: { upkeep: 3, grants: ['sw_ab_masonseye'] }, text: 'The last stairwright of the Upper Sea. She has been waiting two hundred years to finish a job.' }),
-  follower({ id: 'sw_f_kestrel', name: 'Kestrel Marrow', fee: 16, follower: { upkeep: 4, grants: ['sw_ab_gunnery'] }, text: 'A gunner who walked off Ashe’s flagship in the middle of a battle, and has opinions about it.' }),
+  follower({ id: 'sw_f_hallam', name: 'Hallam Marrow', fee: 16, follower: { upkeep: 4, grants: ['sw_ab_gunnery'] }, text: 'A gunner who walked off Ashe’s flagship in the middle of a battle, and has opinions about it.' }),
 ]
 
 export const STARWAKE_CONTENT: ContentPack = { abilities, heroes, items, enemies, members }

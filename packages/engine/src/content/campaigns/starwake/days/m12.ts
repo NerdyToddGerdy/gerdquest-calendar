@@ -4,7 +4,7 @@
 import { boss, buff, check, check3, dmg, fight, gold, haven, heal, item, page, pick, plain, task, travel, virtue, type Draft } from './build'
 import { SHOP_SKY, with_ } from './shops'
 
-const HIRES = ['sw_f_biscuit', 'sw_f_fenwick', 'sw_f_jory', 'sw_f_tully', 'sw_f_vessa', 'sw_f_calibra', 'sw_f_ismay', 'sw_f_kestrel']
+const HIRES = ['sw_f_biscuit', 'sw_f_fenwick', 'sw_f_jory', 'sw_f_tully', 'sw_f_vessa', 'sw_f_calibra', 'sw_f_ismay', 'sw_f_hallam']
 
 export const M12: Draft[] = [
   // ---- Dec 1–2 ----
@@ -50,7 +50,7 @@ export const M12: Draft[] = [
     'Vessa walks the camp slowly, touching the tent poles. “I slept in that one,” she says. “That’s his chair. I drew that map.” She stands at the table, looking at the writing. “I think he knew we’d find it. I think he wanted us to.”',
     [task('Talk to her', check3('Ask her what Ashe wants', 'cha', ['social'], 'She turns the question over and puts it down.', '“To not be afraid,” she says. “Same as anyone.”', ['“To not be afraid,” she says. “And he thinks a cage is the same as being safe.” She takes your hand.', [virtue(1)]]))]),
   haven('The Hanging Camp', 'sw_stair',
-    'You take the camp, because it’s a good place to defend and because the fire is still warm. Fenwick makes something he calls a stew. Kestrel sits with her back to the cold and cleans her pistol. “He’ll be waiting at the Gate,” she says. “He won’t run any more. He’s past running.”',
+    'You take the camp, because it’s a good place to defend and because the fire is still warm. Fenwick makes something he calls a stew. Hallam sits with her back to the cold and cleans her pistol. “He’ll be waiting at the Gate,” she says. “He won’t run any more. He’s past running.”',
     { shop: with_(SHOP_SKY, { id: 'sw_badge', price: 18 }), hires: HIRES }),
 
   // ---- Dec 12–16 ----
@@ -118,7 +118,7 @@ export const M12: Draft[] = [
 
   // ---- Dec 24–25 ----
   haven('The Longnight Feast', 'sw_tavern',
-    'Cloudmoor has never held a feast like this: a table down the middle of the guild hall, a hundred lamps lit, a whale singing at the harbor and every stairwright’s empty chair filled by some star-struck guest. Ismay carves a fish. Greta toasts the stair. Kestrel gets quietly, thoroughly drunk, and Vessa sits next to her. Wend is a star now, and you can see it from the window, steady and warm.',
+    'Cloudmoor has never held a feast like this: a table down the middle of the guild hall, a hundred lamps lit, a whale singing at the harbor and every stairwright’s empty chair filled by some star-struck guest. Ismay carves a fish. Greta toasts the stair. Hallam gets quietly, thoroughly drunk, and Vessa sits next to her. Wend is a star now, and you can see it from the window, steady and warm.',
     { shop: with_(SHOP_SKY, { id: 'sw_badge', price: 18 }), hires: HIRES, steps: [task('Accept the mantle', plain('Take the stairwrights’ gift', 'A mantle woven from a thread of every star that climbed. Ismay drapes it over your shoulders and says nothing at all.', [item('sw_longnightcloak')]))], icons: [{ kind: 'loot', x: 74, y: 68 }] }),
 
   // ---- Dec 26–30 ----

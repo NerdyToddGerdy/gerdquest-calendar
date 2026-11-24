@@ -5,7 +5,7 @@ import { boss, buff, check, check3, dmg, fight, gold, haven, item, page, pick, p
 import { SHOP_SKY, with_ } from './shops'
 
 const HIRES = ['sw_f_biscuit', 'sw_f_fenwick', 'sw_f_jory', 'sw_f_tully', 'sw_f_vessa', 'sw_f_calibra', 'sw_f_ismay']
-const HIRES_K = [...HIRES, 'sw_f_kestrel']
+const HIRES_K = [...HIRES, 'sw_f_hallam']
 
 export const M11: Draft[] = [
   // ---- Nov 1–4 ----
@@ -45,7 +45,7 @@ export const M11: Draft[] = [
     ['They scatter into drifting feathers.', [gold(4)]],
     ['They tear at you with talons of lightning.', [dmg(2)]]),
   page('A Deserter', 'sw_skysea',
-    'A skiff drifts past the landing with a single figure in it, in Ashe’s gold-and-grey, with a long pistol across her knees and one arm in a sling. “Don’t shoot,” she says. “Please. I’m not worth the powder.” Her name is Kestrel Marrow. She walked off the *Gilt Gull* in the middle of a battle, and has been drifting since.',
+    'A skiff drifts past the landing with a single figure in it, in Ashe’s gold-and-grey, with a long pistol across her knees and one arm in a sling. “Don’t shoot,” she says. “Please. I’m not worth the powder.” Her name is Hallam Marrow. She walked off the *Gilt Gull* in the middle of a battle, and has been drifting since.',
     [pick('Choose one',
       check('Hear her out', 'cha', ['social'], 'She clams up, shaking.', ['“He’s going to put the heart in a cage,” she says. “A big one. He’s calling it a mercy. I’m done being merciful for him.”', [buff('roll', 1), virtue(1)]]),
       check('Check her pistol and her story', 'wis', ['perception'], 'She seems honest, or a very good liar.', ['Her pistol is empty, and her sling is real. She isn’t lying.', [buff('def', 1)]]),
@@ -60,7 +60,7 @@ export const M11: Draft[] = [
     ['They fall back, leaving a skiff behind.', [gold(4)]],
     ['A ball takes you in the arm before they retreat.', [dmg(2)]]),
   haven('The Landing of Reeds', 'sw_stair',
-    'Kestrel sleeps in a corner of the landing with her back to the wall, and wakes at every sound. By morning she has fixed three of Fenwick’s pans, Greta’s cracked spyglass and the pistol that was never loaded. “Let me sign on,” she says. “Pay isn’t important. I just want a deck that isn’t his.”',
+    'Hallam sleeps in a corner of the landing with her back to the wall, and wakes at every sound. By morning she has fixed three of Fenwick’s pans, Greta’s cracked spyglass and the pistol that was never loaded. “Let me sign on,” she says. “Pay isn’t important. I just want a deck that isn’t his.”',
     { shop: with_(SHOP_SKY, { id: 'sw_badge', price: 18 }), hires: HIRES_K, icons: [{ kind: 'loot', x: 70, y: 66 }] }),
 
   // ---- Nov 14–18 ----
@@ -97,12 +97,12 @@ export const M11: Draft[] = [
 
   // ---- Nov 21–25 ----
   page('Grey Sails', 'sw_skysea',
-    'At dawn the Cloudback sings a warning: sails on the horizon. Not thirty now, but six, large and dark and rigged in an odd way, as if something very heavy were being towed between them. The *Gilt Gull* flies in front. Kestrel pales when she sees what is slung beneath the barge.',
+    'At dawn the Cloudback sings a warning: sails on the horizon. Not thirty now, but six, large and dark and rigged in an odd way, as if something very heavy were being towed between them. The *Gilt Gull* flies in front. Hallam pales when she sees what is slung beneath the barge.',
     [task('Study them', check('Look through the spyglass at what they tow', 'wis', ['perception'], ['The sun glares off the glass, and you only see a shape.', [travel(1)]], ['A cage. A great brass cage with bars of star-glass, big enough to hold a lighthouse. It is hinged.', [buff('roll', 1)]]))]),
   page('The Lantern-Cage', 'sw_deck',
-    'Kestrel talks fast. “It’s called the Lantern-Cage. Ashe’s smiths built it out of the stair itself, out of the pieces they quarried. Once it closes on a keeper-star, it never opens.” She looks at Wend’s lantern. “It was built for that.”',
+    'Hallam talks fast. “It’s called the Lantern-Cage. Ashe’s smiths built it out of the stair itself, out of the pieces they quarried. Once it closes on a keeper-star, it never opens.” She looks at Wend’s lantern. “It was built for that.”',
     [pick('Choose one',
-      check('Ask how to stop it', 'int', ['lore'], 'Kestrel doesn’t know.', ['“The latch,” she says. “It’s a lantern-latch. Stairwright’s work. Ismay’s chisel could cut it.”', [buff('atk', 1)]]),
+      check('Ask how to stop it', 'int', ['lore'], 'Hallam doesn’t know.', ['“The latch,” she says. “It’s a lantern-latch. Stairwright’s work. Ismay’s chisel could cut it.”', [buff('atk', 1)]]),
       check('Plan a night boarding', 'dex', ['stealth'], ['Your plan is noisy.', [dmg(1)]], ['You plan the boarding down to the minute.', [buff('roll', 1)]]),
     )]),
   fight('Cage-Wardens', 'sw_stair',
@@ -138,7 +138,7 @@ export const M11: Draft[] = [
     'Ashe’s fleet is breaking up. Four ships have turned away from the stair, and their crews, sick of cages, are fighting among themselves. One group, still loyal, tries to stop you on the sixth flight’s foot.',
     ['sw_gunner', 'sw_gildduelist'], 2,
     'Steel rings on stone.',
-    ['They break and run. Kestrel watches them go with an odd expression.', [gold(5)]],
+    ['They break and run. Hallam watches them go with an odd expression.', [gold(5)]],
     ['They hold the stair for a moment and make you pay for it.', [dmg(2)]]),
   page('The Last Gift’s Warning', 'sw_deck',
     'On the last night of the month, Wend speaks to you alone. “The stair’s last flight is steep,” it says. “And cold. I do not know what Ashe means to do with the keystone, but I think the Needle is hungry. It was cut hollow. Hollow things want to be filled.” Its voice is steady. “Whatever happens, I will not leave the stair behind.”',
