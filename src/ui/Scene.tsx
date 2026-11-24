@@ -31,7 +31,11 @@ const SKIES: Record<SceneKind, [string, string]> = {
   wreck: ['#0a0c10', '#2a2320'],
 }
 
-/** Procedural scene art, drawn in SVG so the game ships with no image assets. */
+/**
+ * Procedural scene art, drawn in SVG so the game ships with no image assets.
+ * The art is decorative (aria-hidden): the day's text already describes the
+ * place. Hidden finds are real buttons, so keyboard users can tab to them.
+ */
 export function Scene({ scene, icons, found, disabled, onFind, actors }: Props) {
   const [top, bottom] = SKIES[scene]
   return (
@@ -61,7 +65,7 @@ export function Scene({ scene, icons, found, disabled, onFind, actors }: Props) 
             disabled={disabled}
             onClick={() => onFind(i)}
             title={icon.kind === 'pickpocket' ? 'An unattended purse…' : 'Something tucked away…'}
-            aria-label={icon.kind === 'pickpocket' ? 'Hidden purse' : 'Hidden cache'}
+            aria-label="Something glints here"
           >
             {icon.kind === 'pickpocket' ? <PurseGlyph /> : <PackGlyph />}
           </button>
@@ -73,7 +77,7 @@ export function Scene({ scene, icons, found, disabled, onFind, actors }: Props) 
 
 function PurseGlyph() {
   return (
-    <svg viewBox="0 0 24 24" width="100%" height="100%">
+    <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden="true" focusable="false">
       <path d="M8 6 L16 6 L14 9 Q20 12 19 17 Q18 21 12 21 Q6 21 5 17 Q4 12 10 9 Z" fill="none" stroke="currentColor" strokeWidth="1.6" />
       <path d="M9 4 L15 4" stroke="currentColor" strokeWidth="1.6" />
     </svg>
@@ -82,7 +86,7 @@ function PurseGlyph() {
 
 function PackGlyph() {
   return (
-    <svg viewBox="0 0 24 24" width="100%" height="100%">
+    <svg viewBox="0 0 24 24" width="100%" height="100%" aria-hidden="true" focusable="false">
       <rect x="5" y="7" width="14" height="14" rx="3" fill="none" stroke="currentColor" strokeWidth="1.6" />
       <path d="M9 7 Q9 3 12 3 Q15 3 15 7" fill="none" stroke="currentColor" strokeWidth="1.6" />
       <rect x="9" y="12" width="6" height="4" rx="1" fill="none" stroke="currentColor" strokeWidth="1.4" />
