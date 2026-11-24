@@ -11,7 +11,7 @@ export const M1: Draft[] = [
     'Greta Holloway has watched the sky over Saltmere Quay for forty years. She knows every star by name, because she drew most of them onto the charts the whole Saltreach steers by. Tonight, as the harbor bell rings midnight, the brightest of them all, Wend the Keeper, tears loose from its place and falls burning into the west. A moment later every other star in the sky shivers and begins, very slowly, to drift.',
     [
       task('1. Watch it fall', check('Fix the line of its fall against the old charts', 'int', ['lore'], 'It is gone too fast. All you know is “west, and far.”', ['West by a little south, past the edge of anything you ever charted. You mark it in pencil with a shaking hand.', [virtue(1)]])),
-      task('2. Steady yourself', check('Get down the slippery lighthouse stair in the dark', 'dex', ['physical'], ['You miss a step and bark your shin on the rail.', [dmg(1)]], 'You make it down. Below, the harbor is full of people pointing at the sky.')),
+      task('2. Steady yourself', check('Get down the slippery lighthouse stair in the dark', 'dex', ['physical'], ['You miss a step and scrape your shin on the rail.', [dmg(1)]], 'You make it down. Below, the harbor is full of people pointing at the sky.')),
     ],
     { note: 'Prologue. You play Greta for the first few pages; then the story passes to the hero you choose.' })),
   page('Ships That Missed the Harbor', 'sw_quay',

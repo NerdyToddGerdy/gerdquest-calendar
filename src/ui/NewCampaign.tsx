@@ -6,6 +6,7 @@ import { anchorWeekday, campaign, defaultStartDate, listCatalog, startDateOption
 import { ability, campaignHeroes, heroDef } from '@questender/engine/content'
 import { HeroPreviewButton, HeroPreviewModal } from './HeroPreview'
 import { TRAITS } from '@questender/engine/types'
+import { rulesFor } from '@questender/engine/ruleset'
 import { slotExists } from '../save'
 import { useCampaignPacks } from '../useCampaignPacks'
 import { Opening } from './Opening'
@@ -34,10 +35,15 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
   const startDate = picked && options.includes(picked) ? picked : defaultStartDate(entry, today)
   const taken = slotExists(campaignId, startDate)
   const [previewId, setPreviewId] = useState<string | null>(null)
+  const ruleset = rulesFor(entry.rulesetId)
 
   return (
     <main className="title-screen">
       <h1>New campaign</h1>
+      <p className="switch-note">
+        Not sure? Pick whichever sounds fun. This isn’t a permanent choice: you can start another campaign any time with
+        the <b>+ New campaign</b> button at the top of the desk, and play several side by side. Each one saves separately.
+      </p>
 
       <div className="campaign-picks">
         {campaigns.map((c) => {
@@ -70,7 +76,7 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
                 )}
                 <p className="small">{c.blurb}</p>
                 <span className="muted small">
-                  {c.pageCount} pages · {c.rulesetId} rules
+                  {c.pageCount} pages · <span title={rulesFor(c.rulesetId).summary}>{rulesFor(c.rulesetId).name} rules</span>
                   {c.chaptersPlanned && c.chaptersWritten && c.chaptersWritten < c.chaptersPlanned ? ` · chapters 1–${c.chaptersWritten} of ${c.chaptersPlanned} so far, more coming` : ''}
                 </span>
               </div>
@@ -78,6 +84,19 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
           )
         })}
       </div>
+
+      <section className="rules-explainer" aria-label={`${ruleset.name} rules`}>
+        <h2>
+          What “{ruleset.name} rules” means for {entry.title}
+        </h2>
+        <p>{ruleset.summary}</p>
+        <ul>
+          {ruleset.points.map((pt) => (
+            <li key={pt}>{pt}</li>
+          ))}
+        </ul>
+        <p className="muted small">Each page tells you what to roll and what to add, so you don’t need to learn the rules up front.</p>
+      </section>
 
       {camp ? (
         <>

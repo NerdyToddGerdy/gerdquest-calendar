@@ -251,7 +251,7 @@ describe('no peeking', () => {
     expect(out).toContain(`>${bw.pages[0].title}<`)
     expect(out).not.toContain(bw.pages[1].title)
     expect(out).not.toContain(bw.pages[1].text.slice(0, 30))
-    expect(out).toContain('The next page unlocks')
+    expect(out).toContain('the story continues')
   })
 
   it('viewing a later date than a campaign has reached shows nothing of that page', () => {

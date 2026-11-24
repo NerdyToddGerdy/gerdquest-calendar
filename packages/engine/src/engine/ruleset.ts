@@ -5,6 +5,10 @@ import type { ConditionDef, DeathTable, PoolId, RulesetId, WoundKind } from './t
 export interface Ruleset {
   id: RulesetId
   name: string
+  /** One plain-language line for players choosing a campaign. */
+  summary: string
+  /** What sets these rules apart, in player terms (shown on the New Campaign screen). */
+  points: string[]
   /** Calendar year whose rules this preset is modeled on. */
   basedOn: number
   currencyName: string
@@ -65,6 +69,14 @@ function d4Death(currency: string): DeathTable {
 export const MODERN: Ruleset = {
   id: 'modern',
   name: 'Modern',
+  summary: 'The fullest rules, with the most dice rolling and the most rewards.',
+  points: [
+    'You roll to hit and also roll your Defense to block.',
+    'A natural 1 always fails; a natural 20 earns a Boon.',
+    'You can swap gear whenever you get something new, as well as when you Rest.',
+    'Hidden loot icons in each picture, and a Sunday lottery.',
+    'Falling in battle rolls a d4: lose half your coin, take a Wound, lose some gear, or spend your abilities.',
+  ],
   basedOn: 2024,
   currencyName: 'glint',
   conditions: {
@@ -87,6 +99,14 @@ export const MODERN: Ruleset = {
 export const FRONTIER: Ruleset = {
   id: 'frontier',
   name: 'Frontier',
+  summary: 'Science-fiction rules with a crew and several power pools.',
+  points: [
+    'You roll to hit; your Defense is a fixed number that softens hits.',
+    'Abilities draw on Charges, Spell, Chi and Surge points that refill when you Rest.',
+    'You can swap gear whenever you get something new, as well as when you Rest.',
+    'Shops buy your gear back at full price, and a Sunday lottery opens after the prologue.',
+    'Falling in battle rolls a d4: lose half your credits, take a Wound, lose some gear, or spend your abilities.',
+  ],
   basedOn: 2023,
   currencyName: 'credits',
   conditions: {
@@ -109,6 +129,14 @@ export const FRONTIER: Ruleset = {
 export const CLASSIC: Ruleset = {
   id: 'classic',
   name: 'Classic',
+  summary: 'The original, simpler rules: fewer rolls, followers, and a harsher price for falling.',
+  points: [
+    'You roll to hit; your Defense is a fixed number that softens hits, so there is no Defense roll.',
+    'A fight against a group lasts one round per foe. A lone foe can only be beaten in the final round.',
+    'You can hire followers, who lend you their abilities.',
+    'Spell and Chi points refill when you Rest, and you can only swap gear when you Rest.',
+    'Falling in battle rolls a d6: lose all your gold, take an injury, give up a magic item, or spend your abilities.',
+  ],
   basedOn: 2022,
   currencyName: 'gold',
   conditions: {

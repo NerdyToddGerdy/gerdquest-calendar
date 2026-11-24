@@ -12,6 +12,7 @@ import { CalendarView } from './CalendarView'
 import { campColor } from './colors'
 import { DayView } from './DayView'
 import { turnPage } from './pageTurn'
+import { Tutorial } from './Tutorial'
 import { HeroSheet } from './HeroSheet'
 import { Journal } from './Journal'
 import { Log } from './Log'
@@ -97,6 +98,11 @@ export function Desk(p: Props) {
     else if (active) forwardHint = `Finish this page in ${campaign(active.state.campaignId).title} to move on.`
   } else if (laggingText) {
     forwardHint = `${laggingText}; you can catch up any time.`
+  }
+
+  const goForward = () => {
+    turnPage()
+    p.onForward()
   }
 
   return (
@@ -266,12 +272,10 @@ export function Desk(p: Props) {
             <button
               className="arrow"
               aria-label="Next day"
+              data-tour="next-arrow"
               disabled={!forward}
               title={forward ? 'Next day' : forwardHint}
-              onClick={() => {
-                turnPage()
-                p.onForward()
-              }}
+              onClick={goForward}
             >
               ›
             </button>
@@ -313,9 +317,13 @@ export function Desk(p: Props) {
             dispatch={(a) => p.onDispatch(active.id, a)}
             onDate={p.onDate}
             onDelete={() => p.onDelete(active.id)}
+            onNext={forward ? goForward : undefined}
+            nextHint={forwardHint}
           />
         </>
       )}
+
+      {p.slots.length > 0 && mode === 'day' && <Tutorial today={p.today} veteran={p.progress.days.length > 10} />}
 
       {import.meta.env.DEV && <DevDate today={p.today} onChanged={p.onTodayChanged} />}
     </div>
@@ -345,10 +353,14 @@ interface PanelProps {
   dispatch: (a: Action) => void
   onDate: (d: ISODate) => void
   onDelete: () => void
+  /** Turn to the next page (undefined when › is unavailable). */
+  onNext?: () => void
+  /** Why › is unavailable, or a note about other campaigns. */
+  nextHint?: string
 }
 
 /** One campaign's page for the viewed date, plus its hero sheet. */
-export function CampaignPanel({ slot, viewDate, today, dispatch, onDate, onDelete }: PanelProps) {
+export function CampaignPanel({ slot, viewDate, today, dispatch, onDate, onDelete, onNext, nextHint }: PanelProps) {
   const [panel, setPanel] = useState<'page' | 'journal' | 'notes'>('page')
   const state = slot.state
   const c = campaign(state.campaignId)
@@ -363,7 +375,7 @@ export function CampaignPanel({ slot, viewDate, today, dispatch, onDate, onDelet
     const day = currentDay(state)!
     main = (
       <>
-        <DayView state={state} day={day} dispatch={dispatch} today={today} />
+        <DayView state={state} day={day} dispatch={dispatch} today={today} onNext={onNext} nextHint={nextHint} />
         <Log entries={state.log} />
       </>
     )

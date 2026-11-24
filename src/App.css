@@ -1342,3 +1342,60 @@ fieldset.looks legend { font-family: var(--display); font-size: 1.1rem; padding:
 .token-opt.locked { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 8px 4px; border: 1px dashed var(--line); border-radius: 8px; text-align: center; min-height: 92px; }
 .token-opt.locked .token-q { font-family: var(--display); font-size: 1.3rem; letter-spacing: 0.2em; color: var(--muted); }
 .token-opt.locked small { color: var(--muted); font-size: 0.72rem; line-height: 1.25; }
+
+/* ---------- New campaign: switching and rules ---------- */
+.switch-note { max-width: 60ch; margin: -8px 0 0; color: var(--muted); line-height: 1.5; }
+.rules-explainer {
+  width: 100%;
+  max-width: 720px;
+  text-align: left;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 18px;
+  background: var(--panel);
+}
+.rules-explainer h2 { font-size: 1.15rem; margin: 0 0 6px; }
+.rules-explainer p { margin: 0 0 8px; }
+.rules-explainer ul { margin: 0 0 8px; padding-left: 1.2em; line-height: 1.5; }
+
+/* ---------- End of a page ---------- */
+.day-footer { justify-content: stretch; }
+.page-end { width: 100%; border-radius: 10px; padding: 14px 18px; border: 1px solid var(--line); }
+.page-end h3 { margin: 0 0 6px; }
+.page-end p { margin: 0 0 10px; }
+.page-end ul { margin: 0; padding-left: 1.2em; line-height: 1.5; }
+.page-end.done { border-color: var(--good); background: color-mix(in srgb, var(--good) 8%, transparent); }
+.page-end.done h3 { color: var(--good); }
+.page-end.done .primary.big { width: 100%; max-width: 360px; }
+
+/* ---------- Tutorial tips ---------- */
+.tour-target { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 6px; animation: tour-pulse 1.6s ease-in-out infinite; }
+@keyframes tour-pulse { 50% { outline-color: color-mix(in srgb, var(--accent) 35%, transparent); } }
+@media (prefers-reduced-motion: reduce) { .tour-target { animation: none; } }
+.tour-tip {
+  position: absolute;
+  z-index: 60;
+  width: min(320px, calc(100vw - 32px));
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--text, inherit);
+  border: 2px solid var(--accent);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+  text-align: left;
+}
+.tour-tip::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--arrow, 50%) - 8px);
+  width: 14px;
+  height: 14px;
+  background: var(--panel);
+  border: 2px solid var(--accent);
+  transform: rotate(45deg);
+}
+.tour-tip.below::before { top: -9px; border-right: 0; border-bottom: 0; }
+.tour-tip.above::before { bottom: -9px; border-left: 0; border-top: 0; }
+.tour-title { display: block; font-family: var(--display); font-size: 1.1rem; color: var(--accent); margin-bottom: 4px; }
+.tour-tip p { margin: 0 0 10px; line-height: 1.45; }
+.tour-actions { display: flex; justify-content: space-between; align-items: center; gap: 8px; }

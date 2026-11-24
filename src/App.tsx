@@ -199,6 +199,8 @@ function Game() {
     const turned = slots.map((s) => ({ ...s, state: turnThrough(s.state, viewDate, next) }))
     update(() => turned)
     setViewDate(next)
+    // A new page starts at its top, not wherever the last one was scrolled to.
+    window.scrollTo({ top: 0, behavior: 'instant' })
     const tab = pickTab(turned, next, selected)
     if (tab) select(tab)
   }
