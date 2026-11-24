@@ -15,6 +15,9 @@ const MARKET = [
   { id: 'luckglass', price: 8 },
   { id: 'bw-concordCoat', price: 50 },
   { id: 'bw-pealCharm', price: 45 },
+  { id: 'bw-bellWhet', price: 30 },
+  { id: 'bw-lampGrip', price: 32 },
+  { id: 'bw-oilskinLiner', price: 34 },
 ]
 
 export const DEC: Day[] = [
@@ -88,7 +91,7 @@ export const DEC: Day[] = [
       fight(['bw-paleHeir'], 4, 'The Pale Heir raises its hand, and the hollow goes quiet.',
         'The Heir falls apart into fog, and its crown of false bells shatters like ice.',
         'You drive it back into the fog, but it will come again with the Tide.',
-        [gl(20)], [dmg(4)]),
+        [gl(14)], [dmg(4)]),
       [step('Stand', chk('Stand in front of the Tongue', 'con', ['physical'], 15, 'The silence presses on you.', ['You do not move.', buff('def', 2)]))]),
     pg('d20-last-light', 'Last Light', 'depths',
       'You have one day before the longest night. You spend it bandaging wounds, eating the last of the bread, and listening to the Tide breathe.',
@@ -100,7 +103,7 @@ export const DEC: Day[] = [
       fight(['bw-paleTide'], 5, 'The Pale Tide rises out of the hollow.',
         'You ring the Tide’s Tongue with everything you have, and the seventh voice joins the Peal. The Pale Tide stops. Listens. And slowly, slowly, like a child at the end of a long day, it lies back down and sleeps. Far above, the fog begins to lift off the Marches for the first time in a hundred years.',
         'The Tide drives you back against the wall of the hollow — but the bell rings anyway, swinging on its own in the wind of the Tide’s breath, and the seventh voice joins the Peal. The Tide sinks back, and sleeps.',
-        [gl(30), vir(3)], [dmg(4)]),
+        [gl(20), vir(3)], [dmg(4)]),
       [step('The bell', chk('Seize the bell-rope', 'str', ['physical'], 15, 'The Tide’s breath tears it from your hands.', ['The rope is in your hands.', buff('atk', 2), buff('dmg', 2)]))]),
   ]),
 
@@ -119,7 +122,7 @@ export const DEC: Day[] = [
         act('B) Just eat', 'So much food.', heal(5)))]),
     pg('d26-gifts', 'Gifts', 'inn',
       'People keep pressing gifts on you: pies, scarves, a carved bell, a purse from Madam Quill with a note that says “Paid in full.”',
-      [step(undefined, act('Accept them', 'You run out of pockets.', gl(15), itm('bw-greatMend')))]),
+      [step(undefined, act('Accept them', 'You run out of pockets.', gl(10), itm('bw-greatMend')))]),
     pg('d27-penwick', 'Penwick’s Book', 'tower',
       'Penwick is writing it all down: the Sevenfold Peal, so it will never be forgotten again. He wants your part in your own words.',
       [step(undefined, chk('Tell it well', 'cha', ['social'], 12, 'You tell it badly. He writes it beautifully anyway.', ['He reads it back to you, and it sounds true.', vir(1)]))]),

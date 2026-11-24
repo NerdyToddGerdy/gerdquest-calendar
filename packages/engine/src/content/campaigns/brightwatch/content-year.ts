@@ -47,7 +47,7 @@ export const YEAR_ENEMIES: EnemyDef[] = [
   // Dec
   { id: 'bw-throatSentinel', name: 'Throat Sentinel', ac: 19, toughness: 11, hits: 19, dmg: 9, text: 'A guardian grown from the Underreef’s own stone.' },
   { id: 'bw-paleHeir', name: 'The Pale Heir', ac: 20, toughness: 14, hits: 20, dmg: 10, text: 'The Pale Herald reborn, wearing a crown of seven silent bells.' },
-  { id: 'bw-paleTide', name: 'The Pale Tide', ac: 21, toughness: 15, hits: 20, dmg: 12, text: 'The fog itself, risen from the deep, vast and half awake.' },
+  { id: 'bw-paleTide', name: 'The Pale Tide', ac: 21, toughness: 16, hits: 21, dmg: 14, text: 'The fog itself, risen from the deep, vast and half awake.' },
 ]
 
 export const YEAR_ITEMS: ItemDef[] = [
@@ -72,6 +72,10 @@ export const YEAR_ITEMS: ItemDef[] = [
   { id: 'bw-stridersBoots', name: 'Moor-Strider Boots', kind: 'gear', slot: 'feet', bonus: { def: 2, dex: 1 }, price: 34, text: '+2 Defense, +1 Dexterity.' },
   { id: 'bw-concordCoat', name: 'Concord Greatcoat', kind: 'gear', slot: 'body', bonus: { def: 2, maxHp: 6 }, price: 50, text: '+2 Defense, +6 max health.' },
   { id: 'bw-pealCharm', name: 'Peal-Charm', kind: 'gear', slot: 'trinket', bonus: { atk: 1, def: 1, cha: 1 }, price: 45, text: '+1 Attack, +1 Defense, +1 Charisma. Rings softly in the fog.' },
+  // Late-year upgrades (Oct to Dec markets): stackable, so a full purse always has a use.
+  { id: 'bw-bellWhet', name: 'Bell-Bronze Whetstone', kind: 'upgrade', bonus: { dmg: 1 }, stackMax: 1, price: 30, text: '+1 to Damage rolls.' },
+  { id: 'bw-lampGrip', name: 'Lamp-Keeper’s Grip', kind: 'upgrade', bonus: { atk: 1 }, stackMax: 1, price: 32, text: '+1 Attack.' },
+  { id: 'bw-oilskinLiner', name: 'Storm Oilskin Liner', kind: 'upgrade', bonus: { def: 1 }, stackMax: 1, price: 34, text: '+1 Defense.' },
 ]
 
 export const YEAR_MEMBERS: MemberDef[] = [

@@ -16,6 +16,9 @@ const MARKET = [
   { id: 'luckglass', price: 8 },
   { id: 'bw-emberGauntlets', price: 48 },
   { id: 'bw-concordCoat', price: 50 },
+  { id: 'bw-bellWhet', price: 30 },
+  { id: 'bw-lampGrip', price: 32 },
+  { id: 'bw-oilskinLiner', price: 34 },
 ]
 
 export const NOV: Day[] = [

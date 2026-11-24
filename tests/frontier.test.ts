@@ -270,8 +270,8 @@ describe('Surge and Charges pools', () => {
 
   it('every Halcyon per-Rest ability is pool-costed, and level-1 pools equal the old uses per Rest', () => {
     const lv1: Record<string, Partial<Record<string, number>>> = {
-      hd_juniper: { charges: 1 }, hd_tamsin: { surge: 2 }, hd_brask: { surge: 4 },
-      hd_ilse: { charges: 2 }, hd_kit: { charges: 3 }, hd_ash: { surge: 4 }, hd_seren: { surge: 1 },
+      hd_juniper: { charges: 1 }, hd_tamsin: { surge: 3 }, hd_brask: { surge: 2 },
+      hd_ilse: { charges: 2 }, hd_kit: { charges: 4 }, hd_ash: { surge: 2 }, hd_seren: { surge: 1 },
     }
     for (const [id, pools] of Object.entries(lv1)) expect(heroDef(id).pools).toEqual(pools)
     for (const id of Object.keys(lv1)) {
@@ -298,7 +298,7 @@ describe('Surge and Charges pools', () => {
   it('Surge abilities need Surge and show their cost', () => {
     expect(newGame().hero!.poolMax).toEqual({ charges: 1 }) // prologue courier
     const hero = createHero(heroDef('hd_ash'))
-    expect(hero.pools).toEqual({ surge: 4 })
+    expect(hero.pools).toEqual({ surge: 2 })
     expect(abilityReady({ ...hero, pools: { surge: 0 } }, ability('hd_lockon'))).toBe(false)
     expect(abilityReady(hero, ability('hd_lockon'))).toBe(true)
     expect(costLabel(ability('hd_lockon'))).toBe('1 Surge')
@@ -308,17 +308,17 @@ describe('Surge and Charges pools', () => {
     let s = as('hd_brask')
     s = { ...s, hero: { ...s.hero!, pools: { surge: 0 } } }
     s = act(s, { type: 'REST' })
-    expect(s.hero!.pools!.surge).toBe(4)
+    expect(s.hero!.pools!.surge).toBe(2)
     let k = as('hd_kit')
     k = { ...k, hero: { ...k.hero!, pools: { charges: 1 } } }
-    expect(act(k, { type: 'REST' }).hero!.pools!.charges).toBe(3)
+    expect(act(k, { type: 'REST' }).hero!.pools!.charges).toBe(4)
   })
 
   it('level-ups raise pools by the new ability’s old uses, and a death drain empties them', () => {
     const def = heroDef('hd_brask')
     const lv2 = growPools(levelUp(createHero(def), def.levels[2]), def.levels[2].pools)
-    expect(lv2.poolMax).toEqual({ surge: 4, charges: 1 })
-    expect(lv2.pools).toEqual({ surge: 4, charges: 1 })
+    expect(lv2.poolMax).toEqual({ surge: 2, charges: 1 })
+    expect(lv2.pools).toEqual({ surge: 2, charges: 1 })
     expect(lv2.abilities).toContain('hd_shrugoff')
     const drained = resolveDeath(createHero(def), scriptedRng([4]), FRONTIER.death, 'credits').hero
     expect(drained.pools).toEqual({ surge: 0 })
