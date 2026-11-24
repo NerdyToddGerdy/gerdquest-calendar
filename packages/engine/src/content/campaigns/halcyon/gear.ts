@@ -31,50 +31,50 @@ export const ITEMS: ItemDef[] = [
 ]
 
 export const ENEMIES: EnemyDef[] = [
-  { id: 'hd_leech', name: 'Duct Leech', ac: 10, toughness: 3, hits: 11, dmg: 1, text: 'Pale, wet and hungry. Carries a nasty infection.' },
-  { id: 'hd_scrapper', name: 'Scrapper', ac: 11, toughness: 4, hits: 12, dmg: 2, text: 'A ring scavenger with a cutting torch and no scruples.' },
-  { id: 'hd_drone', name: 'Sentry Drone', ac: 12, toughness: 5, hits: 12, dmg: 2, text: 'A hovering turret that beeps politely before it shoots.' },
-  { id: 'hd_enforcer', name: 'Vell Enforcer', ac: 13, toughness: 6, hits: 13, dmg: 3, text: 'Armored, disciplined, and paid in salvage rights.' },
-  { id: 'hd_vell', name: 'Captain Oriel Vell', ac: 14, toughness: 8, hits: 14, dmg: 4, text: 'The Shoal’s most polite pirate. Wants the data core, and you, gone.' },
+  { id: 'hd_leech', name: 'Duct Leech', ac: 9, toughness: 2, hits: 10, dmg: 1, text: 'Pale, wet and hungry. Carries a nasty infection.' },
+  { id: 'hd_scrapper', name: 'Scrapper', ac: 10, toughness: 3, hits: 11, dmg: 1, text: 'A ring scavenger with a cutting torch and no scruples.' },
+  { id: 'hd_drone', name: 'Sentry Drone', ac: 11, toughness: 4, hits: 11, dmg: 1, text: 'A hovering turret that beeps politely before it shoots.' },
+  { id: 'hd_enforcer', name: 'Vell Enforcer', ac: 12, toughness: 5, hits: 12, dmg: 2, text: 'Armored, disciplined, and paid in salvage rights.' },
+  { id: 'hd_vell', name: 'Captain Oriel Vell', ac: 13, toughness: 6, hits: 13, dmg: 2, text: 'The Shoal’s most polite pirate. Wants the data core, and you, gone.' },
   // February: Tern Deep
-  { id: 'hd_icecrawler', name: 'Ice Crawler', ac: 11, toughness: 4, hits: 12, dmg: 2, text: 'A many-legged maintenance bot gone feral in the cold.' },
-  { id: 'hd_auditguard', name: 'Combine Repo Guard', ac: 12, toughness: 5, hits: 13, dmg: 3, text: 'Grey armor, a stun-lance, and a clipboard.' },
-  { id: 'hd_kessel', name: 'Auditor Brannoc Kessel', ac: 14, toughness: 8, hits: 14, dmg: 4, text: 'Reads you your arrears while he swings.' },
+  { id: 'hd_icecrawler', name: 'Ice Crawler', ac: 10, toughness: 3, hits: 11, dmg: 1, text: 'A many-legged maintenance bot gone feral in the cold.' },
+  { id: 'hd_auditguard', name: 'Combine Repo Guard', ac: 11, toughness: 4, hits: 12, dmg: 2, text: 'Grey armor, a stun-lance, and a clipboard.' },
+  { id: 'hd_kessel', name: 'Auditor Brannoc Kessel', ac: 13, toughness: 6, hits: 13, dmg: 3, text: 'Reads you your arrears while he swings.' },
   // March: Glasshouse
-  { id: 'hd_vaultbot', name: 'Vault Warden Unit', ac: 13, toughness: 6, hits: 14, dmg: 3, text: 'A glass-armored security frame that counts in interest.' },
-  { id: 'hd_combineagent', name: 'Combine Agent', ac: 13, toughness: 6, hits: 13, dmg: 3, text: 'A smiling banker with a very unbanklike pistol.' },
-  { id: 'hd_strand', name: 'Warden-Teller Imogen Strand', ac: 15, toughness: 9, hits: 15, dmg: 4, text: 'Keeper of the Glasshouse vaults. Has never lost a deposit.' },
+  { id: 'hd_vaultbot', name: 'Vault Warden Unit', ac: 12, toughness: 5, hits: 13, dmg: 2, text: 'A glass-armored security frame that counts in interest.' },
+  { id: 'hd_combineagent', name: 'Combine Agent', ac: 12, toughness: 5, hits: 12, dmg: 2, text: 'A smiling banker with a very unbanklike pistol.' },
+  { id: 'hd_strand', name: 'Warden-Teller Imogen Strand', ac: 14, toughness: 7, hits: 14, dmg: 3, text: 'Keeper of the Glasshouse vaults. Has never lost a deposit.' },
   // April: Breakers
-  { id: 'hd_dustrat', name: 'Dust Rat', ac: 12, toughness: 5, hits: 13, dmg: 2, text: 'A storm-addled scavenger with a magnetic hook.' },
-  { id: 'hd_stormraider', name: 'Storm Raider', ac: 14, toughness: 6, hits: 14, dmg: 3, text: 'One of Sela’s crew, lightning tattoos and all.' },
-  { id: 'hd_sela', name: 'Mother Sela Quin', ac: 15, toughness: 9, hits: 15, dmg: 5, text: 'Queen of the Breaker Belt. Fights with an arc-whip and a grudge.' },
+  { id: 'hd_dustrat', name: 'Dust Rat', ac: 11, toughness: 4, hits: 12, dmg: 2, text: 'A storm-addled scavenger with a magnetic hook.' },
+  { id: 'hd_stormraider', name: 'Storm Raider', ac: 13, toughness: 5, hits: 13, dmg: 2, text: 'One of Sela’s crew, lightning tattoos and all.' },
+  { id: 'hd_sela', name: 'Mother Sela Quin', ac: 14, toughness: 7, hits: 14, dmg: 3, text: 'Queen of the Breaker Belt. Fights with an arc-whip and a grudge.' },
   // May: the Choir wakes
-  { id: 'hd_marine', name: 'Navy Marine', ac: 14, toughness: 7, hits: 15, dmg: 3, text: 'Polite, precise, and under orders.' },
-  { id: 'hd_relicguard', name: 'Relic Guardian', ac: 15, toughness: 7, hits: 15, dmg: 4, text: 'A tall shape of song-stone that moves when the Choir hums.' },
-  { id: 'hd_sentinel', name: 'The Choir Sentinel', ac: 16, toughness: 10, hits: 15, dmg: 5, text: 'An ancient guardian waking for the first time in ten thousand years.' },
+  { id: 'hd_marine', name: 'Navy Marine', ac: 13, toughness: 6, hits: 14, dmg: 2, text: 'Polite, precise, and under orders.' },
+  { id: 'hd_relicguard', name: 'Relic Guardian', ac: 14, toughness: 6, hits: 14, dmg: 3, text: 'A tall shape of song-stone that moves when the Choir hums.' },
+  { id: 'hd_sentinel', name: 'The Choir Sentinel', ac: 15, toughness: 7, hits: 14, dmg: 4, text: 'An ancient guardian waking for the first time in ten thousand years.' },
   // June: Quarantine
-  { id: 'hd_bloomed', name: 'Bloomed Dockhand', ac: 13, toughness: 6, hits: 14, dmg: 3, text: 'Spore-sick and confused. Every scratch carries the infection.' },
-  { id: 'hd_sporeswarm', name: 'Spore Swarm', ac: 14, toughness: 5, hits: 15, dmg: 3, text: 'A drifting cloud that bites.' },
-  { id: 'hd_bloom', name: 'The Bloom', ac: 16, toughness: 10, hits: 16, dmg: 5, text: 'A whole freighter grown into one breathing, flowering thing.' },
+  { id: 'hd_bloomed', name: 'Bloomed Dockhand', ac: 12, toughness: 5, hits: 13, dmg: 2, text: 'Spore-sick and confused. Every scratch carries the infection.' },
+  { id: 'hd_sporeswarm', name: 'Spore Swarm', ac: 13, toughness: 3, hits: 14, dmg: 2, text: 'A drifting cloud that bites.' },
+  { id: 'hd_bloom', name: 'The Bloom', ac: 14, toughness: 6, hits: 15, dmg: 3, text: 'A whole freighter grown into one breathing, flowering thing.' },
   // July: Vell
-  { id: 'hd_velllt', name: 'Vell Lieutenant', ac: 15, toughness: 7, hits: 15, dmg: 4, text: 'Fiercely loyal. Quotes Vell’s sayings mid-fight.' },
-  { id: 'hd_vell2', name: 'Oriel Vell, Unbowed', ac: 17, toughness: 10, hits: 16, dmg: 5, text: 'Out of a cell and into a new coat. Still polite. Much angrier.' },
+  { id: 'hd_velllt', name: 'Vell Lieutenant', ac: 15, toughness: 6, hits: 14, dmg: 3, text: 'Fiercely loyal. Quotes Vell’s sayings mid-fight.' },
+  { id: 'hd_vell2', name: 'Oriel Vell, Unbowed', ac: 17, toughness: 8, hits: 15, dmg: 4, text: 'Out of a cell and into a new coat. Still polite. Much angrier.' },
   // August: Free Port
-  { id: 'hd_trooper', name: 'Combine Trooper', ac: 15, toughness: 7, hits: 16, dmg: 4, text: 'Hired muscle in company colors.' },
-  { id: 'hd_hunter', name: 'Bounty Hound', ac: 16, toughness: 8, hits: 16, dmg: 4, text: 'One of Fane’s pack: tracker, cutthroat, collector.' },
-  { id: 'hd_fane', name: 'Iolo Fane, Bounty Hunter', ac: 17, toughness: 10, hits: 16, dmg: 5, text: 'Never lost a mark. Has a little book with your name in it.' },
+  { id: 'hd_trooper', name: 'Combine Trooper', ac: 15, toughness: 6, hits: 15, dmg: 3, text: 'Hired muscle in company colors.' },
+  { id: 'hd_hunter', name: 'Bounty Hound', ac: 15, toughness: 6, hits: 15, dmg: 3, text: 'One of Fane’s pack: tracker, cutthroat, collector.' },
+  { id: 'hd_fane', name: 'Iolo Fane, Bounty Hunter', ac: 16, toughness: 6, hits: 15, dmg: 4, text: 'Never lost a mark. Has a little book with your name in it.' },
   // September: Deep Lanes
-  { id: 'hd_shade', name: 'Choir Shade', ac: 16, toughness: 8, hits: 16, dmg: 4, text: 'An echo of a guardian, flickering between notes.' },
-  { id: 'hd_choirwarden', name: 'The Choir Warden', ac: 18, toughness: 11, hits: 17, dmg: 6, text: 'The relay’s last defender: a cathedral that walks.' },
+  { id: 'hd_shade', name: 'Choir Shade', ac: 16, toughness: 7, hits: 15, dmg: 3, text: 'An echo of a guardian, flickering between notes.' },
+  { id: 'hd_choirwarden', name: 'The Choir Warden', ac: 18, toughness: 9, hits: 16, dmg: 5, text: 'The relay’s last defender: a cathedral that walks.' },
   // October: the mole
-  { id: 'hd_elite', name: 'Combine Elite', ac: 16, toughness: 8, hits: 17, dmg: 5, text: 'The Combine’s best, in mirrored visors.' },
-  { id: 'hd_quell', name: 'Harbormaster Quell', ac: 17, toughness: 10, hits: 17, dmg: 5, text: 'The man who “resigned” in January. Never really left the Combine.' },
+  { id: 'hd_elite', name: 'Combine Elite', ac: 16, toughness: 7, hits: 16, dmg: 4, text: 'The Combine’s best, in mirrored visors.' },
+  { id: 'hd_quell', name: 'Harbormaster Quell', ac: 17, toughness: 8, hits: 16, dmg: 4, text: 'The man who “resigned” in January. Never really left the Combine.' },
   // November: siege
-  { id: 'hd_siegetrooper', name: 'Siege Trooper', ac: 17, toughness: 8, hits: 17, dmg: 5, text: 'Boarding armor, a breaching shotgun, no patience.' },
-  { id: 'hd_executor', name: 'Thale’s Executor', ac: 18, toughness: 11, hits: 17, dmg: 6, text: 'The Auditor-General’s enforcer. Wears a mask shaped like a seal of office.' },
+  { id: 'hd_siegetrooper', name: 'Siege Trooper', ac: 17, toughness: 7, hits: 16, dmg: 5, text: 'Boarding armor, a breaching shotgun, no patience.' },
+  { id: 'hd_executor', name: 'Thale’s Executor', ac: 18, toughness: 9, hits: 16, dmg: 6, text: 'The Auditor-General’s enforcer. Wears a mask shaped like a seal of office.' },
   // December: Final Notice
-  { id: 'hd_honorguard', name: 'Ledger Honor Guard', ac: 18, toughness: 9, hits: 17, dmg: 5, text: 'Gold-trimmed armor, paid for with a thousand repossessions.' },
-  { id: 'hd_thale', name: 'Auditor-General Maren Thale', ac: 19, toughness: 12, hits: 17, dmg: 6, text: 'Head of the Ledger Combine. Believes every debt must be paid, in full.' },
+  { id: 'hd_honorguard', name: 'Ledger Honor Guard', ac: 18, toughness: 8, hits: 16, dmg: 5, text: 'Gold-trimmed armor, paid for with a thousand repossessions.' },
+  { id: 'hd_thale', name: 'Auditor-General Maren Thale', ac: 19, toughness: 10, hits: 16, dmg: 6, text: 'Head of the Ledger Combine. Believes every debt must be paid, in full.' },
 ]
 
 export const SHIPS: ShipDef[] = [

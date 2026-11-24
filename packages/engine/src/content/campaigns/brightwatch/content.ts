@@ -81,13 +81,13 @@ export const BRIGHTWATCH_CONTENT: ContentPack = {
   ],
 
   enemies: [
-    { id: 'bw-inkEel', name: 'Ink Eel', ac: 12, toughness: 5, hits: 12, dmg: 2, text: 'A slick black eel that spits clouds of archive ink.' },
-    { id: 'bw-dockThug', name: 'Syndicate Thug', ac: 12, toughness: 6, hits: 12, dmg: 3, text: 'Big, bored, and paid by the bruise.' },
-    { id: 'bw-fogWight', name: 'Fog-Wight', ac: 13, toughness: 6, hits: 13, dmg: 3, text: 'A sleepwalker the fog has hollowed out and filled with itself.' },
-    { id: 'bw-wrecker', name: 'Reef Wrecker', ac: 12, toughness: 5, hits: 13, dmg: 3, text: 'Lights false beacons on the reef and loots what washes up.' },
-    { id: 'bw-paleHerald', name: 'The Pale Herald', ac: 15, toughness: 8, hits: 15, dmg: 5, text: 'A giant shape of fog wearing a crown of drowned bells.' },
-    { id: 'bw-reefWraith', name: 'Reef Wraith', ac: 13, toughness: 6, hits: 13, dmg: 3, text: 'The cold outline of a sailor who never made it home.' },
-    { id: 'bw-bellWarden', name: 'The Bell-Warden', ac: 14, toughness: 7, hits: 14, dmg: 4, text: 'Guardian of the second bell, armored in barnacled brass.' },
+    { id: 'bw-inkEel', name: 'Ink Eel', ac: 11, toughness: 4, hits: 11, dmg: 2, text: 'A slick black eel that spits clouds of archive ink.' },
+    { id: 'bw-dockThug', name: 'Syndicate Thug', ac: 11, toughness: 5, hits: 11, dmg: 2, text: 'Big, bored, and paid by the bruise.' },
+    { id: 'bw-fogWight', name: 'Fog-Wight', ac: 12, toughness: 5, hits: 12, dmg: 2, text: 'A sleepwalker the fog has hollowed out and filled with itself.' },
+    { id: 'bw-wrecker', name: 'Reef Wrecker', ac: 11, toughness: 4, hits: 12, dmg: 2, text: 'Lights false beacons on the reef and loots what washes up.' },
+    { id: 'bw-paleHerald', name: 'The Pale Herald', ac: 14, toughness: 7, hits: 14, dmg: 4, text: 'A giant shape of fog wearing a crown of drowned bells.' },
+    { id: 'bw-reefWraith', name: 'Reef Wraith', ac: 12, toughness: 5, hits: 12, dmg: 2, text: 'The cold outline of a sailor who never made it home.' },
+    { id: 'bw-bellWarden', name: 'The Bell-Warden', ac: 13, toughness: 6, hits: 13, dmg: 3, text: 'Guardian of the second bell, armored in barnacled brass.' },
     ...YEAR_ENEMIES,
   ],
 

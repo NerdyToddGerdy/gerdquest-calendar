@@ -6,16 +6,16 @@ import type { AbilityDef, EnemyDef, ItemDef, LevelSpec, MemberDef } from '../../
 /** Grouped by the month each enemy first appears; stats climb through the year. */
 export const YEAR_ENEMIES: EnemyDef[] = [
   // Feb–Mar
-  { id: 'bw-cliffSpider', name: 'Cliff Spider', ac: 13, toughness: 6, hits: 13, dmg: 3, text: 'Long-legged, pale, and patient; its silk is stronger than rope.' },
-  { id: 'bw-ropeGnawer', name: 'The Rope-Gnawer', ac: 14, toughness: 8, hits: 14, dmg: 4, text: 'A many-plated reef louse the size of a rowboat, fond of hemp and fingers.' },
-  { id: 'bw-bogChorister', name: 'Bog Chorister', ac: 13, toughness: 6, hits: 13, dmg: 3, text: 'A fog-swollen marsh frog whose croak makes your ears ring.' },
-  { id: 'bw-hushAcolyte', name: 'Hush Acolyte', ac: 13, toughness: 6, hits: 14, dmg: 3, text: 'A grey-robed member of the Quiet Choir, sworn never to speak.' },
-  { id: 'bw-reedHound', name: 'Reed Hound', ac: 14, toughness: 6, hits: 13, dmg: 3, text: 'A dog woven from wet reeds and bad intentions.' },
-  { id: 'bw-sedgeMother', name: 'The Sedge-Mother', ac: 15, toughness: 8, hits: 15, dmg: 5, text: 'A towering fen-spirit of reed and black water, wearing the Marsh Bell like a heart.' },
+  { id: 'bw-cliffSpider', name: 'Cliff Spider', ac: 12, toughness: 5, hits: 12, dmg: 2, text: 'Long-legged, pale, and patient; its silk is stronger than rope.' },
+  { id: 'bw-ropeGnawer', name: 'The Rope-Gnawer', ac: 13, toughness: 7, hits: 13, dmg: 3, text: 'A many-plated reef louse the size of a rowboat, fond of hemp and fingers.' },
+  { id: 'bw-bogChorister', name: 'Bog Chorister', ac: 12, toughness: 6, hits: 12, dmg: 3, text: 'A fog-swollen marsh frog whose croak makes your ears ring.' },
+  { id: 'bw-hushAcolyte', name: 'Hush Acolyte', ac: 12, toughness: 6, hits: 13, dmg: 3, text: 'A grey-robed member of the Quiet Choir, sworn never to speak.' },
+  { id: 'bw-reedHound', name: 'Reed Hound', ac: 13, toughness: 6, hits: 12, dmg: 3, text: 'A dog woven from wet reeds and bad intentions.' },
+  { id: 'bw-sedgeMother', name: 'The Sedge-Mother', ac: 14, toughness: 7, hits: 14, dmg: 4, text: 'A towering fen-spirit of reed and black water, wearing the Marsh Bell like a heart.' },
   // Apr
   { id: 'bw-moorWolf', name: 'Moor Wolf', ac: 14, toughness: 7, hits: 14, dmg: 4, text: 'Grey, gaunt, and hunting in fog.' },
   { id: 'bw-hushBlade', name: 'Hush Blade', ac: 14, toughness: 7, hits: 14, dmg: 4, text: 'A Choir enforcer with a muffled sword and a muffled step.' },
-  { id: 'bw-tarnSerpent', name: 'The Tarn Serpent', ac: 16, toughness: 9, hits: 15, dmg: 5, text: 'A coiled cold-water serpent sleeping around a drowned bell.' },
+  { id: 'bw-tarnSerpent', name: 'The Tarn Serpent', ac: 16, toughness: 9, hits: 15, dmg: 4, text: 'A coiled cold-water serpent sleeping around a drowned bell.' },
   // May
   { id: 'bw-canalCutter', name: 'Canal Cutter', ac: 14, toughness: 7, hits: 14, dmg: 4, text: 'A Saltmarket cutpurse who prefers knives to purses.' },
   { id: 'bw-syndicateBravo', name: 'Syndicate Bravo', ac: 15, toughness: 7, hits: 15, dmg: 4, text: 'Madam Quill’s best-dressed muscle.' },
@@ -25,29 +25,29 @@ export const YEAR_ENEMIES: EnemyDef[] = [
   { id: 'bw-abyssEel', name: 'Abyss Eel', ac: 15, toughness: 7, hits: 15, dmg: 5, text: 'Long as a mast and lit from inside like a lantern.' },
   { id: 'bw-abyssalShepherd', name: 'The Abyssal Shepherd', ac: 17, toughness: 10, hits: 16, dmg: 6, text: 'An ancient deep-thing that herds the drowned like sheep.' },
   // Jul
-  { id: 'bw-hushZealot', name: 'Hush Zealot', ac: 15, toughness: 8, hits: 16, dmg: 5, text: 'Eyes bound, ears stopped, and utterly fearless.' },
-  { id: 'bw-abbeyGuard', name: 'Abbey Guard', ac: 16, toughness: 8, hits: 16, dmg: 5, text: 'A Greyholm sentry in salt-grey mail.' },
-  { id: 'bw-abbessVane', name: 'Abbess Morrow Vane', ac: 17, toughness: 10, hits: 17, dmg: 6, text: 'Leader of the Quiet Choir. Her silence is a weapon.' },
+  { id: 'bw-hushZealot', name: 'Hush Zealot', ac: 15, toughness: 9, hits: 16, dmg: 5, text: 'Eyes bound, ears stopped, and utterly fearless.' },
+  { id: 'bw-abbeyGuard', name: 'Abbey Guard', ac: 16, toughness: 9, hits: 16, dmg: 5, text: 'A Greyholm sentry in salt-grey mail.' },
+  { id: 'bw-abbessVane', name: 'Abbess Morrow Vane', ac: 17, toughness: 11, hits: 17, dmg: 6, text: 'Leader of the Quiet Choir. Her silence is a weapon.' },
   // Aug
-  { id: 'bw-stackHarpy', name: 'Stack Harpy', ac: 16, toughness: 8, hits: 16, dmg: 5, text: 'A screeching fog-bird from the sea-stacks.' },
-  { id: 'bw-wyrmling', name: 'Fog Wyrmling', ac: 16, toughness: 8, hits: 16, dmg: 5, text: 'A serpent-pup of mist with very real teeth.' },
-  { id: 'bw-fogwyrm', name: 'The Young Fogwyrm', ac: 18, toughness: 10, hits: 17, dmg: 6, text: 'Fog given wings, coils, and a hoard.' },
+  { id: 'bw-stackHarpy', name: 'Stack Harpy', ac: 16, toughness: 9, hits: 16, dmg: 6, text: 'A screeching fog-bird from the sea-stacks.' },
+  { id: 'bw-wyrmling', name: 'Fog Wyrmling', ac: 16, toughness: 9, hits: 16, dmg: 6, text: 'A serpent-pup of mist with very real teeth.' },
+  { id: 'bw-fogwyrm', name: 'The Young Fogwyrm', ac: 18, toughness: 11, hits: 17, dmg: 7, text: 'Fog given wings, coils, and a hoard.' },
   // Sep
-  { id: 'bw-coralRevenant', name: 'Coral Revenant', ac: 16, toughness: 8, hits: 17, dmg: 5, text: 'A drowned citizen of the Underreef, half grown over with coral.' },
-  { id: 'bw-drownedKnight', name: 'Drowned Knight', ac: 17, toughness: 8, hits: 17, dmg: 6, text: 'Still guarding a city that sank a thousand years ago.' },
-  { id: 'bw-bellBreaker', name: 'The Bell-Breaker', ac: 18, toughness: 10, hits: 18, dmg: 7, text: 'The Choir’s giant, with a maul made to crack bronze.' },
+  { id: 'bw-coralRevenant', name: 'Coral Revenant', ac: 16, toughness: 9, hits: 17, dmg: 6, text: 'A drowned citizen of the Underreef, half grown over with coral.' },
+  { id: 'bw-drownedKnight', name: 'Drowned Knight', ac: 17, toughness: 9, hits: 17, dmg: 7, text: 'Still guarding a city that sank a thousand years ago.' },
+  { id: 'bw-bellBreaker', name: 'The Bell-Breaker', ac: 18, toughness: 11, hits: 18, dmg: 8, text: 'The Choir’s giant, with a maul made to crack bronze.' },
   // Oct
-  { id: 'bw-cinderHound', name: 'Cinder Hound', ac: 17, toughness: 8, hits: 17, dmg: 6, text: 'A dog of smoking ash from the Cinder Moors.' },
-  { id: 'bw-hushSaboteur', name: 'Hush Saboteur', ac: 17, toughness: 8, hits: 17, dmg: 6, text: 'A Choir agent with a flask of quench-oil and a quiet knife.' },
-  { id: 'bw-drownedHost', name: 'The Drowned Host', ac: 18, toughness: 11, hits: 18, dmg: 7, text: 'Every lost sailor of the Marches, walking out of the sea together.' },
+  { id: 'bw-cinderHound', name: 'Cinder Hound', ac: 17, toughness: 9, hits: 17, dmg: 7, text: 'A dog of smoking ash from the Cinder Moors.' },
+  { id: 'bw-hushSaboteur', name: 'Hush Saboteur', ac: 18, toughness: 9, hits: 18, dmg: 7, text: 'A Choir agent with a flask of quench-oil and a quiet knife.' },
+  { id: 'bw-drownedHost', name: 'The Drowned Host', ac: 19, toughness: 13, hits: 19, dmg: 8, text: 'Every lost sailor of the Marches, walking out of the sea together.' },
   // Nov
-  { id: 'bw-fogReaver', name: 'Fog Reaver', ac: 17, toughness: 9, hits: 18, dmg: 6, text: 'A raider who has given themself entirely to the fog.' },
-  { id: 'bw-heirGuard', name: 'Heir-Guard', ac: 18, toughness: 9, hits: 18, dmg: 7, text: 'A towering fog-knight crowned with a single drowned bell.' },
-  { id: 'bw-vaneUnbound', name: 'Morrow Vane, the Hush Unbound', ac: 19, toughness: 11, hits: 18, dmg: 7, text: 'The Abbess, wrapped in the fog she worships.' },
+  { id: 'bw-fogReaver', name: 'Fog Reaver', ac: 18, toughness: 11, hits: 19, dmg: 7, text: 'A raider who has given themself entirely to the fog.' },
+  { id: 'bw-heirGuard', name: 'Heir-Guard', ac: 19, toughness: 11, hits: 19, dmg: 9, text: 'A towering fog-knight crowned with a single drowned bell.' },
+  { id: 'bw-vaneUnbound', name: 'Morrow Vane, the Hush Unbound', ac: 20, toughness: 13, hits: 19, dmg: 9, text: 'The Abbess, wrapped in the fog she worships.' },
   // Dec
-  { id: 'bw-throatSentinel', name: 'Throat Sentinel', ac: 18, toughness: 9, hits: 18, dmg: 7, text: 'A guardian grown from the Underreef’s own stone.' },
-  { id: 'bw-paleHeir', name: 'The Pale Heir', ac: 19, toughness: 11, hits: 19, dmg: 8, text: 'The Pale Herald reborn, wearing a crown of seven silent bells.' },
-  { id: 'bw-paleTide', name: 'The Pale Tide', ac: 20, toughness: 12, hits: 19, dmg: 9, text: 'The fog itself, risen from the deep, vast and half awake.' },
+  { id: 'bw-throatSentinel', name: 'Throat Sentinel', ac: 19, toughness: 11, hits: 19, dmg: 9, text: 'A guardian grown from the Underreef’s own stone.' },
+  { id: 'bw-paleHeir', name: 'The Pale Heir', ac: 20, toughness: 14, hits: 20, dmg: 10, text: 'The Pale Herald reborn, wearing a crown of seven silent bells.' },
+  { id: 'bw-paleTide', name: 'The Pale Tide', ac: 21, toughness: 15, hits: 20, dmg: 12, text: 'The fog itself, risen from the deep, vast and half awake.' },
 ]
 
 export const YEAR_ITEMS: ItemDef[] = [

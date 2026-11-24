@@ -106,51 +106,51 @@ export const YEAR_ITEMS: ItemDef[] = [
 /** ac = Attack to hit · toughness = Damage to defeat · hits = its attack vs your 10 + Defense · dmg = damage. */
 export const YEAR_ENEMIES: EnemyDef[] = [
   // Feb
-  { id: 'er_houndmaster', name: 'Hush Houndmaster', ac: 12, toughness: 6, hits: 14, dmg: 3, text: 'A handler in white with a silent whistle and a whip of braided ice.' },
-  { id: 'er_snowbear', name: 'Rime Bear', ac: 12, toughness: 7, hits: 13, dmg: 4, text: 'A bear woken too early, its fur frozen into plates.' },
-  { id: 'er_rimewight', name: 'Rime Wight', ac: 13, toughness: 5, hits: 14, dmg: 3, text: 'A frozen traveler that still walks the road it died on.' },
-  { id: 'er_kennelmaster', name: 'The Kennelmaster', ac: 14, toughness: 8, hits: 16, dmg: 5, text: 'Tall as a doorway, with a hound’s skull for a mask and a pack that obeys her silence.' },
+  { id: 'er_houndmaster', name: 'Hush Houndmaster', ac: 11, toughness: 5, hits: 13, dmg: 2, text: 'A handler in white with a silent whistle and a whip of braided ice.' },
+  { id: 'er_snowbear', name: 'Rime Bear', ac: 11, toughness: 6, hits: 12, dmg: 3, text: 'A bear woken too early, its fur frozen into plates.' },
+  { id: 'er_rimewight', name: 'Rime Wight', ac: 12, toughness: 4, hits: 13, dmg: 2, text: 'A frozen traveler that still walks the road it died on.' },
+  { id: 'er_kennelmaster', name: 'The Kennelmaster', ac: 13, toughness: 5, hits: 15, dmg: 3, text: 'Tall as a doorway, with a hound’s skull for a mask and a pack that obeys her silence.' },
   // Mar
-  { id: 'er_drowned', name: 'Drowned Lamplighter', ac: 13, toughness: 6, hits: 14, dmg: 3, text: 'A lamplighter pulled under the floodwater, still carrying a dead wick.' },
-  { id: 'er_eels', name: 'Mere-Eel Swarm', ac: 13, toughness: 4, hits: 14, dmg: 3, text: 'Black eels that hunt in a knot.' },
-  { id: 'er_marshtroll', name: 'Reed Troll', ac: 12, toughness: 8, hits: 15, dmg: 4, text: 'Slow, wet, enormous, and very hungry after a long winter.' },
-  { id: 'er_glasswater', name: 'Old Glasswater', ac: 15, toughness: 9, hits: 16, dmg: 5, text: 'The spirit of the Mere, bargained into the Hush’s service. Her skin is a skin of ice.' },
+  { id: 'er_drowned', name: 'Drowned Lamplighter', ac: 12, toughness: 5, hits: 13, dmg: 2, text: 'A lamplighter pulled under the floodwater, still carrying a dead wick.' },
+  { id: 'er_eels', name: 'Mere-Eel Swarm', ac: 12, toughness: 3, hits: 13, dmg: 2, text: 'Black eels that hunt in a knot.' },
+  { id: 'er_marshtroll', name: 'Reed Troll', ac: 11, toughness: 7, hits: 14, dmg: 3, text: 'Slow, wet, enormous, and very hungry after a long winter.' },
+  { id: 'er_glasswater', name: 'Old Glasswater', ac: 14, toughness: 7, hits: 15, dmg: 4, text: 'The spirit of the Mere, bargained into the Hush’s service. Her skin is a skin of ice.' },
   // Apr
-  { id: 'er_mossling', name: 'Mossling', ac: 13, toughness: 5, hits: 15, dmg: 3, text: 'A bundle of quiet-moss walking on borrowed sticks.' },
-  { id: 'er_hushfarmer', name: 'Hushed Farmhand', ac: 12, toughness: 6, hits: 14, dmg: 3, text: 'A farmer the moss has made quiet. They don’t want to fight; they can’t stop.' },
-  { id: 'er_mossshepherd', name: 'The Moss Shepherd', ac: 15, toughness: 10, hits: 17, dmg: 5, text: 'A crook-backed thing in a cloak of quiet-moss, tending its silent flock.' },
+  { id: 'er_mossling', name: 'Mossling', ac: 12, toughness: 4, hits: 14, dmg: 2, text: 'A bundle of quiet-moss walking on borrowed sticks.' },
+  { id: 'er_hushfarmer', name: 'Hushed Farmhand', ac: 11, toughness: 5, hits: 13, dmg: 2, text: 'A farmer the moss has made quiet. They don’t want to fight; they can’t stop.' },
+  { id: 'er_mossshepherd', name: 'The Moss Shepherd', ac: 15, toughness: 9, hits: 17, dmg: 4, text: 'A crook-backed thing in a cloak of quiet-moss, tending its silent flock.' },
   // May
-  { id: 'er_glassmite', name: 'Glass Mite', ac: 14, toughness: 5, hits: 15, dmg: 3, text: 'A crawling shard of waystone glass gone wrong.' },
-  { id: 'er_cragcat', name: 'Crag Cat', ac: 14, toughness: 7, hits: 15, dmg: 4, text: 'A grey mountain cat with eyes like lamps.' },
-  { id: 'er_forgeguard', name: 'Forge Sentinel', ac: 15, toughness: 8, hits: 16, dmg: 4, text: 'An iron guardian left to keep the Ember Forge — and keeping it for the wrong masters now.' },
-  { id: 'er_colossus', name: 'The Glass Colossus', ac: 16, toughness: 11, hits: 17, dmg: 6, text: 'A giant of fused waystone glass with the Hush’s silence burning blue inside it.' },
+  { id: 'er_glassmite', name: 'Glass Mite', ac: 13, toughness: 4, hits: 14, dmg: 2, text: 'A crawling shard of waystone glass gone wrong.' },
+  { id: 'er_cragcat', name: 'Crag Cat', ac: 13, toughness: 6, hits: 14, dmg: 3, text: 'A grey mountain cat with eyes like lamps.' },
+  { id: 'er_forgeguard', name: 'Forge Sentinel', ac: 14, toughness: 7, hits: 15, dmg: 3, text: 'An iron guardian left to keep the Ember Forge — and keeping it for the wrong masters now.' },
+  { id: 'er_colossus', name: 'The Glass Colossus', ac: 16, toughness: 10, hits: 17, dmg: 5, text: 'A giant of fused waystone glass with the Hush’s silence burning blue inside it.' },
   // Jun
-  { id: 'er_duelist', name: 'Masked Duelist', ac: 15, toughness: 7, hits: 16, dmg: 4, text: 'A court blade in a white mask, paid in Hush silver.' },
-  { id: 'er_sellsword', name: 'Varrow Sellsword', ac: 14, toughness: 8, hits: 16, dmg: 4, text: 'Hired muscle in House Varrow’s grey.' },
-  { id: 'er_varrow', name: 'Sir Edric Varrow', ac: 16, toughness: 11, hits: 18, dmg: 6, text: 'Kingsfair’s tourney champion and the Hush’s patron, armored like a cathedral.' },
+  { id: 'er_duelist', name: 'Masked Duelist', ac: 14, toughness: 6, hits: 15, dmg: 3, text: 'A court blade in a white mask, paid in Hush silver.' },
+  { id: 'er_sellsword', name: 'Varrow Sellsword', ac: 13, toughness: 7, hits: 15, dmg: 3, text: 'Hired muscle in House Varrow’s grey.' },
+  { id: 'er_varrow', name: 'Sir Edric Varrow', ac: 16, toughness: 10, hits: 18, dmg: 5, text: 'Kingsfair’s tourney champion and the Hush’s patron, armored like a cathedral.' },
   // Jul
-  { id: 'er_ashjackal', name: 'Ash Jackal', ac: 15, toughness: 7, hits: 16, dmg: 4, text: 'A grey scavenger of the Ashflats, never alone.' },
-  { id: 'er_saltraider', name: 'Salt Raider', ac: 15, toughness: 8, hits: 16, dmg: 5, text: 'A caravan-robber wrapped in salt-stiff rags.' },
+  { id: 'er_ashjackal', name: 'Ash Jackal', ac: 15, toughness: 6, hits: 16, dmg: 3, text: 'A grey scavenger of the Ashflats, never alone.' },
+  { id: 'er_saltraider', name: 'Salt Raider', ac: 15, toughness: 7, hits: 16, dmg: 4, text: 'A caravan-robber wrapped in salt-stiff rags.' },
   { id: 'er_cinderwyrm', name: 'The Cinderwyrm', ac: 17, toughness: 12, hits: 18, dmg: 6, text: 'A wyrm that sleeps in the ash and wakes when the Hush sings to it.' },
   // Aug
-  { id: 'er_hushsister', name: 'Hush Sister', ac: 16, toughness: 8, hits: 17, dmg: 5, text: 'A nun of the Abbey of Silence, fast and wordless.' },
-  { id: 'er_voiceless', name: 'Voiceless Knight', ac: 16, toughness: 9, hits: 17, dmg: 5, text: 'A knight sworn to the Abbess, helm sealed with wax.' },
+  { id: 'er_hushsister', name: 'Hush Sister', ac: 16, toughness: 7, hits: 17, dmg: 4, text: 'A nun of the Abbey of Silence, fast and wordless.' },
+  { id: 'er_voiceless', name: 'Voiceless Knight', ac: 16, toughness: 8, hits: 17, dmg: 4, text: 'A knight sworn to the Abbess, helm sealed with wax.' },
   { id: 'er_vigilant', name: 'The Vigilant', ac: 17, toughness: 13, hits: 18, dmg: 6, text: 'The Abbey’s gatekeeper: four arms, no eyes, never asleep.' },
   // Sep
   { id: 'er_spearline', name: 'Hush Spearline', ac: 16, toughness: 9, hits: 17, dmg: 5, text: 'Ranks of white-robed spears marching in perfect silence.' },
-  { id: 'er_ram', name: 'Snuffer Ram', ac: 15, toughness: 12, hits: 17, dmg: 6, text: 'A siege engine with a great iron snuffer for a head.' },
-  { id: 'er_tender', name: 'The Siege-Tender', ac: 18, toughness: 13, hits: 19, dmg: 6, text: 'The Hush’s general, who has never spoken and never lost.' },
+  { id: 'er_ram', name: 'Snuffer Ram', ac: 15, toughness: 11, hits: 17, dmg: 6, text: 'A siege engine with a great iron snuffer for a head.' },
+  { id: 'er_tender', name: 'The Siege-Tender', ac: 18, toughness: 14, hits: 19, dmg: 6, text: 'The Hush’s general, who has never spoken and never lost.' },
   // Oct
   { id: 'er_unlitmonk', name: 'Unlit Monk', ac: 17, toughness: 9, hits: 18, dmg: 5, text: 'A monk of the Underroad who has never seen a flame.' },
   { id: 'er_tunnelhorror', name: 'Tunnel Horror', ac: 17, toughness: 11, hits: 18, dmg: 6, text: 'Something long and pale that lives where the road’s roots go.' },
-  { id: 'er_unlitsaint', name: 'The Unlit Saint', ac: 18, toughness: 14, hits: 19, dmg: 6, text: 'The first keeper ever to let a stone go dark — and the Hush’s first saint.' },
+  { id: 'er_unlitsaint', name: 'The Unlit Saint', ac: 19, toughness: 15, hits: 20, dmg: 7, text: 'The first keeper ever to let a stone go dark — and the Hush’s first saint.' },
   // Nov
-  { id: 'er_rimeknight', name: 'Rime Knight', ac: 18, toughness: 10, hits: 19, dmg: 6, text: 'A knight of the Long Dark, armor grown from frost.' },
+  { id: 'er_rimeknight', name: 'Rime Knight', ac: 19, toughness: 11, hits: 20, dmg: 7, text: 'A knight of the Long Dark, armor grown from frost.' },
   { id: 'er_wintergiant', name: 'Winter Giant', ac: 17, toughness: 14, hits: 19, dmg: 7, text: 'A giant walking south ahead of the cold.' },
-  { id: 'er_abbess', name: 'Abbess Maud Sallow', ac: 19, toughness: 15, hits: 20, dmg: 7, text: 'The Hush’s voice that never speaks. Her silence puts out torches at forty paces.' },
+  { id: 'er_abbess', name: 'Abbess Maud Sallow', ac: 20, toughness: 17, hits: 21, dmg: 8, text: 'The Hush’s voice that never speaks. Her silence puts out torches at forty paces.' },
   // Dec
-  { id: 'er_shard', name: 'Shard of the Long Dark', ac: 19, toughness: 11, hits: 19, dmg: 6, text: 'A splinter of the old winter, shaped like whoever looks at it.' },
-  { id: 'er_longdark', name: 'The Long Dark', ac: 20, toughness: 16, hits: 21, dmg: 7, text: 'Not a creature: a season that learned to want.' },
+  { id: 'er_shard', name: 'Shard of the Long Dark', ac: 20, toughness: 12, hits: 20, dmg: 7, text: 'A splinter of the old winter, shaped like whoever looks at it.' },
+  { id: 'er_longdark', name: 'The Long Dark', ac: 21, toughness: 18, hits: 22, dmg: 8, text: 'Not a creature: a season that learned to want.' },
 ]
 
 const follower = (m: Omit<MemberDef, 'kind' | 'maxHp' | 'abilities'>): MemberDef => ({ kind: 'critter', maxHp: 1, abilities: [], ...m })
