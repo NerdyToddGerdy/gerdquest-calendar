@@ -6,6 +6,7 @@ import { nextDeskDate, pickTab, startingDate, turnThrough } from '@questender/en
 import { newSeed } from '@questender/engine/rng'
 import { initialState, reduce, type Action } from '@questender/engine/state'
 import { importEntries } from './calendarNotes'
+import { requestPersistence } from './deviceStorage'
 import { deleteSlot, exportAll, importFile, listSlots, loadSlot, migrateLegacySave, saveSlot, slotIdFor } from './save'
 import { Desk, type DeskSlot } from './ui/Desk'
 import { NewCampaign } from './ui/NewCampaign'
@@ -52,6 +53,14 @@ export default function App() {
     for (const s of slots) if (dirty.current.has(s.id)) saveSlot(s.state)
     dirty.current.clear()
   }, [slots])
+
+  // Ask the browser to keep our saves (best effort; never blocks play).
+  const askedPersist = useRef(false)
+  useEffect(() => {
+    if (slots.length === 0 || askedPersist.current) return
+    askedPersist.current = true
+    void requestPersistence()
+  }, [slots.length])
 
   const select = (id: string) => {
     setSelected(id)
