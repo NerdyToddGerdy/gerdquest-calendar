@@ -102,7 +102,7 @@ export function Desk(p: Props) {
   return (
     <div className="desk">
       <nav className="topbar">
-        <span className="brand">Questender</span>
+        <span className="brand">GerdQuest Calendar</span>
         {p.slots.length > 0 && (
           <div className="view-switch">
             <div className="segmented" role="tablist" aria-label="View">
@@ -204,7 +204,7 @@ export function Desk(p: Props) {
             <div className="sp-week">{formatLong(p.today).split(',')[0]}</div>
             <div className="sp-seal" aria-hidden="true">Page one is waiting</div>
           </div>
-          <h1>Questender</h1>
+          <h1>GerdQuest Calendar</h1>
           <p className="tagline">One page of adventure for every day on the calendar. Tear off today’s, play it, and the next stays sealed until tomorrow.</p>
           <button className="primary big" onClick={p.onNew}>
             Start your first campaign

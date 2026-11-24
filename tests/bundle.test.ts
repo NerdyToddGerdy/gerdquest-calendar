@@ -9,7 +9,7 @@ import { listCampaigns } from '@questender/engine/campaign'
 // Campaign pages must not ship in the entry chunk: that keeps the first load
 // small and stops anyone reading future pages out of the main bundle.
 describe('built bundle', () => {
-  const outDir = mkdtempSync(join(tmpdir(), 'questender-bundle-'))
+  const outDir = mkdtempSync(join(tmpdir(), 'gerdquest-bundle-'))
   let chunks: Rollup.OutputChunk[] = []
 
   beforeAll(async () => {

@@ -14,6 +14,15 @@ export interface Release {
 
 export const CHANGELOG: Release[] = [
   {
+    version: '0.10.0',
+    date: '2026-11-24',
+    title: 'A new name: GerdQuest Calendar',
+    changes: [
+      'Questender is now called GerdQuest Calendar, with a new web address. Your saves, rewards and tokens come with you automatically.',
+      'Old bookmarks to the previous address may stop working: update them to the new one.',
+    ],
+  },
+  {
     version: '0.9.0',
     date: '2026-11-24',
     title: 'Rewards for showing up',
@@ -34,7 +43,7 @@ export const CHANGELOG: Release[] = [
     changes: [
       'New campaign: The Verdant Accord, a legacy campaign told in chapters, where what happens in one chapter opens or closes choices in the next.',
       'The Starwake now runs all year, with October, November and a finale on the longest night.',
-      'Questender has a home page that explains the game. If you already play, you go straight to your desk.',
+      'GerdQuest Calendar has a home page that explains the game. If you already play, you go straight to your desk.',
       'Privacy and terms pages, in plain language. Short version: your progress stays on your device.',
       'Fairer heroes: the most fragile heroes in Brightwatch, Ember Road and Halcyon are tougher now, and the finales are a real fight.',
       'Brightwatch’s late markets have new upgrades worth saving for.',
@@ -48,7 +57,7 @@ export const CHANGELOG: Release[] = [
       'The › arrow now moves on as soon as the campaign you’re playing is done for the day. Other campaigns wait for you and show how many pages behind they are.',
       'Faster start: each campaign now downloads only when you open it.',
       'Your progress is safer: the game asks your browser to keep it, Settings shows whether it will, and a gentle reminder suggests an Export all backup now and then.',
-      'Add Questender to your home screen: it now has its own icon.',
+      'Add GerdQuest Calendar to your home screen: it now has its own icon.',
       'Fights are fairer: enemies across all four campaigns were rebalanced after thousands of simulated playthroughs, especially early on.',
       'Followers now strengthen a skill your hero already has (+1) instead of doing nothing.',
       'Halcyon’s abilities now spend Surge and Charges, refilled when you rest.',
@@ -80,7 +89,7 @@ export const CHANGELOG: Release[] = [
     title: 'Settings and a tidier header',
     changes: [
       'A new ⚙ Settings menu holds Import, Export all, and the choice of light, dark or system appearance.',
-      'Light mode! Pick it in Settings, or let Questender follow your device.',
+      'Light mode! Pick it in Settings, or let GerdQuest Calendar follow your device.',
       'This “What’s new” list now lives in Settings, so you can see what changed since you last played.',
       'The calendar’s Month, Wall, Week and Year buttons moved up into the header, next to Day and Calendar.',
     ],
@@ -126,7 +135,7 @@ export const CHANGELOG: Release[] = [
     date: '2026-11-22',
     title: 'First voyage',
     changes: [
-      'Questender begins: a solo adventure played one page a day.',
+      'GerdQuest Calendar begins: a solo adventure played one page a day.',
       'The Lamp at Brightwatch: six trial heroes, then a year-long hunt for the Sevenfold Peal.',
       'Choices, d20 checks, fights, shops and level-ups, saved in your browser.',
     ],

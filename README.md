@@ -1,10 +1,10 @@
-# Questender
+# GerdQuest Calendar
 
 A browser solo RPG played one page per day. Each campaign is a year of short
 encounters — choices, d20 checks, fights, shops and level-ups — that unlock on
 real calendar dates. You can't peek ahead, but you can always catch up.
 
-**Play:** https://nerdytoddgerdy.github.io/questender/
+**Play:** https://nerdytoddgerdy.github.io/gerdquest-calendar/
 
 ## Campaigns
 
@@ -33,7 +33,7 @@ npm run test:e2e   # end-to-end tests (Playwright, Chromium)
 
 ### End-to-end tests
 
-`tests/e2e/` drives the production build in Chromium, served under `/questender/`
+`tests/e2e/` drives the production build in Chromium, served under `/gerdquest-calendar/`
 like GitHub Pages. `npm run test:e2e` builds into `dist-e2e/` (with
 `VITE_E2E=1`, which turns on a `?today=YYYY-MM-DD` date pin that is compiled out
 of the normal build), starts `tests/e2e/serve.mjs`, and runs the specs. Setup:
@@ -54,4 +54,4 @@ Pushing to `main` deploys to GitHub Pages via `.github/workflows/pages.yml`.
 
 ## Principles
 
-Questender has no microtransactions: cosmetics are earned by playing, never bought. The only possible future revenue is buying campaigns. See [docs/PRINCIPLES.md](docs/PRINCIPLES.md).
+GerdQuest Calendar has no microtransactions: cosmetics are earned by playing, never bought. The only possible future revenue is buying campaigns. See [docs/PRINCIPLES.md](docs/PRINCIPLES.md).

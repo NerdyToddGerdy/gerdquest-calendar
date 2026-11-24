@@ -30,4 +30,4 @@ Escalation: Jan–Feb the Hush snuffs stones by night; Mar–Apr it changes the 
 it to its abbey and lose Tamsin; Sep it marches openly; Oct–Nov the heroes go
 under and over the road to its heart; Dec the Long Dark wakes and is put out.
 
-All characters, places and plot are original to Questender.
+All characters, places and plot are original to GerdQuest Calendar.

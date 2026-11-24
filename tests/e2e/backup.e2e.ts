@@ -14,7 +14,7 @@ test('Export all, then Import in a fresh context restores the same tabs', async 
   await settingsButton(page).click()
   const download = page.waitForEvent('download')
   await page.getByRole('button', { name: 'Export all campaigns' }).click()
-  const file = testInfo.outputPath('questender-all.json')
+  const file = testInfo.outputPath('gerdquest-all.json')
   await (await download).saveAs(file)
   expect(JSON.parse(await readFile(file, 'utf8'))).toMatchObject({ format: 'questender.bundle', campaigns: [{}, {}] })
 
@@ -53,11 +53,11 @@ test('settings: the theme choice persists and the legal links work', async ({ pa
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
 
   await dialog.getByRole('link', { name: 'Privacy' }).click()
-  await expect(page).toHaveURL(/\/questender\/privacy\.html$/)
+  await expect(page).toHaveURL(/\/gerdquest-calendar\/privacy\.html$/)
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Privacy')
   await page.goBack()
   await settingsButton(page).click()
   await page.getByRole('dialog', { name: 'Settings' }).getByRole('link', { name: 'Terms' }).click()
-  await expect(page).toHaveURL(/\/questender\/terms\.html$/)
+  await expect(page).toHaveURL(/\/gerdquest-calendar\/terms\.html$/)
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Terms of use')
 })

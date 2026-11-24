@@ -1,11 +1,11 @@
 # Product principles
 
-These are standing rules for Questender. They apply to every change, by people
+These are standing rules for GerdQuest Calendar. They apply to every change, by people
 or by AI agents, and override convenience or growth ideas that conflict with them.
 
 ## 1. No microtransactions
 
-Questender will **not** become a microtransaction game.
+GerdQuest Calendar will **not** become a microtransaction game.
 
 - **Cosmetics are earned, never bought.** Skins, dice styles, calendar papers,
   page edges, avatar tokens, token borders, keepsakes and any future cosmetic

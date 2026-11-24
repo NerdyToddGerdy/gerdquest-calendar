@@ -157,7 +157,7 @@ export function Settings({ theme, onTheme, campaigns, slots, onDispatch, onImpor
           )}
         </section>
 
-        <p className="muted small center-text">Questender v{APP_VERSION}</p>
+        <p className="muted small center-text">GerdQuest Calendar v{APP_VERSION}</p>
         <nav className="settings-legal small center-text" aria-label="Legal">
           <a href="../privacy.html">Privacy</a>
           <a href="../terms.html">Terms</a>

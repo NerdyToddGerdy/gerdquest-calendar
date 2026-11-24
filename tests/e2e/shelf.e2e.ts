@@ -23,7 +23,7 @@ test('finishing a page earns First light, shown by a toast and on the shelf, and
   await page.getByRole('button', { name: /^Settings/ }).click()
   const download = page.waitForEvent('download')
   await page.getByRole('button', { name: 'Export all campaigns' }).click()
-  const file = testInfo.outputPath('questender-all.json')
+  const file = testInfo.outputPath('gerdquest-all.json')
   await (await download).saveAs(file)
   const bundle = JSON.parse(await readFile(file, 'utf8'))
   expect(bundle.progress.achievements.map((a: { id: string }) => a.id)).toContain('first-light')

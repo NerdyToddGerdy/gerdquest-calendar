@@ -160,7 +160,7 @@ function download(data: unknown, filename: string) {
 }
 
 export function exportSave(s: GameState) {
-  download(s, `questender-${s.campaignId}-${s.startDate}-page${s.dayIndex + 1}.json`)
+  download(s, `gerdquest-${s.campaignId}-${s.startDate}-page${s.dayIndex + 1}.json`)
 }
 
 /** One file holding every campaign on the desk. */
@@ -183,7 +183,7 @@ export function bundleSaves(states: GameState[], exportedOn: ISODate, calendar: 
 }
 
 export function exportAll(states: GameState[], today: ISODate) {
-  download(bundleSaves(states, today, loadEntries(), loadProgress()), `questender-all-${today}.json`)
+  download(bundleSaves(states, today, loadEntries(), loadProgress()), `gerdquest-all-${today}.json`)
 }
 
 /** Calendar entries carried by an export file (none for single-campaign files). */
@@ -215,13 +215,13 @@ export function parseSaves(text: string, today: ISODate): GameState[] {
   try {
     raw = JSON.parse(text)
   } catch {
-    throw new Error('Not a Questender save file.')
+    throw new Error('Not a GerdQuest Calendar save file.')
   }
   const bundle = raw as Partial<SaveBundle> | null
   const list = bundle?.format === 'questender.bundle' && Array.isArray(bundle.campaigns) ? bundle.campaigns : [raw as GameState]
   if (!list.length) throw new Error('This export has no campaigns in it.')
   return list.map((s) => {
-    if (!validState(s)) throw new Error('Not a Questender save file.')
+    if (!validState(s)) throw new Error('Not a GerdQuest Calendar save file.')
     const n = normalizeState(s, today)
     campaignEntry(n.campaignId) // throws for unknown campaigns
     return n

@@ -20,17 +20,17 @@ export default defineConfig({
   timeout: 30_000,
   expect: { timeout: 7_000 },
   use: {
-    baseURL: `http://127.0.0.1:${PORT}/questender/`,
+    baseURL: `http://127.0.0.1:${PORT}/gerdquest-calendar/`,
     trace: 'retain-on-failure',
     timezoneId: 'UTC',
     locale: 'en-US',
     serviceWorkers: 'block',
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'], launchOptions: { executablePath } } }],
-  // Build once (with the test-only ?today= pin compiled in) and serve it under /questender/.
+  // Build once (with the test-only ?today= pin compiled in) and serve it under /gerdquest-calendar/.
   webServer: {
     command: `${process.env.E2E_SKIP_BUILD ? '' : 'npx vite build --outDir dist-e2e --emptyOutDir && '}node tests/e2e/serve.mjs dist-e2e ${PORT}`,
-    url: `http://127.0.0.1:${PORT}/questender/`,
+    url: `http://127.0.0.1:${PORT}/gerdquest-calendar/`,
     cwd: '../..',
     env: { VITE_E2E: '1' },
     reuseExistingServer: !CI,

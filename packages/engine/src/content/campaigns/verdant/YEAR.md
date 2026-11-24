@@ -15,7 +15,7 @@ each chapter with a won-or-lost legacy result that later chapters remember.
 From Chapter 5 the story turns into a chase (the hero carries the Crown while
 two rival powers close in), then a sea voyage, a trap-filled temple on a
 volcanic island and a mountain climb. **Every name, character, place, monster and plot beat here
-is original to Questender.** None of that series' story, NPCs, places, maps,
+is original to GerdQuest Calendar.** None of that series' story, NPCs, places, maps,
 art or monsters are reused.
 
 ## The premise
@@ -102,4 +102,4 @@ coin) that carry a price. Neither is ever the first option.
 Chapters 9–10 are outlines and 11–12 are placeholders; each will be shaped to fit
 the matching box when it arrives, and each adds its own legacy pair.
 
-All characters, places and plot are original to Questender.
+All characters, places and plot are original to GerdQuest Calendar.

@@ -78,3 +78,8 @@ p { margin: 0; }
 .legal h2 { font-size: 1.6rem; margin: 32px 0 8px; }
 .legal .meta { color: var(--muted); font-size: 0.95rem; margin-bottom: 20px; }
 .legal p + p { margin-top: 0.8em; }
+
+/* Long name on phones: keep the brand compact and on one or two tight lines. */
+@media (max-width: 480px) {
+  .brand { font-size: 1.3rem; line-height: 1.1; }
+}

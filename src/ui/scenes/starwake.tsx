@@ -3,7 +3,7 @@ import type { StarwakeScene } from '@questender/engine/types'
 
 // Backgrounds for The Starwake: a sea of scattered isles under drifting stars.
 // Same style as Scene.tsx (400x200 viewBox, layered SVG); every shape here is
-// original to Questender.
+// original to GerdQuest Calendar.
 
 export const STARWAKE_SKIES: Record<StarwakeScene, [string, string]> = {
   sw_quay: ['#141d33', '#6c5a5e'],
