@@ -9,6 +9,26 @@ Settings → What's new. Add every release to both, and bump `package.json`
 
 Versions before 0.5.0 were reconstructed after the fact from the code.
 
+## [0.8.0] — 2026-11-24
+
+### Added
+- The Verdant Accord (`campaigns/verdant`): chapters 1–4 of a 12-chapter legacy campaign, with
+  legacy marks that later options can require (`meetsRequirement`) (#46).
+- The Starwake runs a full year: October–December, finale, levels 7–8, 14 new enemies and bosses,
+  followers Ismay Tolliver and Hallam Marrow (#49).
+- Static landing page at the site root; the game moved to `play/` (Vite multi-page build per
+  ADR 0003). Returning players with saves are redirected; `?stay` keeps the landing page.
+  Custom `404.html`, per-page titles and descriptions, Open Graph/Twitter tags and `og.png`,
+  generated `robots.txt` and `sitemap.xml` (`SITE_URL`/`SITE_BASE` for the custom domain),
+  sticky mobile CTA (#47).
+- `privacy.html` and `terms.html` (v1.0), linked from the landing page, 404 and Settings (#48).
+
+### Changed
+- Balance pass 2: weaker heroes strengthened (Pell, Ysolde, Marisol, Kit, Corin, Hask), late
+  Brightwatch rewards trimmed and Oct–Dec upgrades added, stronger Ember Road and Brightwatch
+  finales; simulator gains a per-hero table (#50).
+- Web app manifest `start_url` is now `./play/` (#47).
+
 ## [0.7.0] — 2026-11-24
 
 ### Added
