@@ -31,9 +31,8 @@ export function Settings({ theme, onTheme, campaigns, onImport, onExportAll, onC
 
   const [latest, ...rest] = CHANGELOG
   const [persisted, setPersisted] = useState<boolean | null>(null)
-  const [canPersist, setCanPersist] = useState(false)
+  const [canPersist] = useState(() => typeof navigator !== 'undefined' && !!navigator.storage?.persist)
   useEffect(() => {
-    setCanPersist(typeof navigator !== 'undefined' && !!navigator.storage?.persist)
     void isPersisted().then(setPersisted)
   }, [])
 
