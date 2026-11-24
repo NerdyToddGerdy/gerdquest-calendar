@@ -25,7 +25,7 @@ function sitePlugin(command: string): Plugin {
       this.emitFile({
         type: 'asset',
         fileName: 'sitemap.xml',
-        source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${SITE_URL}</loc></url>\n</urlset>\n`,
+        source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>${SITE_URL}</loc></url>\n  <url><loc>${SITE_URL}privacy.html</loc></url>\n  <url><loc>${SITE_URL}terms.html</loc></url>\n</urlset>\n`,
       })
     },
   }
@@ -43,6 +43,8 @@ export default defineConfig(({ command }) => ({
       input: {
         main: resolve(import.meta.dirname, 'index.html'),
         play: resolve(import.meta.dirname, 'play/index.html'),
+        privacy: resolve(import.meta.dirname, 'privacy.html'),
+        terms: resolve(import.meta.dirname, 'terms.html'),
         notFound: resolve(import.meta.dirname, '404.html'),
       },
     },

@@ -102,6 +102,10 @@ export function Settings({ theme, onTheme, campaigns, onImport, onExportAll, onC
         </section>
 
         <p className="muted small center-text">Questender v{APP_VERSION}</p>
+        <nav className="settings-legal small center-text" aria-label="Legal">
+          <a href="../privacy.html">Privacy</a>
+          <a href="../terms.html">Terms</a>
+        </nav>
       </div>
     </div>
   )
