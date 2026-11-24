@@ -22,6 +22,14 @@ export const VERDANT_SKIES: Record<VerdantScene, [string, string]> = {
   va_fair: ['#2d2a4a', '#e8a86a'],
   va_manor: ['#101830', '#3a3a5a'],
   va_clock: ['#2a2620', '#8a6a3a'],
+  va_blaze: ['#3a1a10', '#e0742a'],
+  va_sea: ['#6f9ec2', '#d8e6e0'],
+  va_storm: ['#1c2230', '#5a6678'],
+  va_isle: ['#4a3a30', '#d89a5a'],
+  va_temple: ['#14100e', '#4a3a2c'],
+  va_lava: ['#2a0e08', '#e8642a'],
+  va_peak: ['#7aa0c8', '#e8eef0'],
+  va_mine: ['#0c0b0a', '#3a3028'],
 }
 
 // ---------- shared pieces ----------
@@ -364,6 +372,137 @@ export const VERDANT_ART: Record<VerdantScene, ReactNode> = {
         </g>
       ))}
       <path d="M0 186 H400 V200 H0 Z" fill="#3a2a1e" />
+    </>
+  ),
+  va_blaze: (
+    <>
+      <rect x="0" y="0" width="400" height="200" fill="#3a1a10" opacity="0.5" />
+      <circle cx="320" cy="60" r="34" fill="#f0b040" opacity="0.5" />
+      {marrow(200, 150, 340, 70, true)}
+      {[40, 130, 220, 300, 370].map((x, i) => (
+        <path key={x} d={`M${x - 12} 160 Q${x - 4} ${110 - i * 4} ${x} ${90 - (i % 2) * 14} Q${x + 6} ${112 - i * 3} ${x + 12} 160 Z`} fill={i % 2 ? '#e0742a' : '#f0a040'} opacity="0.9" />
+      ))}
+      <path d="M0 200 V158 Q200 148 400 160 V200 Z" fill="#2a1a12" />
+      {[...Array(12)].map((_, i) => (
+        <circle key={i} cx={rnd(i, 51) * 400} cy={30 + rnd(i, 52) * 110} r="1.4" fill="#ffd88a" opacity="0.8" />
+      ))}
+    </>
+  ),
+  va_sea: (
+    <>
+      <circle cx="320" cy="48" r="20" fill="#fff4d0" opacity="0.7" />
+      {water(110, '#6f9ec2', '#2f5a7a')}
+      {water(140, '#5a8aae', '#244a68')}
+      <path d="M0 110 L60 96 L110 108 L170 94 L230 110 H0 Z" fill="#7a8a96" opacity="0.5" />
+      <g transform="translate(200 150)">
+        <path d="M-60 0 L-48 18 H48 L64 0 Z" fill="#5a3d26" />
+        <rect x="-4" y="-70" width="6" height="70" fill="#3a2a1e" />
+        <path d="M2 -66 Q40 -40 36 -6 H2 Z" fill="#e6dcc2" />
+        <path d="M-4 -60 Q-34 -36 -30 -6 H-4 Z" fill="#d8ccb0" />
+      </g>
+      {water(176, '#4a7a9e', '#1c3c58')}
+    </>
+  ),
+  va_storm: (
+    <>
+      <rect x="0" y="0" width="400" height="120" fill="#1c2230" />
+      {[40, 150, 260, 350].map((x, i) => (
+        <ellipse key={x} cx={x} cy={30 + (i % 2) * 22} rx="70" ry="26" fill={i % 2 ? '#2a3244' : '#323c50'} />
+      ))}
+      <path d="M210 30 L190 78 H208 L192 126" stroke="#f2e8a0" strokeWidth="4" fill="none" />
+      {water(120, '#3a4a60', '#141c2a')}
+      {water(150, '#2e3e56', '#0e1522')}
+      <g transform="translate(130 160) rotate(-8)">
+        <path d="M-50 0 L-40 14 H40 L52 0 Z" fill="#3a2a1e" />
+        <rect x="-3" y="-56" width="5" height="56" fill="#2a1e14" />
+        <path d="M2 -52 Q30 -30 28 -6 H2 Z" fill="#cfc6b0" />
+      </g>
+      {[...Array(14)].map((_, i) => (
+        <path key={i} d={`M${rnd(i, 61) * 400} ${rnd(i, 62) * 120} l-6 14`} stroke="#9fb4cc" strokeWidth="1.5" opacity="0.7" />
+      ))}
+    </>
+  ),
+  va_isle: (
+    <>
+      <path d="M200 130 L240 40 L270 30 L300 130 Z" fill="#3a2a24" />
+      <path d="M236 44 L266 30 L272 44 Q254 50 236 44 Z" fill="#e8642a" />
+      <circle cx="254" cy="20" r="18" fill="#6a5a50" opacity="0.5" />
+      {treeline(125, '#2a5a34', 71, 14)}
+      <path d="M0 200 V150 Q200 138 400 152 V200 Z" fill="#6a5a46" />
+      {water(176, '#4a7a8a', '#1e3e50')}
+      {[60, 120, 330].map((x, i) => (
+        <g key={x} transform={`translate(${x} 165)`}>
+          <path d="M0 0 Q4 -30 -2 -50" stroke="#4a3a26" strokeWidth="4" fill="none" />
+          <path d="M-2 -50 q-22 -4 -28 10 M-2 -50 q22 -6 30 8 M-2 -50 q-4 -20 -22 -22 M-2 -50 q8 -20 24 -18" stroke="#3a7a3a" strokeWidth="4" fill="none" />
+          {i === 1 && <circle cx="30" cy="-10" r="3" fill="#e0742a" />}
+        </g>
+      ))}
+    </>
+  ),
+  va_temple: (
+    <>
+      {brickWall(40, 130, '#3a3026', '#2a2018')}
+      {[60, 150, 250, 340].map((x) => (
+        <g key={x}>
+          <rect x={x - 12} y="20" width="24" height="150" fill="#5a4a38" />
+          <rect x={x - 16} y="20" width="32" height="8" fill="#6a5a46" />
+          <rect x={x - 16} y="162" width="32" height="8" fill="#6a5a46" />
+        </g>
+      ))}
+      <path d="M0 200 V168 H400 V200 Z" fill="#2a2018" />
+      {[105, 295].map((x) => (
+        <g key={x}>
+          <circle cx={x} cy="86" r="14" fill="url(#glow)" opacity="0.8" />
+          <path d={`M${x - 3} 100 h6 v10 h-6 Z`} fill="#3a2a1e" />
+        </g>
+      ))}
+      <path d="M180 168 L186 90 Q200 78 214 90 L220 168 Z" fill="#14100e" />
+    </>
+  ),
+  va_lava: (
+    <>
+      <rect x="0" y="0" width="400" height="200" fill="#2a0e08" />
+      <path d="M0 0 H400 V50 Q300 70 200 56 Q100 70 0 50 Z" fill="#1a0a06" />
+      <path d="M0 200 V130 Q100 118 200 130 Q300 142 400 128 V200 Z" fill="#e8642a" />
+      <path d="M0 200 V150 Q100 140 200 152 Q300 160 400 148 V200 Z" fill="#f0a040" opacity="0.7" />
+      {[70, 190, 310].map((x) => (
+        <path key={x} d={`M${x - 36} 130 H${x + 36} L${x + 28} 112 H${x - 28} Z`} fill="#2a1e18" />
+      ))}
+      <path d="M0 96 H400" stroke="#4a2a1e" strokeWidth="6" strokeDasharray="30 12" />
+      {[...Array(14)].map((_, i) => (
+        <circle key={i} cx={rnd(i, 81) * 400} cy={60 + rnd(i, 82) * 100} r={1 + rnd(i, 83) * 2} fill="#ffd88a" opacity="0.8" />
+      ))}
+    </>
+  ),
+  va_peak: (
+    <>
+      <path d="M0 150 L80 70 L130 110 L210 20 L290 100 L330 70 L400 140 V200 H0 Z" fill="#9aa8b8" />
+      <path d="M210 20 L186 52 L204 46 L214 60 L226 44 L240 52 Z" fill="#f4f8fa" />
+      <path d="M80 70 L62 92 L80 86 L92 96 Z" fill="#f4f8fa" />
+      <path d="M0 200 V160 L90 140 L170 160 L260 138 L400 164 V200 Z" fill="#6a7a74" />
+      <path d="M170 200 Q190 176 200 160 L214 160 Q226 176 250 200 Z" fill="#b8b0a0" />
+      {[60, 340].map((x) => (
+        <path key={x} d={`M${x} 170 l-10 24 h20 Z`} fill="#3a5a3a" />
+      ))}
+    </>
+  ),
+  va_mine: (
+    <>
+      <path d="M0 0 H400 V60 Q300 90 200 70 Q100 90 0 60 Z" fill="#14110e" />
+      <path d="M0 200 V150 Q200 130 400 150 V200 Z" fill="#241e18" />
+      {[80, 200, 320].map((x) => (
+        <g key={x}>
+          <rect x={x - 30} y="60" width="6" height="95" fill="#5a4026" />
+          <rect x={x + 24} y="60" width="6" height="95" fill="#5a4026" />
+          <rect x={x - 32} y="58" width="66" height="8" fill="#6a4a2c" />
+        </g>
+      ))}
+      <path d="M130 170 H300 M130 178 H300" stroke="#6a6a6a" strokeWidth="2" />
+      {[150, 190, 230, 270].map((x) => (
+        <path key={x} d={`M${x} 168 v12`} stroke="#4a3a26" strokeWidth="3" />
+      ))}
+      <circle cx="200" cy="100" r="24" fill="url(#glow)" opacity="0.6" />
+      <path d="M262 150 l8 -10 l8 10 l-6 6 Z" fill="#7ab8d0" />
     </>
   ),
 }

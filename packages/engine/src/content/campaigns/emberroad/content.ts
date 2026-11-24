@@ -20,7 +20,6 @@ const abilities: AbilityDef[] = [
   { id: 'er_ab_thaw', name: 'Thaw', kind: 'heal', per: 'rest', uses: 99, die: 6, bonus: 1, cost: { pool: 'spell', amount: 2 }, text: '2 Spell: recover d6+1 health.' },
 
   // Pell Quickfinger — Gutter Thief
-  { id: 'pickpocket', name: 'Pickpocket', kind: 'passive', bonus: 0, tags: ['pickpocket'], text: 'You can lift purses at hidden pickpocket spots (d4 gold; on a 4, lose 1 Virtue).' },
   { id: 'er_ab_lightstep', name: 'Light Step', kind: 'passive', bonus: 2, tags: ['stealth', 'lockpick'], text: '+2 to sneaking and picking locks.' },
   { id: 'er_ab_slip', name: 'Slip Away', kind: 'reroll', per: 'page', uses: 1, text: 'Once per page: reroll any d20.' },
   { id: 'er_ab_backstab', name: 'Backstab', kind: 'addDie', per: 'rest', uses: 2, die: 6, slots: ['attack', 'damage'], text: 'Twice per Rest: add d6 to an Attack or Damage roll.' },

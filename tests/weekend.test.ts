@@ -39,6 +39,11 @@ describe('weekend pages on the desk', () => {
     expect(nextDeskDate(states, '2026-01-03', '2026-01-04')).toBe('2026-01-04')
   })
 
+  it('a date long after the campaign’s last page ends the range at once (it used to loop forever)', () => {
+    expect(deskSpanEnd(states, '2031-06-01')).toBe('2031-06-01')
+    expect(deskSpanEnd([game('verdant', '2026-01-03')], '2027-06-01')).toBe('2027-06-01')
+  })
+
   it('a weekday campaign alongside keeps every date a stop', () => {
     // A campaign whose pages don't line up with Ember’s weekend keeps Sunday a stop.
     const mixed = [...states, game('halcyon', '2026-01-04')]

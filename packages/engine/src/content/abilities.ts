@@ -1,6 +1,8 @@
 import type { AbilityDef } from '../engine/types'
 
 export const ABILITIES: AbilityDef[] = [
+  // Shared by every campaign's thief (Ember Road, Starwake, Verdant): it lives here so a campaign loads without the others.
+  { id: 'pickpocket', name: 'Pickpocket', kind: 'passive', bonus: 0, tags: ['pickpocket'], text: 'You can lift purses at hidden pickpocket spots (d4 gold; on a 4, lose 1 Virtue).' },
   // Wren Ashvale — Lantern Warden
   { id: 'steadfast', name: 'Steadfast', kind: 'passive', bonus: 2, tags: ['physical'], text: '+2 to physical feats of strength and endurance.' },
   { id: 'lanternFlare', name: 'Lantern Flare', kind: 'addDie', per: 'rest', uses: 2, die: 6, slots: ['damage'], text: 'Twice per Rest: add d6 to a Damage roll.' },

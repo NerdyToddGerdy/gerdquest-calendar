@@ -1,5 +1,5 @@
 // The Verdant Accord — original heroes, abilities, items, enemies, followers
-// and legacy marks for a classic-rules forest campaign (Chapters 1–4 of 12).
+// and legacy marks for a classic-rules forest campaign (Chapters 1–8 of 12).
 import type { AbilityDef, ContentPack, EnemyDef, HeroDef, ItemDef, LegacyDef, LevelSpec, MemberDef } from '../../../engine/types'
 
 const abilities: AbilityDef[] = [
@@ -47,7 +47,17 @@ const abilities: AbilityDef[] = [
   { id: 'va_ab_oakfist', name: 'Oak Fist', kind: 'addDie', per: 'rest', uses: 99, die: 8, slots: ['damage'], cost: { pool: 'chi', amount: 2 }, text: '2 Chi: add d8 to a Damage roll.' },
   { id: 'va_ab_innerspring', name: 'Inner Spring', kind: 'heal', per: 'rest', uses: 99, die: 6, bonus: 2, cost: { pool: 'chi', amount: 1 }, text: '1 Chi: recover d6+2 health.' },
 
+  // Levels 6–7
+  { id: 'va_ab_fellingblow', name: 'Felling Blow', kind: 'addDie', per: 'rest', uses: 1, die: 10, slots: ['damage'], text: 'Once per Rest: add d10 to a Damage roll.' },
+  { id: 'va_ab_rootsnare', name: 'Root Snare', kind: 'addDie', per: 'rest', uses: 99, die: 6, slots: ['attack'], cost: { pool: 'spell', amount: 2 }, text: '2 Spell: roots grab your foe’s feet — add d6 to an Attack roll.' },
+  { id: 'va_ab_cheapshot', name: 'Cheap Shot', kind: 'addDie', per: 'rest', uses: 2, die: 8, slots: ['damage'], text: 'Twice per Rest: add d8 to a Damage roll.' },
+  { id: 'va_ab_psalm', name: 'Sunrise Psalm', kind: 'heal', per: 'rest', uses: 1, die: 10, bonus: 3, text: 'Once per Rest: recover d10+3 health.' },
+  { id: 'va_ab_pinshot', name: 'Pinning Shot', kind: 'addDie', per: 'rest', uses: 2, die: 6, slots: ['attack'], text: 'Twice per Rest: add d6 to an Attack roll.' },
+  { id: 'va_ab_rootstance', name: 'Root Stance', kind: 'addDie', per: 'rest', uses: 99, die: 6, slots: ['check', 'attack'], cost: { pool: 'chi', amount: 1 }, text: '1 Chi: add d6 to a check or Attack roll.' },
+
   // Lent by followers
+  { id: 'va_ab_ottoline', name: 'Clockmaker’s Eye', kind: 'passive', bonus: 2, tags: ['lore', 'lockpick'], text: '+2 to puzzles, mechanisms and locks (from Ottoline).' },
+  { id: 'va_ab_pike', name: 'Sea Legs', kind: 'passive', bonus: 2, tags: ['physical', 'travel'], text: '+2 to feats of balance and strength on a deck or a cliff (from Bosun Pike).' },
   { id: 'va_ab_burrnose', name: 'Burr’s Nose', kind: 'passive', bonus: 2, tags: ['perception'], text: '+2 to spotting danger (from Burr).' },
   { id: 'va_ab_turnip', name: 'Turnip’s Back', kind: 'passive', bonus: 2, tags: ['travel'], text: '+2 to travel checks (from Turnip).' },
   { id: 'va_ab_minnow', name: 'Minnow’s Shortcuts', kind: 'passive', bonus: 2, tags: ['stealth'], text: '+2 to sneaking (from Minnow).' },
@@ -55,43 +65,55 @@ const abilities: AbilityDef[] = [
   { id: 'va_ab_juggle', name: 'Thrown Clubs', kind: 'addDie', per: 'rest', uses: 2, die: 4, slots: ['attack'], text: 'Twice per Rest (from Fennick): add d4 to an Attack roll.' },
 ]
 
-/** Levels 2–5 (Chapters 1–4: one level per chapter). Later chapters add 6+. */
+/** Levels 2–7: a level per chapter through Chapter 5, then Chapter 7 (level 7). Chapter 10 will add level 8; Chapters 6 and 8 reward signature gear instead. */
 const LEVELS: Record<string, Record<number, LevelSpec>> = {
   va_brannoc: {
     2: { maxHp: 4, atk: 1, traits: { con: 1 }, ability: 'va_ab_standfast' },
     3: { maxHp: 4, def: 1 },
     4: { maxHp: 4, traits: { str: 1 }, ability: 'va_ab_roar' },
     5: { maxHp: 4, atk: 1, dmgDie: 10 },
+    6: { maxHp: 4, def: 1, ability: 'va_ab_fellingblow' },
+    7: { maxHp: 5, atk: 1, traits: { str: 1 }, dmgDie: 12 },
   },
   va_sorrel: {
     2: { maxHp: 3, def: 1, pools: { spell: 2 }, ability: 'va_ab_poultice' },
     3: { maxHp: 3, pools: { spell: 1 } },
     4: { maxHp: 3, traits: { wis: 1 }, ability: 'va_ab_bramblewall' },
     5: { maxHp: 3, atk: 1, dmgDie: 8, pools: { spell: 1 } },
+    6: { maxHp: 3, def: 1, pools: { spell: 2 }, ability: 'va_ab_rootsnare' },
+    7: { maxHp: 3, atk: 1, dmgDie: 10, pools: { spell: 1 } },
   },
   va_pip: {
     2: { maxHp: 3, atk: 1, traits: { dex: 1 }, ability: 'va_ab_sling' },
     3: { maxHp: 3, def: 1 },
     4: { maxHp: 3, traits: { cha: 1 }, ability: 'va_ab_patter' },
     5: { maxHp: 3, atk: 1, dmgDie: 8 },
+    6: { maxHp: 4, def: 1, ability: 'va_ab_cheapshot' },
+    7: { maxHp: 4, atk: 1, traits: { dex: 1 }, dmgDie: 10 },
   },
   va_aldous: {
     2: { maxHp: 3, pools: { spell: 1 }, ability: 'va_ab_steadyhand' },
     3: { maxHp: 3, pools: { spell: 1 } },
     4: { maxHp: 3, traits: { wis: 1 }, ability: 'va_ab_hearthhymn' },
     5: { maxHp: 4, atk: 1, dmgDie: 8, pools: { spell: 1 } },
+    6: { maxHp: 3, pools: { spell: 1 }, ability: 'va_ab_psalm' },
+    7: { maxHp: 4, def: 1, dmgDie: 10, pools: { spell: 1 } },
   },
   va_kestrel: {
     2: { maxHp: 3, def: 1, ability: 'va_ab_fieldcraft' },
     3: { maxHp: 3, atk: 1 },
     4: { maxHp: 3, traits: { wis: 1 }, ability: 'va_ab_heartshot' },
     5: { maxHp: 4, def: 1, dmgDie: 10 },
+    6: { maxHp: 4, atk: 1, ability: 'va_ab_pinshot' },
+    7: { maxHp: 4, def: 1, traits: { dex: 1 }, dmgDie: 12 },
   },
   va_odo: {
     2: { maxHp: 3, pools: { chi: 1 }, ability: 'va_ab_oakfist' },
     3: { maxHp: 3, pools: { chi: 1 } },
     4: { maxHp: 3, traits: { dex: 1 }, ability: 'va_ab_innerspring' },
     5: { maxHp: 4, atk: 1, dmgDie: 8, pools: { chi: 1 } },
+    6: { maxHp: 4, def: 1, pools: { chi: 1 }, ability: 'va_ab_rootstance' },
+    7: { maxHp: 4, atk: 1, dmgDie: 10, pools: { chi: 1 } },
   },
 }
 
@@ -153,6 +175,9 @@ const items: ItemDef[] = [
   { id: 'va_honeycake', name: 'Honey Cake', kind: 'pageBonus', stat: 'cha', amount: 0, die: 6, price: 3, text: '+d6 Charisma for the rest of today.' },
   { id: 'va_jerky', name: 'Boar Jerky', kind: 'pageBonus', stat: 'str', amount: 0, die: 6, price: 3, text: '+d6 Strength for the rest of today.' },
   { id: 'va_bitterroot', name: 'Bitterroot Tea', kind: 'pageBonus', stat: 'wis', amount: 0, die: 6, price: 4, text: '+d6 Wisdom for the rest of today.' },
+  { id: 'va_stagbrew', name: 'Stagbrew Tonic', kind: 'heal', die: 10, bonus: 4, price: 12, text: 'Recover d10+4 health. Not usable during combat rounds.' },
+  { id: 'va_lanternoil', name: 'Lantern Oil', kind: 'slotDie', die: 8, slots: ['attack'], price: 8, text: 'Add d8 to an Attack roll.' },
+  { id: 'va_thornseed', name: 'Thornburst Seed', kind: 'slotDie', die: 8, slots: ['damage'], price: 7, text: 'Throw it: add d8 to a Damage roll.' },
   // Upgrades: passive while carried.
   { id: 'va_whetstone', name: 'River Whetstone', kind: 'upgrade', bonus: { dmg: 1 }, stackMax: 3, price: 6, text: '+1 to Damage rolls. Stacks up to 3 times.' },
   { id: 'va_grip', name: 'Pine-Pitch Grip', kind: 'upgrade', bonus: { atk: 1 }, stackMax: 3, price: 7, text: '+1 Attack. Stacks up to 3 times.' },
@@ -165,6 +190,14 @@ const items: ItemDef[] = [
   { id: 'va_knucklering', name: 'Knucklebark’s Ring', kind: 'gear', slot: 'trinket', bonus: { atk: 1, con: 1 }, magical: true, price: 20, text: 'Magical. +1 Attack, +1 Constitution. A troll’s toll-ring, big enough for a bracelet.' },
   { id: 'va_oilskin', name: 'Miller’s Oilskin', kind: 'gear', slot: 'body', bonus: { maxHp: 3, con: 1 }, magical: true, price: 18, text: 'Magical. +3 max health, +1 Constitution. Water runs off it like it’s embarrassed.' },
   { id: 'va_gutterlamp', name: 'Gutterlight Lamp', kind: 'gear', slot: 'hands', bonus: { atk: 1, wis: 1 }, magical: true, price: 16, text: 'Magical. +1 Attack, +1 Wisdom. Its flame burns green near hidden doors.' },
+  { id: 'va_ironbark', name: 'Ironbark Jerkin', kind: 'gear', slot: 'body', bonus: { maxHp: 4 }, price: 20, text: '+4 max health.' },
+  { id: 'va_reedboots', name: 'Reed-Weave Boots', kind: 'gear', slot: 'feet', bonus: { dex: 1, con: 1 }, price: 16, text: '+1 Dexterity, +1 Constitution.' },
+  { id: 'va_steward', name: 'Steward’s Signet', kind: 'gear', slot: 'trinket', bonus: { def: 1, cha: 2 }, magical: true, price: 24, text: 'Magical. +1 Defense, +2 Charisma. Corwin Vey’s own seal ring: doors in Highmarrow open for it.' },
+  { id: 'va_brinecharm', name: 'Tidewife’s Charm-Chain', kind: 'gear', slot: 'trinket', bonus: { dex: 1, wis: 1 }, magical: true, price: 22, text: 'Magical. +1 Dexterity, +1 Wisdom. Bought weather, strung on a chain. It hums before a squall.' },
+  { id: 'va_heronplume', name: 'Stormcaller’s Plume', kind: 'gear', slot: 'head', bonus: { atk: 1, def: 1, wis: 1 }, magical: true, price: 30, text: 'Magical. +1 Attack, +1 Defense, +1 Wisdom. A thunder-heron’s crest-feather that crackles in a gale. Mudlark’s signature prize.' },
+  { id: 'va_glassshard', name: 'Black-Glass Shard-Blade', kind: 'gear', slot: 'hands', bonus: { atk: 1, dmg: 1 }, magical: true, price: 26, text: 'Magical. +1 Attack, +1 Damage. Volcanic glass, knapped so sharp it hums.' },
+  { id: 'va_kindlelantern', name: 'Warden’s Kindling-Lantern', kind: 'gear', slot: 'hands', bonus: { atk: 1, def: 1, maxHp: 3 }, magical: true, price: 34, text: 'Magical. +1 Attack, +1 Defense, +3 max health. A coal of the Kindling in a horn lantern. Mountain Chapter’s signature prize.' },
+  { id: 'va_embercharm', name: 'Ember-Seed Charm', kind: 'gear', slot: 'trinket', bonus: { atk: 1, maxHp: 4 }, magical: true, price: 30, text: 'Magical. +1 Attack, +4 max health. The ember-seed in a cage of black glass: warm, heavy, and not yours.' },
   { id: 'va_clocklens', name: 'Spindle’s Loupe', kind: 'gear', slot: 'head', bonus: { def: 1, int: 2 }, magical: true, price: 26, text: 'Magical. +1 Defense, +2 Intellect. A clockmaker’s eyeglass with a dozen tiny lenses.' },
 ]
 
@@ -196,6 +229,44 @@ const enemies: EnemyDef[] = [
   { id: 'va_brassgardener', name: 'The Brass Gardener', ac: 15, toughness: 10, hits: 16, dmg: 5, text: 'Crane’s clockwork groundskeeper: eight feet of brass with shears for hands and a gardener’s patience.' },
 ]
 
+
+const enemies2: EnemyDef[] = [
+  // Chapter 5 — Highmarrow Burns
+  { id: 'va_torchman', name: 'Copperleaf Torchman', ac: 16, toughness: 7, hits: 16, dmg: 4, text: 'A hired hand with a pitch-torch and orders to be somewhere else when the roof comes down.' },
+  { id: 'va_looter', name: 'Exchange Looter', ac: 16, toughness: 8, hits: 17, dmg: 4, text: 'A sellsword in Copperleaf green, stuffing a sack with other people’s silver.' },
+  { id: 'va_thornraider', name: 'Thornwake Raider', ac: 17, toughness: 8, hits: 17, dmg: 4, text: 'A forest-warrior in a coat of living bark, with a spear grown rather than made. The Thornwake do not want the Accord. They want an accounting.' },
+  { id: 'va_rootbreacher', name: 'Root-Breacher', ac: 17, toughness: 10, hits: 17, dmg: 4, text: 'A knot of cobble-cracking root as thick as a barrel, hauling itself up through the street.' },
+  { id: 'va_clockchamp', name: 'Crane’s Clockwork Champion', ac: 16, toughness: 9, hits: 17, dmg: 4, text: 'A duelist of brass and cut-glass springs in a Copperleaf tabard, wound by Crane to win and never to tire.' },
+  { id: 'va_briarknight', name: 'Thornwake Briar Knight', ac: 16, toughness: 10, hits: 17, dmg: 4, text: 'A knight of the forest’s vanguard: antlered helm, thorn-plate and a briar-sword that drinks the heat of the fires.' },
+  // Chapter 6 — The Saltward Passage
+  { id: 'va_shrikegull', name: 'Shrike-Gull Flock', ac: 16, toughness: 6, hits: 16, dmg: 3, text: 'Sea-gulls with hooked beaks that spike their catch on the rigging.' },
+  { id: 'va_reaver', name: 'Brine Reaver', ac: 16, toughness: 8, hits: 17, dmg: 4, text: 'A barnacled sea-raider in a clamshell breastplate, with a net and a grudge.' },
+  { id: 'va_cutterhand', name: 'Copperleaf Cutter Hand', ac: 16, toughness: 7, hits: 17, dmg: 3, text: 'A deckhand of a Copperleaf cutter, armed with a boarding hook and a sea-chest’s worth of bravado.' },
+  { id: 'va_privateer', name: 'Copperleaf Privateer', ac: 17, toughness: 9, hits: 17, dmg: 3, text: 'A licensed pirate with a cutlass and an Exchange letter of marque.' },
+  { id: 'va_warcaptain', name: 'Copperleaf War-Captain', ac: 17, toughness: 12, hits: 17, dmg: 5, text: 'Captain of the Exchange’s sea-wing: black-braided, brass-buttoned and entirely without humour.' },
+  { id: 'va_gillback', name: 'Gillback Raider', ac: 17, toughness: 9, hits: 17, dmg: 4, text: 'A scaled, spined raider of the deep that climbs a hull like a ladder.' },
+  { id: 'va_hoardserpent', name: 'Hoard Serpent', ac: 16, toughness: 10, hits: 17, dmg: 5, text: 'A sea serpent coiled in a drowned vault, sleeping on a bed of other people’s coin.' },
+  { id: 'va_thunderheron', name: 'The Thunder-Heron', ac: 16, toughness: 9, hits: 16, dmg: 4, text: 'A heron as tall as a mast riding the storm-front, with lightning in its beak and a long memory for debts.' },
+  { id: 'va_greyleviathan', name: 'The Grey Leviathan', ac: 16, toughness: 10, hits: 17, dmg: 4, text: 'The sea itself, sat up. A slate-grey back the length of a street, and an eye like a harbour lamp.' },
+  // Chapter 7 — The Ashen Isle
+  { id: 'va_grovespinner', name: 'Grove Weaver', ac: 17, toughness: 9, hits: 17, dmg: 5, text: 'A spider the size of a handcart, strung in the grove’s silken galleries.' },
+  { id: 'va_risen', name: 'Risen Servant', ac: 17, toughness: 9, hits: 17, dmg: 4, text: 'A fired-clay figure with bone showing at the joints: the Kiln’s idea of staff.' },
+  { id: 'va_kilnscout', name: 'Pale Kiln Scout', ac: 17, toughness: 9, hits: 17, dmg: 4, text: 'A bone-potter’s lookout in a mask of white slip, with a hooked pole and a bag of ash.' },
+  { id: 'va_glassback', name: 'Glassback Lizard', ac: 17, toughness: 10, hits: 17, dmg: 4, text: 'A basking lizard whose back is a ridge of black volcanic glass.' },
+  { id: 'va_kilnguard', name: 'Kiln Guard', ac: 17, toughness: 11, hits: 18, dmg: 5, text: 'A temple sentry fired from dark clay, with a halberd and a long, patient stare.' },
+  { id: 'va_livingstatue', name: 'Living Statue', ac: 17, toughness: 11, hits: 18, dmg: 5, text: 'A stone worshipper in the hall of statues. It has stopped worshipping.' },
+  { id: 'va_kilnborn', name: 'The Kiln-Born', ac: 17, toughness: 12, hits: 18, dmg: 6, text: 'The Pale Kiln’s masterpiece: a dead giant fired in the lava chamber until it stood up, glowing from every crack.' },
+  // Chapter 8 — The Kindling Height
+  { id: 'va_gardener2', name: 'The Brass Gardener, Rebuilt', ac: 17, toughness: 12, hits: 18, dmg: 6, text: 'Rebuilt from the Marrow’s scrap with mountain-cold bearings and a new pair of shears. It remembers you.' },
+  { id: 'va_gardener3', name: 'The Brass Gardener, Third Pattern', ac: 18, toughness: 14, hits: 19, dmg: 7, text: 'Crane’s final revision: a taller, quieter gardener with a saw in each arm and no patience left to lose.' },
+  { id: 'va_ram', name: 'Rockhorn Ram', ac: 17, toughness: 9, hits: 17, dmg: 4, text: 'A mountain ram with horns like quarried stone, guarding a hoard it does not understand.' },
+  { id: 'va_passwarden', name: 'Pass Warden', ac: 18, toughness: 12, hits: 19, dmg: 6, text: 'A cairn-giant of stacked slate that stands in the pass and asks, by leaning, for a reason.' },
+  { id: 'va_minecrawler', name: 'Mine Crawler', ac: 17, toughness: 9, hits: 17, dmg: 4, text: 'A pale many-legged thing that has lived off the old mine’s dark and its leavings.' },
+  { id: 'va_gatewarden', name: 'Summit Gate Guardian', ac: 18, toughness: 13, hits: 19, dmg: 6, text: 'An antlered figure of ice and iron that guards the last gate of the Kindling. It has held it for four hundred years.' },
+  { id: 'va_thornvanguard', name: 'Thornwake Vanguard', ac: 18, toughness: 11, hits: 19, dmg: 6, text: 'A veteran warrior of the forest’s vanguard: thorn-armour, a hooked spear, and the Elder’s own war-cry on her lips.' },
+  { id: 'va_elder', name: 'The Elder of Thorns', ac: 18, toughness: 15, hits: 19, dmg: 8, text: 'The oldest voice of the Thornwake: a figure of black briar and white blossom, taller than a doorway, who remembers the theft.' },
+]
+
 const follower = (m: Omit<MemberDef, 'kind' | 'maxHp' | 'abilities'>): MemberDef => ({ kind: 'critter', maxHp: 1, abilities: [], ...m })
 
 const members: MemberDef[] = [
@@ -203,6 +274,9 @@ const members: MemberDef[] = [
   follower({ id: 'va_f_turnip', name: 'Turnip', fee: 6, follower: { upkeep: 2, grants: ['va_ab_turnip'] }, text: 'A grey mule of strong opinions and stronger legs.' }),
   follower({ id: 'va_f_minnow', name: 'Minnow', fee: 8, follower: { upkeep: 2, grants: ['va_ab_minnow'] }, text: 'A mill-girl who knows every rooftop and drain in Millrow.' }),
   follower({ id: 'va_f_sedge', name: 'Old Sedge', fee: 10, follower: { upkeep: 2, grants: ['va_ab_sedge'] }, text: 'Highmarrow’s oldest lamplighter. He knows the city’s history street by street.' }),
+  follower({ id: 'va_f_ottoline', name: 'Ottoline Spindle', fee: 14, follower: { upkeep: 3, grants: ['va_ab_ottoline'] }, text: 'The clockmaker who carried the Seedcrown out of the city. She keeps a spring-wound lantern, a pocket of tools and no illusions.' }),
+  follower({ id: 'va_f_pike', name: 'Bosun Pike', fee: 10, follower: { upkeep: 2, grants: ['va_ab_pike'] }, text: 'The Mudlark’s bosun: a stub-nosed bargewoman who can read the river by the colour of its mud.' }),
+  follower({ id: 'va_f_agathe', name: 'Agathe Rook', fee: 12, follower: { upkeep: 3, grants: ['va_ab_roadwise'] }, text: 'Sixty years old, forty of them on the road, and not about to be left at the foot of a mountain.' }),
   follower({ id: 'va_f_fennick', name: 'Fennick', fee: 12, follower: { upkeep: 3, grants: ['va_ab_juggle'] }, text: 'A Spring Fair juggler whose clubs are heavier than they look.' }),
 ]
 
@@ -216,7 +290,21 @@ export const VERDANT_LEGACY: LegacyDef[] = [
   { id: 'va_l3_loss', chapter: 3, name: 'Guild Grudge', text: 'The Gutterlight blames you for what happened in the chapel.' },
   { id: 'va_l4_win', chapter: 4, name: 'Champion of the Fair', text: 'Highmarrow cheered you at the Spring Fair. The Watch listens when you speak.' },
   { id: 'va_l4_loss', chapter: 4, name: 'The Stopped Clock', text: 'Crane’s version of the Fair is the one the city believes.' },
+  { id: 'va_l5_win', chapter: 5, name: 'The Steward Saved', text: 'Corwin Vey lived through the burning of Highmarrow, and the city’s keepers remember who stood in front of him. Accord kept.' },
+  { id: 'va_l5_loss', chapter: 5, name: 'The Steward Fell', text: 'Steward Vey fell in his own hall, and the Marrow’s rule fell with him. The city’s grip on the Accord loosens. Wilds let in.' },
+  { id: 'va_l6_win', chapter: 6, name: 'The Mudlark Sails', text: 'The barge came through the Grey Leviathan’s waters with her keel intact. Harbours along the coast know her. Accord kept.' },
+  { id: 'va_l6_loss', chapter: 6, name: 'The Mudlark Wrecked', text: 'The Leviathan broke the barge on the coast. The crew lives; the keel does not. Wilds let in.' },
+  { id: 'va_l7_win', chapter: 7, name: 'The Dryad’s Seed', text: 'You gave the ember-seed to the ash-dryad, as you swore to. The island will grow green again, and she owes you. Accord kept.' },
+  { id: 'va_l7_loss', chapter: 7, name: 'The Seed Kept', text: 'You kept the ember-seed. The dryad keeps her silence, and a bargain broken follows a hero. Wilds let in.' },
+  { id: 'va_l8_win', chapter: 8, name: 'The Kindling Kept', text: 'You fed the Kindling, and it burned on at the summit. The Wardens will answer a call. Accord kept.' },
+  { id: 'va_l8_loss', chapter: 8, name: 'The Kindling Out', text: 'You let the Kindling go out, and the mountain went dark and quiet. The forest will not forget who chose. Wilds let in.' },
 ]
 
-export const VERDANT_CONTENT: ContentPack = { abilities, heroes, items, enemies, members }
+/** The running tally from Chapter 5 on: marks that kept the Accord, and marks that let the Wilds in. */
+export function accordTally(marks: readonly string[] = []): { kept: number; letIn: number } {
+  const late = marks.filter((m) => Number(/^va_l(\d+)_/.exec(m)?.[1] ?? 0) >= 5)
+  return { kept: late.filter((m) => m.endsWith('_win')).length, letIn: late.filter((m) => m.endsWith('_loss')).length }
+}
+
+export const VERDANT_CONTENT: ContentPack = { abilities, heroes, items, enemies: [...enemies, ...enemies2], members }
 export const VERDANT_HEROES = ['va_brannoc', 'va_sorrel', 'va_pip', 'va_aldous', 'va_kestrel', 'va_odo']

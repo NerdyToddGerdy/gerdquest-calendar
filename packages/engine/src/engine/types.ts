@@ -232,6 +232,7 @@ export type StarwakeScene = (typeof STARWAKE_SCENES)[number]
 export const VERDANT_SCENES = [
   'va_road', 'va_camp', 'va_forest', 'va_ford', 'va_bridge', 'va_town', 'va_city', 'va_market', 'va_tavern',
   'va_mill', 'va_sewer', 'va_chapel', 'va_fair', 'va_manor', 'va_clock',
+  'va_blaze', 'va_sea', 'va_storm', 'va_isle', 'va_temple', 'va_lava', 'va_peak', 'va_mine',
 ] as const
 export type VerdantScene = (typeof VERDANT_SCENES)[number]
 
@@ -383,6 +384,9 @@ export interface CampaignEntry {
   rulesetId: RulesetId
   /** Number of pages in the loaded campaign. */
   pageCount: number
+  /** For a campaign still being written: chapters authored so far and chapters planned in all. */
+  chaptersWritten?: number
+  chaptersPlanned?: number
   /** Authored date of the first page (ISO). Its weekday is the campaign's anchor weekday. */
   firstDate: string
   /** Heroes offered when starting (default: the base heroes). */

@@ -1,17 +1,24 @@
-// The Verdant Accord (Chapters 1–4): calendar shape, content integrity, legacy
+// The Verdant Accord (Chapters 1–8): calendar shape, content integrity, legacy
 // marks, scene art, and a seeded playthrough with every hero.
 import { describe, expect, it } from 'vitest'
-import { addDays, weekday } from '@questender/engine/calendar'
+import { addDays, parseISO, weekday } from '@questender/engine/calendar'
 import { authoredDate, campaign, pageSpan } from '@questender/engine/campaign'
 import { ability, enemy, heroDef, item, member } from '@questender/engine/content'
+import { BUNDLED_CATALOG } from '@questender/engine/content/bundled'
+import { accordTally } from '@questender/engine/content/campaigns/verdant/content'
 import { canAdvance, fatalFightLegacy, initialState, meetsRequirement, reduce } from '@questender/engine/state'
 import { VERDANT_SCENES, type Day, type Effect, type GameState } from '@questender/engine/types'
 import { legacyLabel } from '../src/ui/legacyLabel'
 import { VERDANT_ART, VERDANT_SKIES } from '../src/ui/scenes/verdant'
+import { hasPortrait } from '../src/ui/portraits/art'
 
 const va = campaign('verdant')
 const MUSTER = 3 // page where the hero is chosen
-const CHAPTERS = 4
+const CHAPTERS = 8
+/** Chapters that award a level: the cap stays at 8, so 6 and 8 give signature gear instead and 10 will add level 8. */
+const LEVEL_CHAPTERS = [1, 2, 3, 4, 5, 7]
+/** Chapters whose legacy is decided by a choice step after the boss, not by the boss fight itself. */
+const CHOICE_CHAPTERS = [7, 8]
 const WEEKDAY_WORDS = /\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)s?\b/
 
 function effectsOf(p: Day): Effect[] {
@@ -35,16 +42,24 @@ function textsOf(p: Day): string[] {
 }
 
 const levelUps = va.pages.slice(MUSTER + 1).filter((p) => effectsOf(p).some((e) => e.type === 'levelUp')).length
-const bosses = va.pages.filter((p) => p.note?.startsWith('A single foe'))
+const isChoice = (p: Day) => p.steps.some((st) => st.options.some((o) => (o.effects ?? []).some((e) => e.type === 'legacy')))
+/** Each chapter's boss: the combat page on its month's last Friday. */
+const bosses = va.pages.filter((p, i) => {
+  const d = authoredDate(va, i)
+  return !!p.combat && weekday(d) === 5 && parseISO(addDays(d, 7)).month !== parseISO(d).month
+})
+/** The page that awards each chapter's mark: the boss itself, or the choice step after it. */
+const markPages = va.pages.filter((p) => !!p.combat?.win?.some((e) => e.type === 'legacy') || isChoice(p))
 
 describe('Verdant Accord: calendar shape', () => {
-  it('runs from Sat Jan 1 to Sat Apr 30, 2022 with no gaps', () => {
+  it('runs from Sat Jan 1 to Wed Aug 31, 2022 with no gaps', () => {
     expect(authoredDate(va, 0)).toBe('2022-01-01')
     for (let i = 1; i < va.pages.length; i++) {
       expect(authoredDate(va, i)).toBe(addDays(authoredDate(va, i - 1), pageSpan(va, i - 1)))
     }
-    expect(authoredDate(va, va.pages.length - 1)).toBe('2022-04-30')
-    expect(va.pages).toHaveLength(103)
+    expect(authoredDate(va, va.pages.length - 1)).toBe('2022-08-31')
+    expect(va.pages).toHaveLength(208)
+    expect(va.pageCount).toBe(208)
   })
 
   it('weekend pages cover Sat + Sun; every other page is a weekday', () => {
@@ -62,20 +77,34 @@ describe('Verdant Accord: calendar shape', () => {
 
   it('in-world dates follow the Fernreach months', () => {
     expect(va.inWorldDate!(0)).toBe('Firstleaf 1–2')
-    expect(va.inWorldDate!(va.pages.length - 1)).toBe('Blossomtide 30–31')
+    expect(va.inWorldDate!(103)).toBe('Greenmoon 2')
+    expect(va.inWorldDate!(va.pages.length - 1)).toBe('Emberleaf 31')
   })
 
   it('has one boss per chapter, on its month’s last Friday', () => {
-    expect(bosses.map((p) => p.month)).toEqual([1, 2, 3, 4])
+    expect(bosses.map((p) => p.month)).toEqual([1, 2, 3, 4, 5, 6, 7, 8])
     for (const b of bosses) expect(weekday(authoredDate(va, va.pages.indexOf(b)))).toBe(5)
   })
 
-  it('levels up once per chapter, the weekend after its boss', () => {
-    expect(levelUps).toBe(CHAPTERS)
-    for (const b of bosses) {
+  it('levels up only where a level applies (1–5 and 7), the weekend after the boss', () => {
+    expect(levelUps).toBe(LEVEL_CHAPTERS.length)
+    bosses.forEach((b, i) => {
       const after = va.pages[va.pages.indexOf(b) + 1]
-      expect(effectsOf(after).some((e) => e.type === 'levelUp'), after.title).toBe(true)
+      expect(after.span, after.title).toBe(2)
+      expect(effectsOf(after).some((e) => e.type === 'levelUp'), after.title).toBe(LEVEL_CHAPTERS.includes(i + 1))
+    })
+  })
+
+  it('chapters 6 and 8 reward signature gear on the weekend after the boss', () => {
+    for (const ch of [6, 8]) {
+      const after = va.pages[va.pages.indexOf(bosses[ch - 1]) + 1]
+      expect(effectsOf(after).some((e) => e.type === 'item' && item(e.id).kind === 'gear'), after.title).toBe(true)
     }
+  })
+
+  it('every boss has a portrait, and no chapter finale leaves a page unused', () => {
+    for (const b of bosses) for (const e of b.combat!.enemies) expect(hasPortrait(e), e).toBe(true)
+    for (const e of ['va_thunderheron', 'va_gardener2', 'va_gardener3']) expect(hasPortrait(e), e).toBe(true)
   })
 })
 
@@ -93,7 +122,7 @@ describe('Verdant Accord: content integrity', () => {
     for (const id of va.heroIds!) {
       const h = heroDef(id)
       for (const a of h.abilities) expect(() => ability(a)).not.toThrow()
-      for (let lvl = 2; lvl <= 1 + CHAPTERS; lvl++) {
+      for (let lvl = 2; lvl <= 1 + LEVEL_CHAPTERS.length; lvl++) {
         expect(h.levels[lvl], `${id} level ${lvl}`).toBeDefined()
         if (h.levels[lvl].ability) expect(() => ability(h.levels[lvl].ability!)).not.toThrow()
       }
@@ -117,13 +146,46 @@ describe('Verdant Accord: content integrity', () => {
 describe('Verdant Accord: legacy', () => {
   const ids = new Set(va.legacy!.map((l) => l.id))
 
-  it('each chapter boss awards its won mark on a win and its lost mark on a loss', () => {
+  it('a boss awards its won mark on a win and its lost mark on a loss, except in choice chapters', () => {
     bosses.forEach((b, i) => {
       const ch = i + 1
+      if (CHOICE_CHAPTERS.includes(ch)) {
+        expect((b.combat!.win ?? []).concat(b.combat!.lose ?? []).filter((e) => e.type === 'legacy'), `Chapter ${ch} boss`).toEqual([])
+        return
+      }
       expect(b.combat!.win!.filter((e) => e.type === 'legacy')).toEqual([{ type: 'legacy', id: `va_l${ch}_win` }])
       expect(b.combat!.lose!.filter((e) => e.type === 'legacy')).toEqual([{ type: 'legacy', id: `va_l${ch}_loss` }])
     })
-    expect(va.pages.filter((p) => effectsOf(p).some((e) => e.type === 'legacy'))).toHaveLength(CHAPTERS)
+    expect(markPages).toHaveLength(CHAPTERS)
+  })
+
+  it('a choice chapter’s mark comes from one choice step after its boss, with a win and a loss option', () => {
+    for (const ch of CHOICE_CHAPTERS) {
+      const page = markPages[ch - 1]
+      expect(page.combat, page.title).toBeUndefined()
+      expect(va.pages.indexOf(page)).toBeGreaterThan(va.pages.indexOf(bosses[ch - 1]))
+      const steps = page.steps.filter((st) => st.options.some((o) => (o.effects ?? []).some((e) => e.type === 'legacy')))
+      expect(steps, page.title).toHaveLength(1)
+      const marks = steps[0].options.map((o) => (o.effects ?? []).filter((e) => e.type === 'legacy'))
+      expect(marks).toEqual([[{ type: 'legacy', id: `va_l${ch}_win` }], [{ type: 'legacy', id: `va_l${ch}_loss` }]])
+      expect(steps[0].options[0].requires).toBeUndefined()
+    }
+  })
+
+  it('every mark has a win and a loss text, and Chapter 5 on keeps the Accord/Wilds tally', () => {
+    for (let ch = 1; ch <= CHAPTERS; ch++) {
+      expect(ids.has(`va_l${ch}_win`) && ids.has(`va_l${ch}_loss`), `chapter ${ch}`).toBe(true)
+    }
+    for (const l of va.legacy!.filter((x) => x.chapter >= 5)) expect(l.text).toMatch(/Accord kept\.$|Wilds let in\.$/)
+    expect(accordTally(['va_l1_win', 'va_l5_win', 'va_l6_loss', 'va_l7_win'])).toEqual({ kept: 2, letIn: 1 })
+  })
+
+  it('finale pages offer earned options to ease the fight, and every chapter 5–8 finale uses earlier marks', () => {
+    const finaleGated = (ch: number) => {
+      const boss = va.pages.indexOf(bosses[ch - 1])
+      return va.pages.slice(boss - 4, boss + 1).flatMap((p) => p.steps.flatMap((st) => st.options.filter((o) => o.requires)))
+    }
+    for (const ch of [5, 6, 7, 8]) expect(finaleGated(ch).length, `Chapter ${ch} finale`).toBeGreaterThanOrEqual(2)
   })
 
   it('every requirement names a defined mark awarded on an earlier page', () => {
@@ -145,7 +207,7 @@ describe('Verdant Accord: legacy', () => {
 
   it('later chapters actually use both outcomes of earlier ones', () => {
     const used = new Set(va.pages.flatMap((p) => p.steps.flatMap((st) => st.options.flatMap((o) => (o.requires ? [o.requires] : [])))))
-    for (const id of ['va_l1_win', 'va_l1_loss', 'va_l2_win', 'va_l2_loss', 'va_l3_win', 'va_l3_loss']) expect(used.has(id), id).toBe(true)
+    for (const id of ['va_l1_win', 'va_l1_loss', 'va_l2_win', 'va_l2_loss', 'va_l3_win', 'va_l3_loss', 'va_l4_win', 'va_l4_loss', 'va_l5_win', 'va_l5_loss', 'va_l6_win', 'va_l6_loss', 'va_l7_win', 'va_l7_loss']) expect(used.has(id), id).toBe(true)
   })
 })
 
@@ -190,7 +252,7 @@ describe('Locked option label', () => {
 
 describe('Legacy on a fatal boss fight', () => {
   it('falling to a chapter boss still records the chapter’s lost mark', () => {
-    const boss = va.pages.findIndex((p) => p.note?.startsWith('A single foe'))
+    const boss = va.pages.indexOf(bosses[0])
     let s = reduce(initialState(), { type: 'NEW_GAME', seed: 5, campaignId: 'verdant', startDate: '2026-01-03' })
     s = { ...s, dayIndex: boss, hero: { ...s.hero!, hp: 1 }, progress: { ...s.progress, steps: va.pages[boss].steps.map(() => null), results: va.pages[boss].steps.map(() => null) } }
     for (let g = 0; g < 200 && !(s.legacy?.length); g++) {
@@ -219,6 +281,16 @@ describe('Legacy on a fatal boss fight', () => {
   })
 })
 
+describe('Verdant Accord: partial campaign', () => {
+  it('the catalog entry says how much is written and how much is planned', () => {
+    const entry = BUNDLED_CATALOG.find((e) => e.id === 'verdant')!
+    expect(entry.pageCount).toBe(va.pages.length)
+    expect(entry.chaptersWritten).toBe(CHAPTERS)
+    expect(entry.chaptersPlanned).toBe(12)
+    expect(va.chaptersWritten).toBe(CHAPTERS)
+  })
+})
+
 describe('Verdant Accord: scenes', () => {
   it('every Verdant kind has a sky and a drawing, and all are used', () => {
     for (const k of VERDANT_SCENES) {
@@ -233,7 +305,7 @@ describe('Verdant Accord: scenes', () => {
 
 describe('Verdant Accord: seeded playthrough', () => {
   for (const option of [0, 1, 2, 3, 4, 5]) {
-    it(`plays Chapters 1–4 with ${va.heroIds![option]}`, () => {
+    it(`plays Chapters 1–8 with ${va.heroIds![option]}`, () => {
       let s = reduce(initialState(), { type: 'NEW_GAME', seed: 11 + option, campaignId: 'verdant', startDate: '2026-01-03' })
       for (let guard = 0; guard < 20000 && !s.finished; guard++) {
         if (s.pending) {
@@ -242,7 +314,9 @@ describe('Verdant Accord: seeded playthrough', () => {
         }
         const next = s.progress.steps.findIndex((x) => x === null)
         if (next >= 0) {
-          const pick = s.dayIndex === MUSTER ? option : 0
+          // The hero page picks the hero; choice pages alternate between their two endings by hero.
+          const isLegacyStep = va.pages[s.dayIndex].steps[next].options.some((o) => (o.effects ?? []).some((e) => e.type === 'legacy'))
+          const pick = s.dayIndex === MUSTER ? option : isLegacyStep ? option % 2 : 0
           s = reduce(s, { type: 'CHOOSE', step: next, option: pick })
           continue
         }
@@ -263,6 +337,8 @@ describe('Verdant Accord: seeded playthrough', () => {
       // Exactly one outcome per chapter.
       expect(s.legacy).toHaveLength(CHAPTERS)
       s.legacy!.forEach((id, i) => expect(id).toMatch(new RegExp(`^va_l${i + 1}_(win|loss)$`)))
+      // Choice chapters follow the choice taken.
+      for (const ch of CHOICE_CHAPTERS) expect(s.legacy![ch - 1]).toBe(`va_l${ch}_${option % 2 === 0 ? 'win' : 'loss'}`)
       expect(JSON.parse(JSON.stringify(s))).toEqual(s)
     }, 60_000)
   }
