@@ -809,6 +809,12 @@ button:disabled { opacity: 1; color: var(--muted); background: transparent; bord
 .theme-winter { --theme: light-dark(#bf4a17, #ee7a42); --theme-ink: light-dark(#9a3a10, #f29a6c); --theme-ink-dark: #f7c3a5; --theme-deep: light-dark(#f6e6dc, #1f1f2b); }
 .theme-space { --theme: light-dark(#7a66e0, #a08cff); --theme-ink: light-dark(#4f3bb8, #a08cff); --theme-ink-dark: #beaeff; --theme-deep: light-dark(#e6e1fa, #120f2a); }
 .theme-starwake { --theme: light-dark(#2f9a8e, #3fb5a8); --theme-ink: light-dark(#8a5300, #f0c76a); --theme-ink-dark: #f0c76a; --theme-deep: light-dark(#d8eeea, #0c2a2e); }
+.theme-verdant { --theme: light-dark(#4a7a1e, #8fc45a); --theme-ink: light-dark(#3a5e14, #b4dc7e); --theme-ink-dark: #b4dc7e; --theme-deep: light-dark(#e6f0da, #16220f); }
+.theme-verdant .campaign-ambient {
+  background-image: radial-gradient(3px 2px at 18% 30%, #9fd06a 50%, transparent 51%), radial-gradient(2px 3px at 64% 18%, #c8e08a 50%, transparent 51%),
+    radial-gradient(3px 2px at 82% 46%, #7fb04a 50%, transparent 51%);
+  background-size: 110px 80px; bottom: 45%; animation: camp-twinkle 4.5s ease-in-out infinite alternate;
+}
 .theme-starwake .campaign-ambient {
   background-image: radial-gradient(1.5px 1.5px at 15% 20%, #ffe9a8 50%, transparent 51%), radial-gradient(1px 1px at 72% 12%, #fff 50%, transparent 51%),
     radial-gradient(1.5px 1.5px at 48% 32%, #f0c76a 50%, transparent 51%), radial-gradient(1px 1px at 88% 38%, #fff 50%, transparent 51%);
@@ -864,6 +870,7 @@ button:disabled { opacity: 1; color: var(--muted); background: transparent; bord
   --camp-emberroad: #ee7a42;
   --camp-halcyon: #a98cf0;
   --camp-starwake: #34c2ad;
+  --camp-verdant: #8fc45a;
   --camp-wash: #ffffff;
 }
 :root[data-theme='light'] {
@@ -871,6 +878,7 @@ button:disabled { opacity: 1; color: var(--muted); background: transparent; bord
   --camp-emberroad: #bf4a17;
   --camp-halcyon: #6a45c4;
   --camp-starwake: #0f7a6c;
+  --camp-verdant: #4a7a1e;
   --camp-wash: #fffdf8;
 }
 @media (prefers-color-scheme: light) {
@@ -879,6 +887,7 @@ button:disabled { opacity: 1; color: var(--muted); background: transparent; bord
     --camp-emberroad: #bf4a17;
     --camp-halcyon: #6a45c4;
     --camp-starwake: #0f7a6c;
+    --camp-verdant: #4a7a1e;
     --camp-wash: #fffdf8;
   }
 }
@@ -1245,3 +1254,8 @@ body {
 .backup-notice p { margin: 0; }
 /* Placeholder while a campaign pack downloads: keeps its height so nothing jumps. */
 .opening { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; min-height: 40vh; text-align: center; }
+
+/* Legacy marks: gated options and the hero sheet list. */
+.legacy-req { display: block; font-size: 0.78em; color: var(--theme-ink, var(--accent)); margin-top: 2px; }
+.option.legacy-locked .option-btn { opacity: 0.55; }
+ul.legacy { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 4px; }
