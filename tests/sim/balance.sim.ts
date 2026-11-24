@@ -4,14 +4,16 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { it } from 'vitest'
-import { CAMPAIGNS } from '@questender/engine/content/campaigns'
+import { BUNDLED_CATALOG } from '@questender/engine/content/bundled'
+import { listCampaigns, loadCampaigns } from '@questender/engine/campaign'
 import { simulate } from '../../packages/engine/src/sim/run'
 import { renderSummary, summarize } from '../../packages/engine/src/sim/stats'
 import type { Summary } from '../../packages/engine/src/sim/stats'
 
 const RUNS = Number(process.env.SIM_RUNS ?? 200)
 const only = process.env.SIM_CAMPAIGNS?.split(',')
-const ids = CAMPAIGNS.map((c) => c.id).filter((id) => !only || only.includes(id))
+await loadCampaigns(BUNDLED_CATALOG.map((e) => e.id))
+const ids = listCampaigns().map((c) => c.id).filter((id) => !only || only.includes(id))
 
 it('simulates the campaigns', { timeout: 3_600_000 }, () => {
   const summaries: Summary[] = []

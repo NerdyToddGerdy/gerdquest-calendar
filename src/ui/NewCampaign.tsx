@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { daysBetween, formatLong, WEEKDAY_NAMES, type ISODate } from '@questender/engine/calendar'
 import { CAMPAIGN_THEMES } from './campaignThemes'
 import { Scene } from './Scene'
-import { anchorWeekday, defaultStartDate, listCampaigns, startDateOptions, unlockedThrough } from '@questender/engine/campaign'
+import { anchorWeekday, campaign, defaultStartDate, listCatalog, startDateOptions, unlockedThrough } from '@questender/engine/campaign'
 import { ability, campaignHeroes, heroDef } from '@questender/engine/content'
 import { HeroPreviewButton, HeroPreviewModal } from './HeroPreview'
 import { TRAITS } from '@questender/engine/types'
 import { slotExists } from '../save'
+import { useCampaignPacks } from '../useCampaignPacks'
+import { Opening } from './Opening'
 import { Portrait } from './Portrait'
 
 interface Props {
@@ -21,12 +23,15 @@ interface Props {
  * pages double as a tutorial and weekend pages land on real weekends.
  */
 export function NewCampaign({ today, onStart, onCancel }: Props) {
-  const campaigns = listCampaigns()
+  const campaigns = listCatalog()
   const [campaignId, setCampaignId] = useState(campaigns[0].id)
-  const camp = campaigns.find((c) => c.id === campaignId)!
-  const options = startDateOptions(camp, today)
+  const entry = campaigns.find((c) => c.id === campaignId)!
+  const packs = useCampaignPacks([campaignId])
+  // The pages (and heroes) arrive with the pack; everything below the cards waits for it.
+  const camp = packs.ready ? campaign(campaignId) : null
+  const options = startDateOptions(entry, today)
   const [picked, setPicked] = useState<ISODate | null>(null)
-  const startDate = picked && options.includes(picked) ? picked : defaultStartDate(camp, today)
+  const startDate = picked && options.includes(picked) ? picked : defaultStartDate(entry, today)
   const taken = slotExists(campaignId, startDate)
   const [previewId, setPreviewId] = useState<string | null>(null)
 
@@ -65,7 +70,7 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
                 )}
                 <p className="small">{c.blurb}</p>
                 <span className="muted small">
-                  {c.pages.length} pages · {c.rulesetId} rules
+                  {c.pageCount} pages · {c.rulesetId} rules
                 </span>
               </div>
             </button>
@@ -73,9 +78,11 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
         })}
       </div>
 
+      {camp ? (
+        <>
       <fieldset className="start-picks">
         <legend>
-          When does your story begin? <span className="muted small">(always a {WEEKDAY_NAMES[anchorWeekday(camp)]}, like page one)</span>
+          When does your story begin? <span className="muted small">(always a {WEEKDAY_NAMES[anchorWeekday(entry)]}, like page one)</span>
         </legend>
         {options.map((d) => {
           const warmup = unlockedThrough(camp, d, today) + 1
@@ -88,7 +95,7 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
                 <span className="muted small">
                   {' '}
                   · {ago === 0 ? 'today' : `${ago} days ago`} · {warmup} page{warmup === 1 ? '' : 's'} to warm up with
-                  {d === defaultStartDate(camp, today) ? ' · recommended' : ''}
+                  {d === defaultStartDate(entry, today) ? ' · recommended' : ''}
                 </span>
               </span>
             </label>
@@ -162,6 +169,10 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
         />
       )}
       </>
+      )}
+        </>
+      ) : (
+        <Opening what={entry.title} status={packs} />
       )}
       <button onClick={onCancel}>Back</button>
     </main>

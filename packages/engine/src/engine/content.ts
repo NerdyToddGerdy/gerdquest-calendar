@@ -1,39 +1,92 @@
-// Registry that lets the engine look up content definitions by id.
-import { ABILITIES } from '../content/abilities'
-import { ENEMIES } from '../content/enemies'
-import { HEROES } from '../content/heroes'
-import { ITEMS } from '../content/items'
-import { MEMBERS } from '../content/members'
-import { CAMPAIGNS } from '../content/campaigns'
-import type { AbilityDef, Campaign, ContentPack, EnemyDef, HeroDef, ItemDef, MemberDef } from './types'
+// Runtime registry that lets the engine look up content definitions by id.
+//
+// Nothing is registered until something calls registerContent / registerCampaign
+// (the bundled free campaigns do that from `@questender/engine/content/bundled`).
+// Lookups are synchronous; looking up something from a pack that was never
+// registered throws, so async callers must load packs before calling the engine.
+import type {
+  AbilityDef,
+  Campaign,
+  CampaignEntry,
+  ContentPack,
+  CraftDef,
+  CrewDef,
+  EnemyDef,
+  HeroDef,
+  ItemDef,
+  MemberDef,
+  ShipDef,
+  ShipUpgradeDef,
+} from './types'
 
-/** Base content plus every campaign's own pack. */
-function all<T>(key: keyof ContentPack, base: T[]): T[] {
-  return [...base, ...CAMPAIGNS.flatMap((c) => (c.content?.[key] ?? []) as T[])]
+type Kind = keyof ContentPack
+
+const WHAT: Record<Kind, string> = {
+  abilities: 'ability',
+  items: 'item',
+  enemies: 'enemy',
+  heroes: 'hero',
+  members: 'party member',
+  ships: 'ship',
+  crew: 'crew member',
+  upgrades: 'ship upgrade',
+  craft: 'enemy craft',
 }
 
-function lookup<T extends { id: string }>(list: T[], what: string) {
-  const map = new Map<string, T>()
-  for (const x of list) {
-    if (map.has(x.id)) throw new Error(`Duplicate ${what} id: ${x.id}`)
-    map.set(x.id, x)
+const tables = new Map<Kind, Map<string, { id: string }>>()
+const packs = new Map<string, ContentPack>()
+
+function table(kind: Kind) {
+  let t = tables.get(kind)
+  if (!t) tables.set(kind, (t = new Map()))
+  return t
+}
+
+/**
+ * Add a pack of definitions under a key (a campaign id, or "base"). Registering
+ * the same key again is a no-op; a different pack reusing an existing id throws
+ * and registers nothing.
+ */
+export function registerContent(key: string, pack: ContentPack): void {
+  if (packs.has(key)) return
+  const kinds = Object.keys(pack) as Kind[]
+  for (const kind of kinds) {
+    const seen = new Set<string>()
+    for (const x of (pack[kind] ?? []) as { id: string }[]) {
+      if (table(kind).has(x.id) || seen.has(x.id)) throw new Error(`Duplicate ${WHAT[kind]} id: ${x.id}`)
+      seen.add(x.id)
+    }
   }
+  for (const kind of kinds) for (const x of (pack[kind] ?? []) as { id: string }[]) table(kind).set(x.id, x)
+  packs.set(key, pack)
+}
+
+function lookup<T extends { id: string }>(kind: Kind) {
   return (id: string): T => {
-    const v = map.get(id)
-    if (!v) throw new Error(`Unknown ${what}: ${id}`)
+    const v = table(kind).get(id) as T | undefined
+    if (!v) throw new Error(`Unknown ${WHAT[kind]}: ${id} (is its campaign loaded?)`)
     return v
   }
 }
 
-export const ability = lookup<AbilityDef>(all('abilities', ABILITIES), 'ability')
-export const item = lookup<ItemDef>(all('items', ITEMS), 'item')
-export const enemy = lookup<EnemyDef>(all('enemies', ENEMIES), 'enemy')
-export const heroDef = lookup<HeroDef>(all('heroes', HEROES), 'hero')
-export const member = lookup<MemberDef>(all('members', MEMBERS), 'party member')
+export const ability = lookup<AbilityDef>('abilities')
+export const item = lookup<ItemDef>('items')
+export const enemy = lookup<EnemyDef>('enemies')
+export const heroDef = lookup<HeroDef>('heroes')
+export const member = lookup<MemberDef>('members')
+export const shipDef = lookup<ShipDef>('ships')
+export const crewDef = lookup<CrewDef>('crew')
+export const upgradeDef = lookup<ShipUpgradeDef>('upgrades')
+export const craftDef = lookup<CraftDef>('craft')
+
+/** The shared base heroes (registered under the key "base"): the default roster when a campaign names none. */
+export function baseHeroIds(): string[] {
+  return (packs.get('base')?.heroes ?? []).map((h) => h.id)
+}
 
 /** Heroes offered when starting a campaign. */
-export function campaignHeroes(c: Campaign): HeroDef[] {
-  return (c.heroIds ?? HEROES.map((h) => h.id)).map(heroDef)
+export function campaignHeroes(c: CampaignEntry): HeroDef[] {
+  return (c.heroIds ?? baseHeroIds()).map(heroDef)
 }
 
 /** In-world date shown under the real calendar date. */

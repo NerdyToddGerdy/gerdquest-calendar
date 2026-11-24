@@ -3,14 +3,14 @@
 // Run: npx vitest run spikes/save-size.test.ts   (prints a table)
 import { gzipSync } from 'node:zlib'
 import { describe, expect, it } from 'vitest'
-import { CAMPAIGNS } from '@questender/engine/content/campaigns'
+import { listCampaigns } from '@questender/engine/campaign'
 import { canAdvance, initialState, reduce, type Action } from '@questender/engine/state'
 import type { GameState } from '@questender/engine/types'
 
 const DDB_LIMIT = 400 * 1024
 
 function playYear(campaignId: string, seed: number): GameState {
-  const camp = CAMPAIGNS.find((c) => c.id === campaignId)!
+  const camp = listCampaigns().find((c) => c.id === campaignId)!
   let s = reduce(initialState(), { type: 'NEW_GAME', seed, campaignId, startDate: '2026-01-03' })
   for (let guard = 0; guard < 30000 && !s.finished; guard++) {
     if (s.pending) {
@@ -47,7 +47,7 @@ const kb = (n: number) => (n / 1024).toFixed(1)
 
 describe('save size after a full year', () => {
   const rows: string[] = []
-  for (const c of CAMPAIGNS) {
+  for (const c of listCampaigns()) {
     it(c.id, () => {
       const s = playYear(c.id, 42)
       expect(s.finished, 'campaign should finish').toBe(true)

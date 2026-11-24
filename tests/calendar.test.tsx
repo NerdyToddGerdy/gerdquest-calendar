@@ -30,7 +30,7 @@ const page = (id: string, month: number, day: number): Day => ({
 })
 
 const leapCampaign: Campaign = {
-  id: 'leap', title: 'Leap', blurb: '', authoredYear: 2024, rulesetId: 'modern',
+  id: 'leap', title: 'Leap', blurb: '', authoredYear: 2024, rulesetId: 'modern', pageCount: 3, firstDate: '2024-02-28',
   pages: [page('a', 2, 28), page('b', 2, 29), page('c', 3, 1)],
 }
 

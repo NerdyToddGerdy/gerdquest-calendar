@@ -1,5 +1,6 @@
+import { STARWAKE_ENTRY } from './meta'
 import type { Campaign } from '../../../engine/types'
-import { STARWAKE_CONTENT, STARWAKE_HEROES } from './content'
+import { STARWAKE_CONTENT } from './content'
 import { DAYS } from './days/index'
 
 /** The Saltreach calendar: one in-world month per chapter. Months 10–13 come later. */
@@ -13,15 +14,8 @@ function inWorldDate(i: number): string {
 }
 
 export const starwake: Campaign = {
-  id: 'starwake',
-  title: 'The Starwake',
-  blurb: 'The star that held the night sky in place has fallen into the sea. Sail the Saltreach for its shards before a corsair-prince cages it. Classic rules.',
-  authoredYear: 2022,
-  rulesetId: 'classic',
+  ...STARWAKE_ENTRY,
   pages: DAYS,
   content: STARWAKE_CONTENT,
-  startHero: 'sw_greta',
-  heroIds: STARWAKE_HEROES,
-  startItems: { ration: 3, sw_kelptea: 1 },
   inWorldDate,
 }

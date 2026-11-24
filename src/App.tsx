@@ -7,7 +7,9 @@ import { newSeed } from '@questender/engine/rng'
 import { initialState, reduce, type Action } from '@questender/engine/state'
 import { importEntries } from './calendarNotes'
 import { requestPersistence } from './deviceStorage'
-import { deleteSlot, exportAll, importFile, listSlots, loadSlot, migrateLegacySave, saveSlot, slotIdFor } from './save'
+import { deleteSlot, exportAll, importFile, listSlots, loadSlot, migrateLegacySave, saveSlot, savedCampaignIds, slotIdFor } from './save'
+import { useCampaignPacks } from './useCampaignPacks'
+import { Opening } from './ui/Opening'
 import { Desk, type DeskSlot } from './ui/Desk'
 import { NewCampaign } from './ui/NewCampaign'
 import { useToday } from './ui/today'
@@ -33,7 +35,18 @@ function readTab(): string | null {
   }
 }
 
+/**
+ * Loading boundary: the campaigns on this device load their packs first, so
+ * everything below (reducer, desk, calendar) can use the engine synchronously.
+ */
 export default function App() {
+  const [ids] = useState(savedCampaignIds)
+  const packs = useCampaignPacks(ids)
+  if (!packs.ready) return <Opening what="your campaigns" status={packs} />
+  return <Game />
+}
+
+function Game() {
   const [today, refreshToday] = useToday()
   const [slots, setSlots] = useState<DeskSlot[]>(() => {
     migrateLegacySave(today)
@@ -45,6 +58,7 @@ export default function App() {
   const [selected, setSelected] = useState<string | null>(() => pickTab(slots, viewDate, readTab()))
   const [screen, setScreen] = useState<'desk' | 'new'>('desk')
   const [error, setError] = useState<string | null>(null)
+  const [importing, setImporting] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
   const dirty = useRef(new Set<string>())
 
@@ -143,6 +157,7 @@ export default function App() {
 
   const onImport = async (file: File | undefined) => {
     if (!file) return
+    setImporting(true)
     try {
       const { states, calendar } = await importFile(file, today)
       const incoming = new Set(states.map((s) => slotIdFor(s.campaignId, s.startDate)))
@@ -160,6 +175,8 @@ export default function App() {
       setError(null)
     } catch (e) {
       setError((e as Error).message)
+    } finally {
+      setImporting(false)
     }
   }
 
@@ -175,6 +192,11 @@ export default function App() {
           e.target.value = ''
         }}
       />
+      {importing && (
+        <p className="muted" role="status">
+          Opening your import…
+        </p>
+      )}
       {error && <p className="error">{error}</p>}
       {screen === 'new' ? (
         <NewCampaign
