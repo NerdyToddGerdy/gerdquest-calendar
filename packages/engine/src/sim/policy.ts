@@ -13,7 +13,7 @@ import { isFollower } from '../engine/followers'
 import { canPay } from '../engine/pools'
 import { rules } from '../engine/ruleset'
 import { situationalMods } from '../engine/upgrades'
-import { canChangeGear, combatInProgress, currentDay, pendingSlots, stepAvailable, stepsDone } from '../engine/state'
+import { canChangeGear, combatInProgress, currentDay, meetsRequirement, pendingSlots, stepAvailable, stepsDone } from '../engine/state'
 import { COMPARTMENTS, craftDef, crewDef, maxIntegrity, shipStat, upgradeDef } from '../engine/vehicle'
 import { dogfightInProgress } from '../engine/vehicleActions'
 import type { Action } from '../engine/state'
@@ -458,6 +458,8 @@ export function playPage(s: GameState, dispatch: Dispatch, brain: Brain): { s: G
       const picks = st.options.filter((o) => (o.effects ?? []).some((e) => e.type === 'setHero')).length
       let idx = -1
       st.options.forEach((o, option) => {
+        // Legacy-gated options the run hasn't earned can't be chosen.
+        if (!meetsRequirement(s, o.requires)) return
         const isPick = (o.effects ?? []).some((e) => e.type === 'setHero')
         if (isPick) idx++
         const score = optionScore(s, o, brain, isPick ? idx : -1, picks)

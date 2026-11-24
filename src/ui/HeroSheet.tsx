@@ -1,3 +1,4 @@
+import { campaign } from '@questender/engine/campaign'
 import { ability, item, member } from '@questender/engine/content'
 import { abilityBoost, maxHp, maxUses, stat, usesLeft, woundName } from '@questender/engine/hero'
 import { rules } from '@questender/engine/ruleset'
@@ -79,6 +80,23 @@ export function HeroSheet({ state, dispatch }: { state: GameState; dispatch: (a:
           <span key={k} className="tag">Today: {sign(v ?? 0)} {k === 'roll' ? 'all rolls' : k}</span>
         ))}
       </div>
+
+      {(state.legacy?.length ?? 0) > 0 && (
+        <>
+          <h3>Legacy</h3>
+          <ul className="legacy">
+            {state.legacy!.map((id) => {
+              const def = campaign(state.campaignId).legacy?.find((l) => l.id === id)
+              return (
+                <li key={id}>
+                  <b>{def ? `Chapter ${def.chapter}: ${def.name}` : id}</b>
+                  {def && <span className="muted small"> {def.text}</span>}
+                </li>
+              )
+            })}
+          </ul>
+        </>
+      )}
 
       {hero.poolMax && Object.keys(hero.poolMax).length > 0 && (
         <div className="pools">

@@ -97,4 +97,19 @@ export const PORTRAITS: Record<string, PortraitSpec> = {
   sw_teague: fig({ build: 'broad', skin: SKIN.rose, hair: HAIR.black, hairStyle: 'bald', beard: true, outfit: '#4a4a52', trim: '#c9a45a', prop: 'axe', scale: 1.08 }),
   sw_orrery: beast({ shape: 'machine', body: '#4a3d6a', accent: '#e8b25a', eye: '#ffd88a' }),
   sw_giltgull: beast({ shape: 'ship', body: '#3a3a42', accent: '#e8c87a', eye: '#ffd88a' }),
+
+  // ---------- The Verdant Accord: heroes ----------
+  va_agathe: fig({ build: 'slim', skin: SKIN.tan, hair: HAIR.grey, hairStyle: 'braid', outfit: '#6a4a2e', trim: '#b88a4a', prop: 'whip', head: 'hat', headColor: '#4a3a26', cloak: '#3a4a2e' }),
+  va_brannoc: fig({ build: 'broad', skin: SKIN.rose, hair: HAIR.auburn, hairStyle: 'short', beard: true, outfit: '#7a4a2a', trim: '#3a2a1e', prop: 'axe' }),
+  va_sorrel: fig({ build: 'robed', skin: SKIN.fair, hair: HAIR.red, hairStyle: 'wild', outfit: '#4a6a3a', trim: '#c9b06a', prop: 'wand', glow: '#9fe08a', head: 'hood', headColor: '#3a5a2e' }),
+  va_pip: fig({ build: 'slim', skin: SKIN.olive, hair: HAIR.brown, hairStyle: 'cropped', outfit: '#6a4a7a', trim: '#c9a06a', prop: 'dagger', head: 'cap', headColor: '#4a3a5a' }),
+  va_aldous: fig({ build: 'robed', skin: SKIN.brown, hair: HAIR.grey, hairStyle: 'bald', beard: true, outfit: '#8a6a3a', trim: '#e0c77a', prop: 'staff', glow: '#ffe2a0' }),
+  va_kestrel: fig({ build: 'slim', skin: SKIN.deep, hair: HAIR.black, hairStyle: 'braid', outfit: '#3f6a4a', trim: '#8a6a3a', prop: 'bow', cloak: '#2a4a30', head: 'hood', headColor: '#2f5a3a' }),
+  va_odo: fig({ build: 'slim', skin: SKIN.tan, hair: HAIR.black, hairStyle: 'bald', outfit: '#8aa04a', trim: '#4a3a26', prop: 'fists', head: 'headband', headColor: '#c9b06a' }),
+
+  // ---------- Verdant Accord: bosses ----------
+  va_knucklebark: fig({ build: 'broad', skin: '#6a5a3a', hair: '#4f6a3a', hairStyle: 'wild', beard: true, outfit: '#4a3a26', trim: '#2a2a2a', prop: 'fists', scale: 1.15 }),
+  va_sluicemother: beast({ shape: 'serpent', body: '#3a4a3a', accent: '#7a8a5a', eye: '#e8d07a' }),
+  va_waxwarden: fig({ build: 'robed', skin: '#e8dcc0', hair: '#e8dcc0', hairStyle: 'bald', outfit: '#d8ccb0', trim: '#b8a880', prop: 'censer', glow: '#ffd88a', head: 'crown', headColor: '#f0c060', scale: 1.1 }),
+  va_brassgardener: beast({ shape: 'construct', body: '#a8864a', accent: '#4f6a3a', eye: '#9fe08a' }),
 }

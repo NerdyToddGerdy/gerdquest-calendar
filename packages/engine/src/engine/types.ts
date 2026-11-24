@@ -181,6 +181,8 @@ export type Effect =
   | { type: 'setHero'; heroId: string; carry?: ('glint' | 'inventory' | 'gear')[] }
   /** Vehicles: `give` a ship, add Ship Parts, or repair every compartment by `repair`. */
   | { type: 'ship'; give?: string; parts?: number; repair?: number }
+  /** Record a legacy mark (a chapter's lasting outcome); later options can require it. */
+  | { type: 'legacy'; id: string }
 
 export interface Check {
   trait: Trait
@@ -226,7 +228,14 @@ export const STARWAKE_SCENES = [
 ] as const
 export type StarwakeScene = (typeof STARWAKE_SCENES)[number]
 
-export type Scene = ClassicScene | EmberScene | StarwakeScene
+/** Backgrounds drawn for The Verdant Accord (see src/ui/scenes/verdant.tsx). */
+export const VERDANT_SCENES = [
+  'va_road', 'va_camp', 'va_forest', 'va_ford', 'va_bridge', 'va_town', 'va_city', 'va_market', 'va_tavern',
+  'va_mill', 'va_sewer', 'va_chapel', 'va_fair', 'va_manor', 'va_clock',
+] as const
+export type VerdantScene = (typeof VERDANT_SCENES)[number]
+
+export type Scene = ClassicScene | EmberScene | StarwakeScene | VerdantScene
 
 export interface HiddenIcon {
   kind: 'pickpocket' | 'loot'
@@ -593,4 +602,32 @@ export interface GameState {
   notes?: string
   /** Dates (the desk date being viewed) on which the player wrote or edited notes. */
   noteDates?: string[]
+}
+
+// ---------- Legacy marks ----------
+// A chapter's finale records a lasting outcome (won or lost). Later options can
+// require a mark ("va_l1_win") or its absence ("!va_l1_win").
+
+/** One possible chapter outcome, shown on the hero sheet once earned. */
+export interface LegacyDef {
+  id: string
+  /** Chapter number it comes from (1-based). */
+  chapter: number
+  name: string
+  text: string
+}
+
+export interface Campaign {
+  /** Legacy marks this campaign can award. */
+  legacy?: LegacyDef[]
+}
+
+export interface Option {
+  /** Only choosable with this legacy mark; prefix with "!" to require its absence. */
+  requires?: string
+}
+
+export interface GameState {
+  /** Legacy marks earned so far in this run, oldest first. */
+  legacy?: string[]
 }
