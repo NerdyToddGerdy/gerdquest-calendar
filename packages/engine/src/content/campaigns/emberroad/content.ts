@@ -123,11 +123,11 @@ const items: ItemDef[] = [
 ]
 
 const enemies: EnemyDef[] = [
-  { id: 'er_frosthound', name: 'Frost Hound', ac: 11, toughness: 4, hits: 12, dmg: 2, text: 'A lean grey hound with ice in its fur and no breath in its lungs.' },
-  { id: 'er_cultist', name: 'Hush Cultist', ac: 12, toughness: 5, hits: 13, dmg: 3, text: 'Robed in white, lips sewn shut, carrying a snuffer-pole like a spear.' },
-  { id: 'er_wisp', name: 'Ice Wisp', ac: 13, toughness: 3, hits: 13, dmg: 2, text: 'A drifting light that leaves frost wherever it passes.' },
-  { id: 'er_bandit', name: 'Pine-Road Bandit', ac: 12, toughness: 5, hits: 12, dmg: 2, text: 'Hungry, desperate, and better armed than you’d like.' },
-  { id: 'er_warden', name: 'The Hollow Warden', ac: 13, toughness: 6, hits: 15, dmg: 4, text: 'The last road warden, hollowed out by the Hush and set to guard the dark it serves.' },
+  { id: 'er_frosthound', name: 'Frost Hound', ac: 10, toughness: 3, hits: 11, dmg: 1, text: 'A lean grey hound with ice in its fur and no breath in its lungs.' },
+  { id: 'er_cultist', name: 'Hush Cultist', ac: 11, toughness: 4, hits: 12, dmg: 2, text: 'Robed in white, lips sewn shut, carrying a snuffer-pole like a spear.' },
+  { id: 'er_wisp', name: 'Ice Wisp', ac: 12, toughness: 2, hits: 12, dmg: 1, text: 'A drifting light that leaves frost wherever it passes.' },
+  { id: 'er_bandit', name: 'Pine-Road Bandit', ac: 11, toughness: 4, hits: 11, dmg: 1, text: 'Hungry, desperate, and better armed than you’d like.' },
+  { id: 'er_warden', name: 'The Hollow Warden', ac: 12, toughness: 4, hits: 14, dmg: 2, text: 'The last road warden, hollowed out by the Hush and set to guard the dark it serves.' },
 ]
 
 const followers = (m: Omit<MemberDef, 'kind' | 'maxHp' | 'abilities'>): MemberDef => ({ kind: 'critter', maxHp: 1, abilities: [], ...m })

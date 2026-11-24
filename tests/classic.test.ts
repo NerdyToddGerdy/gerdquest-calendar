@@ -13,7 +13,7 @@ import { makeRng, scriptedRng } from '@questender/engine/rng'
 import { canChangeGear, initialState, newProgress, reduce, type Action } from '@questender/engine/state'
 import { situationalMods } from '@questender/engine/upgrades'
 import type { GameState, RollSlot } from '@questender/engine/types'
-import { ability } from '@questender/engine/content'
+import { ability, enemy } from '@questender/engine/content'
 
 const er = campaign('emberroad')
 
@@ -62,18 +62,20 @@ describe('static Defense (2022 rules)', () => {
   })
 
   it('10 + Defense at or above the enemy’s attack halves damage; below takes it all', () => {
-    const c = startCombat(['er_cultist', 'er_cultist']) // hits 13, dmg 3
+    const cultist = enemy('er_cultist') // read from content so balance tuning doesn't break the rule check
+    const c = startCombat(['er_cultist', 'er_cultist'])
     const miss = [slot('0:atk', 'attack', 2), slot('0:dmg', 'damage', 1), slot('1:atk', 'attack', 2), slot('1:dmg', 'damage', 1)]
-    expect(resolveRound(c, miss, 2, { staticDefense: 13 }).damageTaken).toBe(2) // 1 + 1
-    expect(resolveRound(c, miss, 2, { staticDefense: 12 }).damageTaken).toBe(6)
+    expect(resolveRound(c, miss, 2, { staticDefense: cultist.hits }).damageTaken).toBe(2 * Math.floor(cultist.dmg / 2))
+    expect(resolveRound(c, miss, 2, { staticDefense: cultist.hits - 1 }).damageTaken).toBe(2 * cultist.dmg)
   })
 
   it('the reducer uses static Defense under classic rules', () => {
-    let s = at(2) // two frost hounds (hits 12, dmg 2); Garrick Def 4 → 14 ≥ 12
+    const hound = enemy('er_frosthound')
+    let s = at(2) // two frost hounds; Garrick Def 4 → 14 ≥ their attack
     s = act(s, { type: 'ROLL_ROUND' }, [2, 1, 2, 1]) // both attacks miss
     expect(s.pending?.type === 'combat' && s.pending.slots.length).toBe(4) // attack + damage per hound, no Defense
     s = act(s, { type: 'CONFIRM' })
-    expect(s.hero!.hp).toBe(14 - 2) // each hound's 2 damage halved
+    expect(s.hero!.hp).toBe(14 - 2 * Math.floor(hound.dmg / 2)) // each hound's damage halved
   })
 })
 
