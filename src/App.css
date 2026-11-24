@@ -1328,3 +1328,17 @@ fieldset.looks legend { font-family: var(--display); font-size: 1.1rem; padding:
 .toast-more { color: var(--muted); font-size: 0.8rem; }
 @keyframes toast-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .toast { animation: none; } }
+
+/* ---------- Player token (top bar) and its picker ---------- */
+.token-btn { border-radius: 50%; padding: 0; background: transparent; border-color: transparent; width: 40px; height: 40px; }
+.token-btn:hover:not(:disabled) { border-color: var(--accent); }
+.token { display: block; }
+.token-picker { max-width: 560px; }
+.token-preview { display: flex; align-items: center; gap: 14px; padding: 6px 4px 10px; }
+.token-preview p { margin: 0; }
+.token-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; }
+.token-opt button { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 4px; font-size: 0.8rem; text-align: center; }
+.token-opt button.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--panel-2)); }
+.token-opt.locked { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 8px 4px; border: 1px dashed var(--line); border-radius: 8px; text-align: center; min-height: 92px; }
+.token-opt.locked .token-q { font-family: var(--display); font-size: 1.3rem; letter-spacing: 0.2em; color: var(--muted); }
+.token-opt.locked small { color: var(--muted); font-size: 0.72rem; line-height: 1.25; }

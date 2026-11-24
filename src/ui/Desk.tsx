@@ -22,6 +22,7 @@ import { Settings } from './Settings'
 import { Shelf } from './Shelf'
 import type { Progress } from '@questender/engine/progress'
 import { styleAttrs } from './styleAttrs'
+import { Token, TokenPicker, tokenLabel } from './Token'
 import { recordExport } from '../deviceStorage'
 import { readDevOverride, writeDevOverride } from './today'
 
@@ -50,6 +51,7 @@ interface Props {
   onTodayChanged: () => void
   progress: Progress
   onOpenChest: (week: ISODate, slotId: string) => void
+  onToken: (token: Progress['token']) => void
 }
 
 /**
@@ -61,6 +63,7 @@ export function Desk(p: Props) {
   const [mode, setMode] = useState<'day' | 'calendar' | 'shelf'>('day')
   const [calView, setCalView] = useState<CalView>('month')
   const [settings, setSettings] = useState(false)
+  const [tokenOpen, setTokenOpen] = useState(false)
   const [news, setNews] = useState(() => !seenLatest())
   const openSettings = () => {
     setSettings(true)
@@ -158,8 +161,13 @@ export function Desk(p: Props) {
             </svg>
             {news && <span className="news-dot" aria-hidden="true" />}
           </button>
+          <button className="icon-btn token-btn" aria-label={tokenLabel(p.progress.token.avatar, p.progress.token.border)} title="Your token" onClick={() => setTokenOpen(true)}>
+            <Token avatar={p.progress.token.avatar} border={p.progress.token.border} size={36} />
+          </button>
         </div>
       </nav>
+
+      {tokenOpen && <TokenPicker progress={p.progress} onChoose={p.onToken} onClose={() => setTokenOpen(false)} />}
 
       {settings && (
         <Settings

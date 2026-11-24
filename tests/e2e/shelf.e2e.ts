@@ -45,3 +45,33 @@ test('finishing a page earns First light, shown by a toast and on the shelf, and
     await fresh.close()
   }
 })
+
+test('starting a campaign grants the hero’s token, which sits top right and can be picked', async ({ page }) => {
+  await openDesk(page)
+  // Before any campaign, the token button holds the plain token.
+  const token = page.getByRole('button', { name: /^Your token: plain token, plain border/ })
+  await expect(token).toBeVisible()
+
+  await startCampaign(page, 'The Lamp at Brightwatch')
+  await expect(token).toBeVisible()
+
+  // Top right of the bar, beside the Settings button.
+  const settings = await page.getByRole('button', { name: /^Settings/ }).boundingBox()
+  const box = await token.boundingBox()
+  expect(box && settings && box.x > settings.x && Math.abs(box.y - settings.y) < 8).toBe(true)
+  expect(box?.width).toBeGreaterThanOrEqual(36)
+
+  await token.click()
+  const dialog = page.getByRole('dialog', { name: 'Your token' })
+  await expect(dialog).toBeVisible()
+  await expect(dialog.getByRole('radio', { name: /Wren Ashvale/ })).toBeVisible() // earned by starting with Wren
+  await expect(dialog.getByText('???').first()).toBeVisible() // unearned rims and emblems stay hidden
+  await dialog.getByRole('radio', { name: /Wren Ashvale/ }).click()
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+  await expect(page.getByRole('button', { name: /^Your token: Wren Ashvale, plain border/ })).toBeVisible()
+
+  // The choice survives a reload.
+  await page.reload()
+  await expect(page.getByRole('button', { name: /^Your token: Wren Ashvale, plain border/ })).toBeVisible()
+})

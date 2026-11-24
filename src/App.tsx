@@ -15,6 +15,7 @@ import { deleteSlot, exportAll, importFile, listSlots, loadSlot, migrateLegacySa
 import { useCampaignPacks } from './useCampaignPacks'
 import { loadProgress, saveProgress } from './progressStore'
 import { Toasts, type ToastItem } from './ui/Toasts'
+import { avatarName, borderName } from './ui/Token'
 import { Opening } from './ui/Opening'
 import { Desk, type DeskSlot } from './ui/Desk'
 import { NewCampaign } from './ui/NewCampaign'
@@ -99,6 +100,10 @@ function Game() {
         for (const k of keepsakesEarned(s.state.campaignId, days)) if (!before.keepsakes.has(k.id)) fresh.push({ id: `k-${s.id}-${k.id}`, title: k.name, text: k.text, label: `New keepsake in ${title}` })
         for (const x of stylesUnlocked(s.state.campaignId, days)) if (!before.looks.has(x.id)) fresh.push({ id: `s-${s.id}-${x.id}`, title: x.name, text: 'Unlocked. Choose it in Settings.', label: `New look in ${title}` })
       }
+    if (prev) {
+      for (const a of synced.avatars) if (!progress.avatars.some((x) => x.id === a.id)) fresh.push({ id: `t-${a.id}`, title: avatarName(a.id), text: 'A new token for your corner of the desk. Pick it from the token button, top right.', label: 'New token' })
+      for (const b of synced.borders) if (!progress.borders.some((x) => x.id === b.id)) fresh.push({ id: `b-${b.id}`, title: borderName(b.id), text: 'A new border for your token. Pick it from the token button, top right.', label: 'New border' })
+    }
     milestones.current = cur
     if (fresh.length) setToasts((q) => [...q, ...fresh.filter((f) => !q.some((x) => x.id === f.id))])
   }, [slots, today, progress])
@@ -287,6 +292,7 @@ function Game() {
           onTodayChanged={refreshToday}
           progress={progress}
           onOpenChest={openChest}
+          onToken={(token) => setProgress((p) => ({ ...p, token }))}
         />
       )}
     </>

@@ -5,6 +5,7 @@
 // the clock. Days played reward showing up, never unbroken streaks.
 import { addDays, daysBetween, weekStart, type ISODate } from './calendar'
 import { playedDates } from './state'
+import { DEFAULT_AVATAR, DEFAULT_BORDER, GILDED_ACHIEVEMENT, GILDED_BORDER, tokenUnlocksFor } from './tokens'
 import type { GameState } from './types'
 
 export interface Dated {
@@ -31,13 +32,19 @@ export interface Progress {
   achievements: Dated[]
   /** Legacy mark ids seen in any run, so "both endings across runs" survives deleting a run. */
   marks: string[]
+  /** Hero tokens earned (by hero id) and when. */
+  avatars: Dated[]
+  /** Borders and emblem tokens earned and when. */
+  borders: Dated[]
+  /** The token shown top right: chosen avatar and border (ids). */
+  token: { avatar: string; border: string }
 }
 
 export const AWAY_DAYS = 3
 export const CHEST_DAYS = 5
 
 export function emptyProgress(): Progress {
-  return { version: 1, days: [], lastVisit: null, returnedOn: null, chests: [], achievements: [], marks: [] }
+  return { version: 1, days: [], lastVisit: null, returnedOn: null, chests: [], achievements: [], marks: [], avatars: [], borders: [], token: { avatar: DEFAULT_AVATAR, border: DEFAULT_BORDER } }
 }
 
 const ISO = /^\d{4}-\d{2}-\d{2}$/
@@ -64,7 +71,16 @@ export function sanitizeProgress(raw: unknown): Progress {
     }),
     achievements: dedupeEarliest(dated(r.achievements)),
     marks: uniqSorted(arr(r.marks).filter((m): m is string => typeof m === 'string')),
+    avatars: dedupeEarliest(dated(r.avatars)),
+    borders: dedupeEarliest(dated(r.borders)),
+    token: sanitizeToken(r.token),
   }
+}
+
+function sanitizeToken(raw: unknown): Progress['token'] {
+  const t = (raw && typeof raw === 'object' ? raw : {}) as Partial<Progress['token']>
+  const id = (v: unknown, fallback: string) => (typeof v === 'string' && v.length > 0 && v.length <= 64 ? v : fallback)
+  return { avatar: id(t.avatar, DEFAULT_AVATAR), border: id(t.border, DEFAULT_BORDER) }
 }
 
 function dedupeEarliest(list: Dated[]): Dated[] {
@@ -92,15 +108,34 @@ export function mergeProgress(a: Progress, b: Progress): Progress {
     chests: [...chests.values()].sort((x, y) => x.week.localeCompare(y.week)),
     achievements: dedupeEarliest([...a.achievements, ...b.achievements]),
     marks: uniqSorted([...a.marks, ...b.marks]),
+    avatars: dedupeEarliest([...a.avatars, ...b.avatars]),
+    borders: dedupeEarliest([...a.borders, ...b.borders]),
+    // The choice on this device wins; a device still on the plain token takes the imported choice.
+    token: a.token.avatar === DEFAULT_AVATAR && a.token.border === DEFAULT_BORDER ? b.token : a.token,
   }
 }
 
-/** Fold the campaigns' own days and legacy marks into the record (never future dates). Same object when nothing changed. */
+/**
+ * Fold the campaigns' own days, legacy marks and token unlocks into the record
+ * (never future dates). Same object when nothing changed.
+ */
 export function syncProgress(p: Progress, states: GameState[], today: ISODate): Progress {
   const days = uniqSorted([...p.days, ...states.flatMap(playedDates)].filter((d) => d <= today))
   const marks = uniqSorted([...p.marks, ...states.flatMap((s) => s.legacy ?? [])])
-  if (days.length === p.days.length && marks.length === p.marks.length) return p
-  return { ...p, days, marks }
+  // A hero's token is earned by playing that hero, however they came to the run (start, hero pick, prologue).
+  const heroes = states.flatMap((s) => (s.hero ? [s.hero.defId] : []))
+  const unlocked = states.flatMap((s) => tokenUnlocksFor(s.campaignId, playedDates(s).length))
+  if (p.achievements.some((a) => a.id === GILDED_ACHIEVEMENT)) unlocked.push(GILDED_BORDER)
+  const isEmblem = (id: string) => id.endsWith('-emblem')
+  const avatars = addDated(p.avatars, [...heroes, ...unlocked.filter(isEmblem)], today)
+  const borders = addDated(p.borders, unlocked.filter((id) => !isEmblem(id)), today)
+  const same = days.length === p.days.length && marks.length === p.marks.length && avatars === p.avatars && borders === p.borders
+  return same ? p : { ...p, days, marks, avatars, borders }
+}
+
+function addDated(list: Dated[], ids: string[], today: ISODate): Dated[] {
+  const fresh = [...new Set(ids)].filter((id) => !list.some((d) => d.id === id))
+  return fresh.length ? [...list, ...fresh.map((id) => ({ id, date: today }))] : list
 }
 
 /** Note a visit. Coming back after AWAY_DAYS or more records the return date. */
