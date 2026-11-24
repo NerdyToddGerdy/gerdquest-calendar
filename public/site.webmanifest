@@ -3,7 +3,7 @@
   "short_name": "Questender",
   "description": "A solo adventure played one calendar page per real day.",
   "id": "./",
-  "start_url": "./",
+  "start_url": "./play/",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
