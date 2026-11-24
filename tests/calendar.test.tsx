@@ -1,3 +1,4 @@
+import { emptyProgress } from '@questender/engine/progress'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { addDays, daysBetween, formatLong, formatSpan, weekday } from '@questender/engine/calendar'
@@ -231,6 +232,9 @@ describe('no peeking', () => {
         onImport={() => {}}
         onDelete={() => {}}
         onTodayChanged={() => {}}
+        progress={emptyProgress()}
+        onOpenChest={() => {}}
+        onToken={() => {}}
       />,
     )
 
@@ -360,6 +364,9 @@ describe('desk: one date, every campaign', () => {
           onTheme={() => {}}
           onDelete={() => {}}
           onTodayChanged={() => {}}
+          progress={emptyProgress()}
+          onOpenChest={() => {}}
+          onToken={() => {}}
         />,
       )
       expect(html).toContain('is 1 page behind; you can catch up any time')

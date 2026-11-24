@@ -2,13 +2,20 @@ import { useEffect, useRef, useState } from 'react'
 import { playDiceSound, setSoundEnabled, soundEnabled } from './sound/audio'
 import { diceSoundFor } from './sound/diceEvents'
 import type { ISODate } from '@questender/engine/calendar'
-import { nextDeskDate, pickTab, startingDate, turnThrough } from '@questender/engine/desk'
+import { nextDeskDate, pickTab, startingDate, tabView, turnThrough } from '@questender/engine/desk'
+import { achievementDef, newlyEarned } from '@questender/engine/achievements'
+import { mergeProgress, recordAchievements, recordChest, recordVisit, syncProgress, welcomeDue } from '@questender/engine/progress'
+import { keepsakesEarned, stylesUnlocked } from '@questender/engine/rewards'
+import { campaign } from '@questender/engine/campaign'
 import { newSeed } from '@questender/engine/rng'
-import { initialState, reduce, type Action } from '@questender/engine/state'
+import { canWelcomeBack, initialState, playedDates, reduce, type Action } from '@questender/engine/state'
 import { importEntries } from './calendarNotes'
 import { requestPersistence } from './deviceStorage'
 import { deleteSlot, exportAll, importFile, listSlots, loadSlot, migrateLegacySave, saveSlot, savedCampaignIds, slotIdFor } from './save'
 import { useCampaignPacks } from './useCampaignPacks'
+import { loadProgress, saveProgress } from './progressStore'
+import { Toasts, type ToastItem } from './ui/Toasts'
+import { avatarName, borderName } from './ui/Token'
 import { Opening } from './ui/Opening'
 import { Desk, type DeskSlot } from './ui/Desk'
 import { NewCampaign } from './ui/NewCampaign'
@@ -61,6 +68,45 @@ function Game() {
   const [importing, setImporting] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
   const dirty = useRef(new Set<string>())
+
+  // Desk-wide progress: days played, achievements, weekly chests. Local to this device.
+  const [progress, setProgress] = useState(() => recordVisit(loadProgress(), today))
+  const [toasts, setToasts] = useState<ToastItem[]>([])
+  const milestones = useRef<Map<string, { keepsakes: Set<string>; looks: Set<string> }> | null>(null)
+  useEffect(() => setProgress((p) => recordVisit(p, today)), [today])
+  useEffect(() => saveProgress(progress), [progress])
+
+  // After every change: fold in days played, check achievements and per-campaign milestones.
+  useEffect(() => {
+    const states = slots.map((s) => s.state)
+    const synced = syncProgress(progress, states, today)
+    const earned = newlyEarned({ states, progress: synced, today })
+    const next = earned.length ? recordAchievements(synced, earned, today) : synced
+    if (next !== progress) setProgress(next)
+    const fresh: ToastItem[] = earned.map((id) => ({ id: `a-${id}`, title: achievementDef(id)!.name, text: achievementDef(id)!.text, label: 'Achievement earned' }))
+    const prev = milestones.current
+    const cur = new Map(
+      slots.map((s) => {
+        const days = playedDates(s.state).length
+        return [s.id, { keepsakes: new Set(keepsakesEarned(s.state.campaignId, days).map((k) => k.id)), looks: new Set(stylesUnlocked(s.state.campaignId, days).map((x) => x.id)) }] as const
+      }),
+    )
+    if (prev)
+      for (const s of slots) {
+        const before = prev.get(s.id)
+        if (!before) continue
+        const days = playedDates(s.state).length
+        const title = campaign(s.state.campaignId).title
+        for (const k of keepsakesEarned(s.state.campaignId, days)) if (!before.keepsakes.has(k.id)) fresh.push({ id: `k-${s.id}-${k.id}`, title: k.name, text: k.text, label: `New keepsake in ${title}` })
+        for (const x of stylesUnlocked(s.state.campaignId, days)) if (!before.looks.has(x.id)) fresh.push({ id: `s-${s.id}-${x.id}`, title: x.name, text: 'Unlocked. Choose it in Settings.', label: `New look in ${title}` })
+      }
+    if (prev) {
+      for (const a of synced.avatars) if (!progress.avatars.some((x) => x.id === a.id)) fresh.push({ id: `t-${a.id}`, title: avatarName(a.id), text: 'A new token for your corner of the desk. Pick it from the token button, top right.', label: 'New token' })
+      for (const b of synced.borders) if (!progress.borders.some((x) => x.id === b.id)) fresh.push({ id: `b-${b.id}`, title: borderName(b.id), text: 'A new border for your token. Pick it from the token button, top right.', label: 'New border' })
+    }
+    milestones.current = cur
+    if (fresh.length) setToasts((q) => [...q, ...fresh.filter((f) => !q.some((x) => x.id === f.id))])
+  }, [slots, today, progress])
 
   // Autosave whichever campaigns changed.
   useEffect(() => {
@@ -124,6 +170,20 @@ function Game() {
     update((prev) => prev.map((s) => (s.id === id ? { ...s, state: reduce(s.state, a) } : s)))
   }
 
+  // Well rested: on the first page opened in a campaign after a return from 3+ days away.
+  useEffect(() => {
+    if (!welcomeDue(progress, today)) return
+    const sel = slots.find((s) => s.id === selected)
+    if (sel && tabView(sel.state, viewDate).kind === 'play' && canWelcomeBack(sel.state, today)) dispatch(sel.id, { type: 'WELCOME_BACK', date: today })
+  }, [slots, selected, viewDate, progress, today])
+
+  const openChest = (week: string, slotId: string) => {
+    const slot = slots.find((s) => s.id === slotId)
+    if (!slot) return
+    dispatch(slotId, { type: 'OPEN_CHEST', week })
+    setProgress((p) => recordChest(p, week, slot.state.campaignId, today))
+  }
+
   /**
    * The › arrow: move to the next date that shows something new (Saturday
    * goes straight to Monday when every campaign is on a weekend page),
@@ -159,7 +219,7 @@ function Game() {
     if (!file) return
     setImporting(true)
     try {
-      const { states, calendar } = await importFile(file, today)
+      const { states, calendar, progress: incomingProgress } = await importFile(file, today)
       const incoming = new Set(states.map((s) => slotIdFor(s.campaignId, s.startDate)))
       const existing = listSlots().filter((m) => incoming.has(m.slotId))
       if (existing.length) {
@@ -168,6 +228,7 @@ function Game() {
       }
       existing.forEach((m) => deleteSlot(m.slotId))
       if (calendar.length) importEntries(calendar)
+      if (incomingProgress) setProgress((p) => mergeProgress(p, incomingProgress))
       addAll(
         states,
         existing.map((m) => m.slotId),
@@ -198,6 +259,7 @@ function Game() {
         </p>
       )}
       {error && <p className="error">{error}</p>}
+      <Toasts items={toasts} onDismiss={(id) => setToasts((q) => q.filter((x) => x.id !== id))} />
       {screen === 'new' ? (
         <NewCampaign
           today={today}
@@ -228,6 +290,9 @@ function Game() {
             setSlots((prev) => prev.filter((s) => s.id !== id))
           }}
           onTodayChanged={refreshToday}
+          progress={progress}
+          onOpenChest={openChest}
+          onToken={(token) => setProgress((p) => ({ ...p, token }))}
         />
       )}
     </>

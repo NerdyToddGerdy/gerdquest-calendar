@@ -6,6 +6,8 @@ import { toISO, type ISODate } from '@questender/engine/calendar'
 import { alignedOnOrBefore, campaign, campaignEntry, DEFAULT_CAMPAIGN, defaultStartDate, listCatalog, loadCampaigns, pageDate } from '@questender/engine/campaign'
 import type { GameState, JournalEntry } from '@questender/engine/types'
 import { loadEntries, sanitizeEntries, type CalendarEntry } from './calendarNotes'
+import { sanitizeProgress, type Progress } from '@questender/engine/progress'
+import { loadProgress } from './progressStore'
 
 const INDEX_KEY = 'questender.slots'
 const SLOT_PREFIX = 'questender.slot.'
@@ -169,16 +171,19 @@ export interface SaveBundle {
   campaigns: GameState[]
   /** The player's desk-wide calendar entries (optional; older bundles lack it). */
   calendar?: CalendarEntry[]
+  /** The desk-wide progress record: days played, achievements, chests (optional; older bundles lack it). */
+  progress?: Progress
 }
 
-export function bundleSaves(states: GameState[], exportedOn: ISODate, calendar: CalendarEntry[] = []): SaveBundle {
+export function bundleSaves(states: GameState[], exportedOn: ISODate, calendar: CalendarEntry[] = [], progress?: Progress): SaveBundle {
   const bundle: SaveBundle = { format: 'questender.bundle', version: 1, exportedOn, campaigns: states }
   if (calendar.length) bundle.calendar = calendar
+  if (progress) bundle.progress = progress
   return bundle
 }
 
 export function exportAll(states: GameState[], today: ISODate) {
-  download(bundleSaves(states, today, loadEntries()), `questender-all-${today}.json`)
+  download(bundleSaves(states, today, loadEntries(), loadProgress()), `questender-all-${today}.json`)
 }
 
 /** Calendar entries carried by an export file (none for single-campaign files). */
@@ -188,6 +193,16 @@ export function parseCalendar(text: string): CalendarEntry[] {
     return raw?.format === 'questender.bundle' ? sanitizeEntries(raw.calendar) : []
   } catch {
     return []
+  }
+}
+
+/** The progress record carried by an export bundle (null for single-campaign and older files). */
+export function parseProgress(text: string): Progress | null {
+  try {
+    const raw = JSON.parse(text) as Partial<SaveBundle> | null
+    return raw?.format === 'questender.bundle' && raw.progress ? sanitizeProgress(raw.progress) : null
+  } catch {
+    return null
   }
 }
 
@@ -237,8 +252,8 @@ export async function importSaves(file: File, today: ISODate): Promise<GameState
 }
 
 /** Read an export file: its campaigns plus any calendar entries. */
-export async function importFile(file: File, today: ISODate): Promise<{ states: GameState[]; calendar: CalendarEntry[] }> {
+export async function importFile(file: File, today: ISODate): Promise<{ states: GameState[]; calendar: CalendarEntry[]; progress: Progress | null }> {
   const text = await file.text()
   await loadPacksFor(text)
-  return { states: parseSaves(text, today), calendar: parseCalendar(text) }
+  return { states: parseSaves(text, today), calendar: parseCalendar(text), progress: parseProgress(text) }
 }

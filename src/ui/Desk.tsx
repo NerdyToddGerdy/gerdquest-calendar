@@ -19,6 +19,10 @@ import { Notes } from './Notes'
 import { revealTab } from './revealTab'
 import { BackupNotice } from './BackupNotice'
 import { Settings } from './Settings'
+import { Shelf } from './Shelf'
+import type { Progress } from '@questender/engine/progress'
+import { styleAttrs } from './styleAttrs'
+import { Token, TokenPicker, tokenLabel } from './Token'
 import { recordExport } from '../deviceStorage'
 import { readDevOverride, writeDevOverride } from './today'
 
@@ -45,6 +49,9 @@ interface Props {
   onToggleSound: () => void
   onDelete: (id: string) => void
   onTodayChanged: () => void
+  progress: Progress
+  onOpenChest: (week: ISODate, slotId: string) => void
+  onToken: (token: Progress['token']) => void
 }
 
 /**
@@ -53,9 +60,10 @@ interface Props {
  * that date below.
  */
 export function Desk(p: Props) {
-  const [mode, setMode] = useState<'day' | 'calendar'>('day')
+  const [mode, setMode] = useState<'day' | 'calendar' | 'shelf'>('day')
   const [calView, setCalView] = useState<CalView>('month')
   const [settings, setSettings] = useState(false)
+  const [tokenOpen, setTokenOpen] = useState(false)
   const [news, setNews] = useState(() => !seenLatest())
   const openSettings = () => {
     setSettings(true)
@@ -104,6 +112,9 @@ export function Desk(p: Props) {
               <button role="tab" aria-selected={mode === 'calendar'} className={mode === 'calendar' ? 'active' : ''} onClick={() => setMode('calendar')}>
                 Calendar
               </button>
+              <button role="tab" aria-selected={mode === 'shelf'} className={mode === 'shelf' ? 'active' : ''} onClick={() => setMode('shelf')}>
+                Shelf
+              </button>
             </div>
             {mode === 'calendar' && (
               <div className="segmented" role="tablist" aria-label="Calendar layout">
@@ -150,14 +161,21 @@ export function Desk(p: Props) {
             </svg>
             {news && <span className="news-dot" aria-hidden="true" />}
           </button>
+          <button className="icon-btn token-btn" aria-label={tokenLabel(p.progress.token.avatar, p.progress.token.border)} title="Your token" onClick={() => setTokenOpen(true)}>
+            <Token avatar={p.progress.token.avatar} border={p.progress.token.border} size={36} />
+          </button>
         </div>
       </nav>
+
+      {tokenOpen && <TokenPicker progress={p.progress} onChoose={p.onToken} onClose={() => setTokenOpen(false)} />}
 
       {settings && (
         <Settings
           theme={p.theme}
           onTheme={p.onTheme}
           campaigns={p.slots.length}
+          slots={p.slots}
+          onDispatch={p.onDispatch}
           onImport={() => {
             setSettings(false)
             p.onImport()
@@ -195,7 +213,10 @@ export function Desk(p: Props) {
             or import a saved file
           </button>
         </main>
+      ) : mode === 'shelf' ? (
+        <Shelf slots={p.slots} progress={p.progress} today={p.today} onOpenChest={p.onOpenChest} />
       ) : mode === 'calendar' ? (
+        <div className="skin" {...styleAttrs(active.state)}>
         <CalendarView
           slots={p.slots}
           viewDate={p.viewDate}
@@ -207,6 +228,7 @@ export function Desk(p: Props) {
             setMode('day')
           }}
         />
+        </div>
       ) : (
         <>
           <div className="desk-head">
@@ -377,7 +399,7 @@ export function CampaignPanel({ slot, viewDate, today, dispatch, onDate, onDelet
   }
 
   return (
-    <div className="layout">
+    <div className="layout skin" {...styleAttrs(state)}>
       <div className="main-col">
         <div className="panel-tools row">
           <span className="muted small">

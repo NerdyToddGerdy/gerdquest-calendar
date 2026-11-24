@@ -57,3 +57,8 @@ export function formatShort(d: ISODate): string {
 export function formatSpan(first: ISODate, last: ISODate): string {
   return first === last ? formatShort(first) : `${formatShort(first)} – ${formatShort(last)}`
 }
+
+/** The Monday of the Mon-Sun week containing `d`. */
+export function weekStart(d: ISODate): ISODate {
+  return addDays(d, -((weekday(d) + 6) % 7))
+}

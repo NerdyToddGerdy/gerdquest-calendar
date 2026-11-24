@@ -7,6 +7,9 @@ import { isFollower } from '@questender/engine/followers'
 import { abilityReady, costLabel } from '@questender/engine/pools'
 import type { Action } from '@questender/engine/state'
 import type { Band, GameState, RollSlot } from '@questender/engine/types'
+import { hasRerollKeepsake, rewardTheme } from '@questender/engine/rewards'
+import { playedDates } from '@questender/engine/state'
+import { weekStart } from '@questender/engine/calendar'
 import { BandScale } from './BandScale'
 
 interface Props {
@@ -16,6 +19,8 @@ interface Props {
   confirmLabel: string
   /** Outcome bands of the check being rolled; the band the total lands in is highlighted. */
   bands?: Band[]
+  /** The player's date, for the once-a-week keepsake reroll. */
+  today?: string
 }
 
 const SHAPES: Record<number, string> = {
@@ -49,7 +54,7 @@ function DieFace({ slot }: { slot: RollSlot }) {
  * Shows rolled dice and lets the player apply abilities, a Boon, items or
  * party members after seeing the result — then confirm.
  */
-export function RollPanel({ state, slots, dispatch, confirmLabel, bands }: Props) {
+export function RollPanel({ state, slots, dispatch, confirmLabel, bands, today }: Props) {
   const [selected, setSelected] = useState(slots[0]?.id)
   const hero = state.hero!
   const slot = slots.find((s) => s.id === selected) ?? slots[0]
@@ -63,7 +68,12 @@ export function RollPanel({ state, slots, dispatch, confirmLabel, bands }: Props
     .map(item)
     .filter((it) => it.kind === 'slotDie' && it.slots.includes(slot.kind))
 
+  const keepsakeReady =
+    !!today && isD20(slot) && state.perkWeek !== weekStart(today) && hasRerollKeepsake(state.campaignId, playedDates(state).length)
+  const keepsake = rewardTheme(state.campaignId).keepsakes.find((k) => k.perk === 'reroll')
+
   const hasModifiers =
+    keepsakeReady ||
     abilities.length + items.length > 0 ||
     (isD20(slot) && !!hero.boon) ||
     state.party.some((p) => !isFollower(member(p.defId)))
@@ -130,6 +140,11 @@ export function RollPanel({ state, slots, dispatch, confirmLabel, bands }: Props
               </button>
             )
           })}
+          {keepsakeReady && today && (
+            <button onClick={() => dispatch({ type: 'KEEPSAKE_REROLL', slot: slot.id, today })} title={`${keepsake?.name}: a free reroll, once a week`}>
+              {keepsake?.name} <small>(free reroll, once a week)</small>
+            </button>
+          )}
           {isD20(slot) && hero.boon && (
             <button onClick={() => dispatch({ type: 'USE_BOON', slot: slot.id })}>Spend Boon (+d4)</button>
           )}

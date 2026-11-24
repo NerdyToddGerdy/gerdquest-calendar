@@ -141,6 +141,7 @@ export function DayView({ state, day, dispatch, today }: Props) {
                         slots={[pend.slot]}
                         dispatch={dispatch}
                         confirmLabel="Accept result"
+                        today={today}
                         bands={opt.bands}
                       />
                     )}
@@ -181,7 +182,7 @@ export function DayView({ state, day, dispatch, today }: Props) {
             </div>
           )}
           {pend?.type === 'combat' ? (
-            <RollPanel state={state} slots={pend.slots} dispatch={dispatch} confirmLabel="Resolve round" />
+            <RollPanel state={state} slots={pend.slots} dispatch={dispatch} confirmLabel="Resolve round" today={today} />
           ) : (
             !p.combat?.done && (
               <button
