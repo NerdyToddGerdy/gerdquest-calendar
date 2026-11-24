@@ -1,4 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { persistenceMessage } from '../backup'
+import { isPersisted, requestPersistence } from '../deviceStorage'
 import { APP_VERSION, CHANGELOG } from '../changelog'
 import { formatLong } from '@questender/engine/calendar'
 import type { ThemePref } from '../theme'
@@ -28,6 +30,11 @@ export function Settings({ theme, onTheme, campaigns, onImport, onExportAll, onC
   }, [onClose])
 
   const [latest, ...rest] = CHANGELOG
+  const [persisted, setPersisted] = useState<boolean | null>(null)
+  const [canPersist] = useState(() => typeof navigator !== 'undefined' && !!navigator.storage?.persist)
+  useEffect(() => {
+    void isPersisted().then(setPersisted)
+  }, [])
 
   return (
     <div className="hero-modal-backdrop" onClick={onClose}>
@@ -70,6 +77,14 @@ export function Settings({ theme, onTheme, campaigns, onImport, onExportAll, onC
               Import from file…
             </button>
           </div>
+          <p className="muted small">{persistenceMessage(persisted)}</p>
+          {canPersist && persisted !== true && (
+            <div className="row">
+              <button onClick={() => void requestPersistence().then((r) => r !== null && setPersisted(r))} title="Ask the browser to keep your saves">
+                Ask the browser to keep my progress
+              </button>
+            </div>
+          )}
           <p className="muted small">To export just one campaign, use Export on that campaign’s tab.</p>
         </section>
 

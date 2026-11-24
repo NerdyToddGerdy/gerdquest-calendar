@@ -17,7 +17,9 @@ import { Journal } from './Journal'
 import { Log } from './Log'
 import { Notes } from './Notes'
 import { revealTab } from './revealTab'
+import { BackupNotice } from './BackupNotice'
 import { Settings } from './Settings'
+import { recordExport } from '../deviceStorage'
 import { readDevOverride, writeDevOverride } from './today'
 
 export interface DeskSlot {
@@ -59,6 +61,12 @@ export function Desk(p: Props) {
     setSettings(true)
     markSeen()
     setNews(false)
+  }
+  const [exportedAt, setExportedAt] = useState(0)
+  const exportAll = () => {
+    p.onExportAll()
+    recordExport(p.today)
+    setExportedAt((n) => n + 1)
   }
   const states = p.slots.map((s) => s.state)
   const active = p.slots.find((s) => s.id === p.selected) ?? p.slots[0]
@@ -154,8 +162,18 @@ export function Desk(p: Props) {
             setSettings(false)
             p.onImport()
           }}
-          onExportAll={p.onExportAll}
+          onExportAll={exportAll}
           onClose={() => setSettings(false)}
+        />
+      )}
+
+      {p.slots.length > 0 && (
+        <BackupNotice
+          campaigns={p.slots.length}
+          playedDays={states.reduce((n, s) => n + s.journal.length, 0)}
+          today={p.today}
+          exportedAt={exportedAt}
+          onExportAll={exportAll}
         />
       )}
 
