@@ -14,6 +14,20 @@ export interface Release {
 
 export const CHANGELOG: Release[] = [
   {
+    version: '0.9.0',
+    date: '2026-11-24',
+    title: 'Rewards for showing up',
+    changes: [
+      'The Verdant Accord continues: chapters 5 to 8, from a burning city to a sea voyage, a forbidden island and a sacred peak.',
+      'A new Shelf: each campaign gives its own keepsakes and looks (page edges, paper, dice) for the days you play it. Catch-up days count, and missing a day never takes anything away.',
+      'Your token: earn a portrait token for every hero you play and themed borders from each campaign. Pick yours from the top right.',
+      'Come back after a few days away and your hero starts well rested.',
+      'Play on five days in a week to open the week’s chest.',
+      'Nineteen achievements to find.',
+      'Nothing here is for sale: every reward is earned by playing.',
+    ],
+  },
+  {
     version: '0.8.0',
     date: '2026-11-24',
     title: 'Two new journeys and a front door',

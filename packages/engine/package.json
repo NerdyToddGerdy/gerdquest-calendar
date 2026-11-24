@@ -1,6 +1,6 @@
 {
   "name": "@questender/engine",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": true,
   "type": "module",
   "description": "Pure Questender game engine and bundled original (free) campaign content. No React, DOM or storage dependencies.",
