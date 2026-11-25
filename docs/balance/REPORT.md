@@ -653,3 +653,28 @@ Deaths per hero (death-table hits per run):
 | va_sorrel | 17 | 3.24 | 4.0 | 5.4 | 0.29 | 0.18 | 0.06 | 0.29 | 0.65 | 0.76 | 0.18 | 0.29 | 0.18 | 0.35 |
 | va_pip | 16 | 3.56 | 4.0 | 5.0 | 0.31 | 0.31 | 0.25 | 0.13 | 0.56 | 0.13 | 0.44 | 0.69 | 0.44 | 0.31 |
 | va_aldous | 16 | 3.44 | 3.5 | 5.5 | 0.00 | 0.25 | 0.31 | 0.19 | 0.63 | 0.69 | 0.13 | 0.19 | 0.50 | 0.56 |
+
+### Verdant Accord: full-year check (chapters 1–10, 300 runs)
+
+Run with `SIM_RUNS=300 SIM_CAMPAIGNS=verdant,starwake npm run sim` (seeds 1000..1299, 50 runs per hero), after chapters 9 and 10 landed. No tuning was needed, so no content changed.
+
+- Difficulty climbs smoothly. Death rate per chapter (share of runs hitting the table): 20%, 22%, 15%, 11%, 27%, 24%, 13%, 19%, 13%, 22%. Peaks are the chapter 5 and 6 bosses (Steward 16%, Leviathan 22%), nothing spikes above 27%, and no chapter is trivial (lowest is chapter 4 at 11%). Chapter 10's Hold at the Fork (21%) is the hardest finale-month page, which is the right shape. Starwake for reference runs 4–23% by month and a 42% spike in December (Hollow Needle 38%), so Verdant's ending is gentler.
+- Level curve: 2, 3, 4, 5, 6, 6, 7, 7, 7, 8 at each month end with zero spread (p10 = p90), so every hero is on schedule and hits the cap of 8 at chapter 10. Levels plateau for chapters 5–6 and 7–9, the same pattern as Starwake (5/5, 6, 7, 8/8).
+- Gold: median currency climbs 3, 3, 6, 5, 7, 11, 33, 39, 55, 43. Chapters 1–6 are lean (single digits to low teens), then it builds to about 55 in September and falls to 43 after the October shopping. That is a mild surplus against the top shop prices (Brine Charm 22, Ironbark 20, Stagbrew 12) but nowhere near hoarding or starving; Starwake ends at 42–43. Weak heroes (Aldous) stay at 13–17 gold because they spend it on recovery, which is the intended pressure.
+- HP and gear: median max HP by hero at chapter 10 is 41–54 (Sorrel 41, Brannoc 54) against 13–18 at chapter 1; heal items held rise from 3 to 13.
+- Hero spread is the known content issue: Brannoc, Kestrel and (in Starwake) Bram and Reyna almost never die (mean 0.2–0.3 hits per run), Odo and Sorrel take 3.3 on average. Not addressed here.
+- Legacy marks are not recorded by the sim. The bot picks the choice-decided endings of chapters 7 and 8 by run parity, so those split about 50/50 by construction.
+
+| Month | Runs | Deaths | % runs with a death | Level med (p10–p90) | Currency med (p10–p90) | HP % at month end | Heal items (median) |
+|---|---|---|---|---|---|---|---|
+| 1 | 300 | 62 | 20.0% | 2 (2–2) | 3 (0–10) | 100 (100–100) | 3 |
+| 2 | 300 | 72 | 21.7% | 3 (3–3) | 3 (0–7) | 88 (84–100) | 3 |
+| 3 | 300 | 47 | 14.7% | 4 (4–4) | 6 (2–9) | 100 (100–100) | 3 |
+| 4 | 300 | 35 | 11.0% | 5 (5–5) | 5 (0–9) | 100 (100–100) | 3 |
+| 5 | 300 | 112 | 27.0% | 6 (6–6) | 7 (1–27) | 100 (100–100) | 4 |
+| 6 | 300 | 99 | 24.0% | 6 (6–6) | 11 (3–45) | 100 (100–100) | 6 |
+| 7 | 300 | 40 | 13.0% | 7 (7–7) | 33 (15–56) | 95 (89–100) | 8 |
+| 8 | 300 | 61 | 18.7% | 7 (7–7) | 39 (12–57) | 100 (100–100) | 10 |
+| 9 | 300 | 50 | 13.3% | 7 (7–7) | 55 (13–70) | 59 (45–84) | 11 |
+| 10 | 300 | 67 | 22.0% | 8 (8–8) | 43 (11–58) | 100 (100–100) | 13 |
+
