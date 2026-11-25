@@ -14,6 +14,18 @@ export interface Release {
 
 export const CHANGELOG: Release[] = [
   {
+    version: '0.13.0',
+    date: '2026-11-25',
+    title: 'Verdant Accord reaches October',
+    changes: [
+      'Verdant Accord Chapter 9, Blight on the Fernfields: rot and Thornwake war-bands across the farmland, and a poisoned Wellspring to cleanse.',
+      'Verdant Accord Chapter 10, Up the Rootwater: a river journey toward lost Loamhallow, the White Hart to cure, and a fork outpost to hold. Heroes reach level 8.',
+      'Picking a hero now asks you to confirm first, so a misclick can\'t lock in the wrong character.',
+      'With many campaigns on your desk, the tabs wrap onto extra rows. On phones they scroll sideways, with arrows when more tabs are off screen.',
+      'Reward pop-ups use sentence case instead of capital letters.',
+    ],
+  },
+  {
     version: '0.12.1',
     date: '2026-11-25',
     title: 'Home is one click away',

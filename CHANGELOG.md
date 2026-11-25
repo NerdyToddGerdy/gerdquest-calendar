@@ -9,6 +9,24 @@ Settings → What's new. Add every release to both, and bump `package.json`
 
 Versions before 0.5.0 were reconstructed after the fact from the code.
 
+## [0.13.0] — 2026-11-25
+
+### Added
+- **Verdant Accord Chapters 9–10** (#73): `days/m9.ts`, `days/m10.ts`; 52 new pages (208 → 260, ends Oct 31),
+  `chaptersWritten: 10`. Legacy pairs `va_l9_win`/`va_l9_loss` and `va_l10_win`/`va_l10_loss`; finales read earlier marks.
+  Level 8 (cap), Firstwater Dewdrop trinket, shops SHOP_FARM/SHOP_RIVER. Balance report updated for ch5–10.
+- **Hero confirm** (#64, #72): `src/ui/ConfirmHero.tsx` gates every hero pick (New Campaign, Preview, prologue Begin,
+  mid-story `setHero`); nothing is dispatched until confirmed.
+
+### Changed
+- **Campaign tabs** (#63, #74): `src/ui/TabStrip.tsx`; tabs wrap above 600px, scroll with edge fades, ‹ › buttons and
+  wheel-to-horizontal at phone width; long titles ellipsized with full text in `title`.
+- Reward toast label is sentence case (#60, #71).
+
+### Fixed
+- `Modal` autofocus ran both focus calls, so the close button stole focus from `data-autofocus` (#72).
+- Explicit 60 s timeouts on long playthrough tests (#59, #71).
+
 ## [0.12.1] — 2026-11-25
 
 ### Changed
