@@ -19,6 +19,7 @@ import { Journal } from './Journal'
 import { Log } from './Log'
 import { Notes } from './Notes'
 import { revealTab } from './revealTab'
+import { TabStrip } from './TabStrip'
 import { BackupNotice } from './BackupNotice'
 import { Settings } from './Settings'
 import { Shelf } from './Shelf'
@@ -294,7 +295,7 @@ export function Desk(p: Props) {
 
           {forwardHint && <p className="forward-hint small muted">{forwardHint}</p>}
 
-          <div className="tabs" role="tablist">
+          <TabStrip>
             {p.slots.map((s) => {
               const v = tabView(s.state, p.viewDate)
               const c = campaign(s.state.campaignId)
@@ -304,20 +305,20 @@ export function Desk(p: Props) {
                   role="tab"
                   aria-selected={s.id === active.id}
                   className={`tab ${s.id === active.id ? 'selected' : ''} ${v.kind === 'notStarted' ? 'not-started' : ''}`}
-                  title={v.kind === 'notStarted' ? `${c.title} begins ${formatLong(v.begins)}` : undefined}
+                  title={v.kind === 'notStarted' ? `${c.title} begins ${formatLong(v.begins)}` : c.title}
                   style={{ ['--camp' as string]: campColor(p.slots, s) }}
                   onClick={() => p.onSelect(s.id)}
                   ref={s.id === active.id ? revealTab : undefined}
                 >
                   <TabMark view={v} state={s.state} owed={pagesOwed(s.state, p.viewDate)} />
                   {v.kind === 'notStarted' && <span className="tab-when">starts {shortDate(v.begins)}</span>}
-                  <span>{c.title}</span>
+                  <span className="tab-title">{c.title}</span>
                   {v.kind === 'blocked' && <span className="tab-behind">{pagesOwed(s.state, p.viewDate)} behind</span>}
                   <span className="tab-hero">{s.state.hero?.name.split(' ')[0]}</span>
                 </button>
               )
             })}
-          </div>
+          </TabStrip>
           </div>
 
           <CampaignPanel
