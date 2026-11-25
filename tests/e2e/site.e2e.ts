@@ -63,3 +63,17 @@ test('the game title in the desk links back to the start page', async ({ page })
   await expect(page).toHaveURL(/\/gerdquest-calendar\/\?stay$/)
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
 })
+
+test('on a phone the desk still has a way back to the start page', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('play/')
+  await expect(page.locator('.topbar .brand')).toBeHidden()
+  const home = page.getByRole('link', { name: 'Back to the start page' })
+  await expect(home).toBeVisible()
+  const box = (await home.boundingBox())!
+  expect(box.width).toBeGreaterThanOrEqual(32)
+  expect(box.height).toBeGreaterThanOrEqual(40)
+  await home.click()
+  await expect(page).toHaveURL(/\/gerdquest-calendar\/\?stay$/)
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+})
