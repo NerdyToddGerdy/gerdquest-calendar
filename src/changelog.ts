@@ -14,6 +14,14 @@ export interface Release {
 
 export const CHANGELOG: Release[] = [
   {
+    version: '0.13.1',
+    date: '2026-11-25',
+    title: 'A way home on phones',
+    changes: [
+      'On phones, a small house button at the top left takes you back to the start page.',
+    ],
+  },
+  {
     version: '0.13.0',
     date: '2026-11-25',
     title: 'Verdant Accord reaches October',

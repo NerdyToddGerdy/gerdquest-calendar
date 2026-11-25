@@ -9,6 +9,18 @@ Settings → What's new. Add every release to both, and bump `package.json`
 
 Versions before 0.5.0 were reconstructed after the fact from the code.
 
+## [0.13.1] — 2026-11-25
+
+### Added
+- Phone-only home link (house icon, `../?stay`) in the topbar at ≤600px, where the text brand is hidden;
+  phone topbar spacing trimmed to fit (#76).
+- e2e coverage: mid-story hero hand-off confirm (Go back leaves the save unchanged, confirm swaps the hero)
+  and the hero confirm at 390px in light and dark (#78).
+- Balance report: Verdant Accord full-year check, chapters 1–10, 300 runs; no tuning needed (#77).
+
+### Changed
+- `e2e` is now a required status check on `main`, alongside lint, typecheck, test and build.
+
 ## [0.13.0] — 2026-11-25
 
 ### Added
