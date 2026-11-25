@@ -124,4 +124,11 @@ export const PORTRAITS: Record<string, PortraitSpec> = {
   va_gardener2: beast({ shape: 'construct', body: '#9a7a44', accent: '#6a8a5a', eye: '#9fe08a' }),
   va_gardener3: beast({ shape: 'machine', body: '#7a6a4a', accent: '#c8b898', eye: '#e8f0a0' }),
   va_elder: beast({ shape: 'plant', body: '#2a2a22', accent: '#f0e8e0', eye: '#e8ffd0', crown: true }),
+  va_sloe: fig({ build: 'armored', skin: '#6a4a3a', hair: HAIR.black, hairStyle: 'bald', outfit: '#2a2a3a', trim: '#6a2a4a', prop: 'axe', head: 'helm', headColor: '#2a2236', cloak: '#241a2e' }),
+  va_twinbole_a: beast({ shape: 'plant', body: '#4a6a32', accent: '#d8e8a0', eye: '#e8ffd0', crown: true }),
+  va_twinbole_b: beast({ shape: 'plant', body: '#2a2a24', accent: '#8a9a7a', eye: '#c8ff9a', crown: true }),
+  va_mossgiant: beast({ shape: 'plant', body: '#5a6a4a', accent: '#a8c078', eye: '#fff4b0' }),
+  va_foxalpha: beast({ shape: 'beast', body: '#8a8a92', accent: '#f0f0f0', eye: '#ffffff' }),
+  va_rivermaster: fig({ build: 'broad', skin: SKIN.rose, hair: HAIR.brown, hairStyle: 'short', beard: true, outfit: '#2f5a3a', trim: '#c9a45a', prop: 'sword', head: 'hat', headColor: '#2a3a26', cloak: '#1f3a2a' }),
+  va_reedraider: fig({ build: 'slim', skin: '#7a5a3a', hair: HAIR.black, hairStyle: 'wild', outfit: '#4a5a2e', trim: '#d8d0b0', prop: 'harpoon' }),
 }

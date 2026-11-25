@@ -1,12 +1,12 @@
-# The Verdant Accord — the year (Chapters 1–8 of 12)
+# The Verdant Accord — the year (Chapters 1–10 of 12)
 
 A forest-frontier campaign with **one chapter per month** and a **legacy
-outcome** at the end of every chapter. Chapters 1–8 are written (208 pages,
-Jan 1 to Aug 31); Chapters 9–10 are outlined below, and 11–12 are placeholders
-awaiting the next boxes. The campaign is **partial**: its catalog entry says
-`chaptersWritten: 8` of `chaptersPlanned: 12`, and the end-of-content view and the
-New Campaign card tell the player more is coming. Chapter 8 ends on a hook
-into Chapter 9.
+outcome** at the end of every chapter. Chapters 1–10 are written (260 pages,
+Jan 1 to Oct 31); Chapters 11–12 are placeholders awaiting the next boxes. The
+campaign is **partial**: its catalog entry says `chaptersWritten: 10` of
+`chaptersPlanned: 12`, and the end-of-content view and the New Campaign card tell
+the player more is coming. Chapter 10 ends on a hook into Chapter 11 (Crane's own
+sealed orders, and the gate of Loamhallow).
 
 Its *structure* follows the user's twelve-part adventure subscription: a
 caravan journey to a great city, then a run of city adventures (a flooded
@@ -82,6 +82,14 @@ coin) that carry a price. Neither is ever the first option.
 | 3 | **The Gutterlight Sign**: the thieves' guild taught you their knock. | **Guild Grudge**: the guild blames you for the chapel. |
 | 4 | **Champion of the Fair**: Highmarrow cheers you; the Watch listens. | **The Stopped Clock**: Crane's version of events is the one the city believes. |
 
+Chapters 9 and 10 continue the tally. Chapter 9: **The Wellspring Cleansed**
+(the Twinbole fell and Firstwater ran clear; the farmers answer a call; Accord
+kept) or **The Wellspring Fouled** (driven from the hollow; the blight seeps
+downriver; Wilds let in). Chapter 10: **The Fork Held** (the Alderfork outpost
+held; the river-folk keep a lamp lit; Accord kept) or **The Fork Lost** (the
+outpost fell; Wilds let in). Chapter 10's finale and the last page use
+Chapter 9's marks, and its hold uses marks from Chapters 1 to 9.
+
 ## The chapters
 
 | # | Month | Chapter | Where & what | Boss | Introduced |
@@ -94,12 +102,12 @@ coin) that carry a price. Neither is ever the first option.
 | 6 | Jun | **The Saltward Passage** | Downriver to the sea and up the coast on the refitted barge *Mudlark*, bound for a far peak. A whole-crew sailing check every day (gale, rain, fog, narrows) where a bad roll costs time, damage or a hand overboard. Shrike-gulls, rescued kelpfolk (a gift), a comic parley with an offended walrus matriarch and her gossiping seals, Copperleaf privateers at three strengths, raiders climbing the hull, three weather-selling Tidewives on a night islet, a drifting ghost hulk, sunken ruins, a serpent’s hoard. Mostly travel and events, a quarter fights, the rest social or puzzle. | Two stages: **the Thunder-Heron** riding the storm, then **the Grey Leviathan** | Bosun Pike; **Stormcaller’s Plume** (gear) |
 | 7 | Jul | **The Ashen Isle** | Castaways on a volcanic jungle island of the **Pale Kiln**, bone-potters who fire the dead into servants. Web groves, a marsh of the risen, coloured hot springs (hazard or boon), a black-glass ridge, Kiln scouts, a plateau. A tense bargain with an imprisoned ash-dryad. A trap-filled temple: hall of lore, hall of statues (puzzle), corridors of trials (each trap a trigger + effect + twist), a lava chamber. | **The Kiln-Born** on a hazardous floor. The legacy comes from a **choice** afterwards. | Emberlind; **Lv 7** |
 | 8 | Aug | **The Kindling Height** | The climb to the Wardens of the Kindling at the summit, to deliver the Seedcrown. Agathe’s reunion; the rebuilt Brass Gardener returns twice; a hoard of rockhorn rams; a pass guardian (combat gate); an abandoned mine; a lost thunder-heron chick to return rather than fight (it links to Ch6); a ghost and standing stones; the summit gate; the shrine. About a third each fights, puzzles and social; the rest is alpine weather. **Twist:** the founders *stole* the Seedcrown, and the Accord was the forest’s mercy. | A **parley with the Elder of Thorns** that turns into a fight if talks fail. The legacy comes from a **choice** at the shrine. | Agathe (follower); **Warden’s Kindling-Lantern** (gear) |
-| 9 | Sep | *Blight on the Fernfields* (outline) | Thornwake war-bands and rot across farmland, a countryside under siege. The Wellspring is poisoned and must be cleansed once the war-band falls. | **The Twinbole**, a two-trunked treant warlord fought as two foes, then the cleansing of the Wellspring | — |
-| 10 | Oct | *Up the Rootwater* (outline) | By river toward the lost hall of Loamhallow: foraging, a moss giant (talk or fight), river-trolls, a werefox pack, and the thorn-cursed **White Hart** to cure. Finale: hold a fork outpost in waves. | The hold at the fork. **Lv 8** (the cap) | — |
+| 9 | Sep | **Blight on the Fernfields** | Down from the Kindling Height into the **Fernfields**, the farmland that feeds Highmarrow, now under siege by Thornwake war-bands (**Marshal Sloe's Briar Host**) while a grey rot (rot-hounds, rotwing crows, sporecap shamblers, walking scarecrows) creeps over the barley. Tansy Cross, Hobnail Bridge and Longfurrow; a three-night mid-month siege of **Whistlemill** (set-piece); the march on **Firstwater**, the Fernreach's oldest spring, which has been poisoned. Marshal Sloe falls, then the boss. The Wellspring is cleansed on the next page (Oct 1, the weekend after the boss), where the Mosswife gives the chapter's signature gear and points up the Rootwater. | **The Twinbole**, a two-trunked treant warlord fought as two foes (Heartward and Rotward trunks) | **Hesper Dunmoor** (follower, farmwife), Orrin Haye the miller; **Firstwater Dewdrop** (gear) |
+| 10 | Oct | **Up the Rootwater** | By punt up the Rootwater from Reedmere Landing toward **Loamhallow**, the lost hall of the first signatories, at the river's fork. Foraging the banks, snappers, a beaver-dam lock, rapids, a stilt-village on drift-ice, a **Moss Giant** (a parley that eases or hardens the fight), river-trolls under Greyspan Bridge (and their toll-court), the werefox pack and its alpha **Marrow-Eye**, the thorn-cursed **White Hart** to cure (nine black thorns), then the finale: hold the **Alderfork** outpost in three waves (Exchange river-wardens, Thornwake reed-raiders, then both at once). Ends at the gate of Loamhallow with Crane's own sealed orders. | **The Hold at the Fork**: Rivermaster Garrow Pellam and two Thornwake Reed-Raiders, all at once. Level 8 (the cap) follows on the weekend. | **Russet** (follower, werefox youth), Mother Wickerly, Gaffer Thole; **Lv 8** |
 | 11 | Nov | *(placeholder)* Expose Crane | Expose Provost Crane before the city; shape to the next box. | — | — |
 | 12 | Dec | *(placeholder)* The Longest Night | Renew the Accord at the Heartwood; the final confrontation. | — | — |
 
-Chapters 9–10 are outlines and 11–12 are placeholders; each will be shaped to fit
-the matching box when it arrives, and each adds its own legacy pair.
+Chapters 11–12 are placeholders; each will be shaped to fit the matching box when
+it arrives, and each adds its own legacy pair.
 
 All characters, places and plot are original to GerdQuest Calendar.

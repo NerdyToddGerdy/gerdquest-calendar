@@ -42,7 +42,7 @@ export interface RewardTheme {
 }
 
 const STANDARD = [7, 30, 100, 200, 365]
-/** Verdant is a partial year (208 pages, chapters 1–8), so its milestones stop at 200. Switch it to STANDARD when all 12 chapters exist. */
+/** Verdant is a partial year (260 pages, chapters 1–10), so its milestones stop at 200. Switch it to STANDARD when all 12 chapters exist. */
 const SHORT = [7, 30, 100, 150, 200]
 
 function theme(
