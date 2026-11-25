@@ -137,37 +137,37 @@ const heroes: HeroDef[] = [
   hero({
     id: 'va_brannoc', name: 'Brannoc Tull', title: 'Wagon Guard', color: '#c4703a', weapon: 'Long-hafted woodaxe',
     blurb: 'A former logger built like a cart-horse. He quit the timber camps the day a tree he was felling spoke to him, and he won’t say what it said.',
-    traits: { str: 2, dex: 0, con: 2, int: -1, wis: 0, cha: 0 }, maxHp: 14, atk: 2, def: 4, dmgDie: 8,
+    traits: { str: 2, dex: 0, con: 2, int: -1, wis: 0, cha: 0 }, maxHp: 13, atk: 2, def: 3, dmgDie: 6,
     abilities: ['va_ab_shoulder', 'va_ab_cleave'],
   }),
   hero({
     id: 'va_sorrel', name: 'Sorrel Vey', title: 'Hedge-Witch', color: '#7fb86a', weapon: 'Rowan wand', glint: 6,
     blurb: 'She keeps a garden of things that shouldn’t grow in winter. This year they are flowering, and she wants to know why.',
-    traits: { str: -1, dex: 0, con: 0, int: 2, wis: 2, cha: 0 }, maxHp: 10, atk: 3, def: 2, dmgDie: 6, pools: { spell: 4 },
+    traits: { str: -1, dex: 0, con: 0, int: 2, wis: 2, cha: 0 }, maxHp: 11, atk: 3, def: 3, dmgDie: 6, pools: { spell: 4 },
     abilities: ['va_ab_herblore', 'va_ab_thornlash', 'va_ab_hedgesight'],
   }),
   hero({
     id: 'va_pip', name: 'Pip Larkspur', title: 'Road Urchin', color: '#b08ad0', weapon: 'Sling and a bent knife', glint: 8,
     blurb: 'Pip has ridden every caravan out of Cobbleford, mostly as a stowaway. This time Agathe caught them and made them sign on properly.',
-    traits: { str: 0, dex: 3, con: 0, int: 1, wis: -1, cha: 2 }, maxHp: 12, atk: 3, def: 3, dmgDie: 6,
+    traits: { str: 0, dex: 3, con: 0, int: 1, wis: -1, cha: 2 }, maxHp: 13, atk: 3, def: 3, dmgDie: 6,
     abilities: ['pickpocket', 'va_ab_lightstep', 'va_ab_scarper'],
   }),
   hero({
     id: 'va_aldous', name: 'Brother Aldous Fenn', title: 'Wayside Friar', color: '#e0c77a', weapon: 'Oak staff with a brass sun', glint: 5,
     blurb: 'He walks the roads blessing milestones and burying the travelers nobody else will. He has been very busy this winter.',
-    traits: { str: 0, dex: -1, con: 1, int: 1, wis: 3, cha: 1 }, maxHp: 11, atk: 2, def: 3, dmgDie: 6, pools: { spell: 3 },
+    traits: { str: 0, dex: -1, con: 1, int: 1, wis: 3, cha: 1 }, maxHp: 12, atk: 2, def: 3, dmgDie: 6, pools: { spell: 3 },
     abilities: ['va_ab_kindword', 'va_ab_mend', 'va_ab_sunblessing'],
   }),
   hero({
     id: 'va_kestrel', name: 'Kestrel Moss', title: 'Fernreach Ranger', color: '#5f9a7a', weapon: 'Yew longbow',
     blurb: 'She has walked the Fernreach since she was old enough to hold a bow. The forest has never frightened her before.',
-    traits: { str: 1, dex: 2, con: 1, int: 0, wis: 2, cha: 0 }, maxHp: 12, atk: 3, def: 2, dmgDie: 8,
+    traits: { str: 1, dex: 2, con: 1, int: 0, wis: 2, cha: 0 }, maxHp: 10, atk: 3, def: 2, dmgDie: 6,
     abilities: ['va_ab_tracker', 'va_ab_drawbreath', 'va_ab_twinshot'],
   }),
   hero({
     id: 'va_odo', name: 'Odo Brindle', title: 'Wandering Monk', color: '#a8c46a', weapon: 'Bare hands and a walking stick', glint: 3,
     blurb: 'Odo trained among the moss-shrines of the deep woods. When the shrine bells began ringing on their own, his teachers sent him out to find out why.',
-    traits: { str: 1, dex: 2, con: 1, int: 0, wis: 2, cha: -1 }, maxHp: 12, atk: 3, def: 3, dmgDie: 6, pools: { chi: 3 },
+    traits: { str: 1, dex: 2, con: 1, int: 0, wis: 2, cha: -1 }, maxHp: 14, atk: 3, def: 3, dmgDie: 6, pools: { chi: 3 },
     abilities: ['va_ab_stillroot', 'va_ab_palm', 'va_ab_breath'],
   }),
 ]
