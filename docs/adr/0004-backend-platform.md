@@ -10,10 +10,10 @@ Questender is a static Vite + React SPA. There is no backend. Saves are a JSON `
 
 What the backend has to do:
 
-1. Cloud saves (#2): Google sign-in now, Discord account linking later, per-user isolation, offline-first client with sync.
+1. Cloud saves (#2): optional accounts (email first, Google as an option, never required), Discord account linking later, per-user isolation, offline-first client with sync.
 2. Paid campaigns (#3): entitlements written only by the server (Stripe webhook), and **server-side page release by date**. Players must never receive a future page. The server must run the same date logic as the client (`campaign.ts`, `desk.ts`).
 3. Discord bot (#1): reads and writes the same saves, authenticated by Discord user ID, with a 3 s interaction deadline.
-4. A solo developer maintains it. "Maybe with AWS" is a preference, not a requirement.
+4. A solo developer maintains it as a **side project, so running cost must stay as close to $0 as possible** (see *Cost guardrails*). "Maybe with AWS" is a preference, not a requirement.
 
 ## Measured data: how big is a save?
 
@@ -85,13 +85,63 @@ Runner-up and when it would win: **C (Supabase)** if solo-dev time matters more 
 
 Other decisions folded in:
 
-- **Compute (#29):** Lambda (Node 22, esbuild bundles) for API, Stripe webhook and Discord interactions (HTTP API route or function URL). EventBridge Scheduler + Lambda for daily reminders. No always-on Discord gateway process: slash commands and buttons all arrive as interactions. Region: one US region (`us-east-1` or `us-east-2`) unless the player base says otherwise; revisit for residency. AWS Budgets alerts at $10/$25/$50, root MFA, separate dev and prod accounts.
+- **Compute (#29):** Lambda (Node 22, esbuild bundles) for API, Stripe webhook and Discord interactions (HTTP API route or function URL). EventBridge Scheduler + Lambda for daily reminders. No always-on Discord gateway process: slash commands and buttons all arrive as interactions. Region: one US region (`us-east-1` or `us-east-2`) unless the player base says otherwise; revisit for residency. AWS Budgets alerts at $1/$5/$10 (see Cost guardrails), root MFA, separate dev and prod accounts.
 - **IaC (#25):** CDK. SST v3 is a reasonable alternative (nicer `sst dev`), but it adds a Pulumi/Terraform layer and a smaller maintenance base.
 - **Types end to end (#25):** shared TypeScript request/response types (zod schemas) in `packages/api-types`, imported by both the client and the Lambdas. REST with a `/v1` prefix. Responses carry the save schema version so older cached clients can be refused or migrated.
 - **Server migrations (#26):** the server stores `schema` on each slot and runs the same `normalizeState` (moved to the shared package) on read.
 - **Packs (#26):** private S3 bucket (`packs/<campaignId>/<version>/`, versioning on); no public access; pages only through the release endpoint.
 - **Backups (#26):** DynamoDB PITR on, S3 versioning on. Account deletion: delete `USER#<sub>` partition, keep entitlement records in a purchases ledger as required for tax.
 - **Client storage:** localStorage stays the offline cache for slots; move released-page cache to IndexedDB in #3.
+
+## Sign-in methods (decided 2026-11-24)
+
+Accounts are **optional**. Playing without one stays exactly as today (saves on the device, Export/Import for backups). An account only adds cloud saves and, later, purchases.
+
+| Method | Cognito feature | Why |
+|---|---|---|
+| **Email + password** | User pool native sign-in, email as the username (an optional display name is a separate attribute) | For players who don't want to link Google. Email is required so a forgotten password can be reset. |
+| **Email one-time code** (passwordless) | Essentials-tier email OTP | Nothing to remember and nothing to leak. Offer it only if it stays inside the free tier (see guardrails); otherwise ship password-only first. |
+| **Continue with Google** | Google as a federated IdP | One tap for players who want it. Never required. |
+| Passkeys | Essentials-tier WebAuthn | Later, same free-tier condition. |
+| Discord | Link-only (see notes above) | Later, with #1. |
+
+Rules:
+
+- **Use Cognito's managed login pages** (hosted UI) instead of building sign-in screens. They cover sign-up, email verification, forgot password and lockout. The client stores no passwords and never sees them.
+- **Tokens:** Cognito issues JWTs (short-lived access token plus refresh token). API Gateway's built-in JWT authorizer verifies them, and every handler keys data by the token's `sub`, whichever method was used. The data model doesn't change by sign-in method.
+- **No silent account linking.** Signing up with email and later choosing Google with the same address creates a second Cognito user by default. We don't auto-merge. Account settings gets a **Link Google** button: the player signs in to both, and a small Lambda calls `AdminLinkProviderForUser` (only for verified emails). This avoids merging accounts the player didn't ask to merge.
+- **Password policy:** at least 8 characters, no composition rules (NIST 800-63B style). Lockout and rate limiting are Cognito's.
+- **Token storage:** the Cognito browser library keeps tokens in localStorage. That's acceptable while the game holds no payment data, as long as the site keeps a strict CSP and no third-party scripts. Revisit (an HttpOnly refresh cookie via a small backend route) before purchases (#3) ship.
+- **Account deletion** is self-serve in account settings: delete the Cognito user and the `USER#<sub>` partition (entitlement records go to the purchases ledger, see Backups).
+
+## Cost guardrails (side project)
+
+Target: **$0/month at hobby scale**, a few dollars at most, and never a surprise bill.
+
+- **Free-tier-only Cognito features.** Use the Lite tier (email + password and Google) unless Essentials is also inside the monthly free MAU allowance; check current pricing before enabling email OTP or passkeys. **No SMS**: it's billed per message and abused by toll fraud. **No Plus tier** (threat protection) at this size.
+- **Email:** start with Cognito's built-in email sender (free, but a low daily cap of about 50 emails). Move to SES (cents per thousand) only if verification or reset emails hit the cap. Never add a paid email service.
+- **Serverless, pay-per-use only:** HTTP API (not REST API), Lambda on arm64, DynamoDB on-demand. All idle at $0 and sit in or near the free tiers at hobby scale.
+- **Hard bans** (fixed monthly cost): no VPC-attached Lambdas and **no NAT gateway** (about $30+/mo each), no RDS/Aurora, no Fargate/EC2, no always-on bot gateway, no paid WAF rules, no CloudFront for the API.
+- **Logs:** CloudWatch log retention of 7 days on every function, no verbose request logging. Logs are the classic slow leak.
+- **Writes:** sync on page boundaries and a debounce, never per click. Gzip save bodies (about 5x fewer write units).
+- **Alarms:** AWS Budgets at **$1, $5 and $10** a month on each account, emailed to the owner. Root MFA on both accounts.
+- **Dev account:** tear down or leave idle. Nothing in it should cost money while unused.
+- A paid alternative (Supabase Pro, a hosted auth service) needs a new ADR that shows why the $0 path stopped working.
+
+## Privacy page (blocking for #2)
+
+`privacy.html` currently promises *"no accounts, no server of its own, no analytics and no cookies"* and says it will be updated before accounts or cloud saves are added. Before any account feature reaches production, update it (bump the version and date) to cover:
+
+1. **What an account stores:** email address, an optional display name, the Cognito user ID, sign-in method; and, for synced runs, the same game data that is local today (saves, notes, calendar entries, progress, settings), stored in AWS (DynamoDB, the region named) and encrypted at rest.
+2. **Accounts are optional:** playing without one keeps everything on the device, as today.
+3. **Processors:** AWS (hosting the API, database and sign-in), Google only if the player chooses "Continue with Google" (which profile fields we receive: email, name), and later Stripe for purchases and Discord if linked.
+4. **Cookies and storage:** Cognito's managed login sets strictly necessary cookies on its own domain; tokens are kept in the browser's local storage. These are necessary for sign-in, so no consent banner is needed, but they must be listed.
+5. **Retention and deletion:** how to delete the account (self-serve) and what is removed; backups (PITR) age out within 35 days; purchase records are kept as required for tax.
+6. **Emails:** we send only verification and password-reset or sign-in codes, with no marketing.
+7. **Children:** an email address is personal information. State a minimum age for creating an account (13, or the local age of digital consent), while keeping account-free play open to everyone.
+8. **Contact** for data requests (access, export, deletion), beyond GitHub issues.
+
+The terms page (`terms.html`) needs a matching update for accounts (one per person, keep the password safe, we may close abusive accounts).
 
 ## DynamoDB design (single table `questender`)
 
@@ -102,7 +152,8 @@ Key: `pk` (S), `sk` (S). On-demand billing, PITR on, TTL attribute `ttl`.
 | Slot metadata | `USER#<sub>` | `SLOT#<slotId>` | `campaignId, startDate, heroName, updated, rev, schema, bodyBytes` |
 | Slot body | `USER#<sub>` | `SAVE#<slotId>` | `body` (B, gzipped GameState JSON), `rev` |
 | Calendar notes | `USER#<sub>` | `CALENDAR` | `entries` (list), `updated` |
-| Settings | `USER#<sub>` | `SETTINGS` | `timezone` (IANA), prefs |
+| Settings | `USER#<sub>` | `SETTINGS` | `timezone` (IANA), prefs (theme, sound, tutorial tips on/off and seen tips) |
+| Desk progress | `USER#<sub>` | `PROGRESS` | `body` (gzipped `Progress`: days played, achievements, legacy marks seen, tokens, borders, chests), `rev` |
 | Entitlement | `USER#<sub>` | `ENTITLEMENT#<campaignId>` | `source` (stripe/gift/promo/free), `price, currency, purchasedAt, stripeSessionId` |
 | Linked identity | `USER#<sub>` | `LINK#discord` | `discordId, linkedAt` |
 | Discord reverse lookup | `DISCORD#<discordId>` | `LINK` | `sub` |
@@ -114,6 +165,7 @@ Access patterns:
 - List slots: `Query pk=USER#<sub>, sk begins_with SLOT#` (metadata only, bodies are under `SAVE#`, so a list never reads them).
 - Load slot: `GetItem` on `SLOT#<id>` and `SAVE#<id>` (BatchGet).
 - Save slot: `TransactWriteItems` of both items with condition `rev = :expected` (optimistic concurrency, so last-write-wins is explicit and the bot and web can't silently overwrite each other). Server checks: body size, schema, and page unlocked for the player's timezone.
+- Progress: `GetItem PROGRESS` on load. Save with the same `rev` condition. On first sign-in, merge with the device's copy using the engine's existing `mergeProgress` (union of days, achievements and tokens).
 - Library: `Query pk=USER#<sub>, sk begins_with ENTITLEMENT#` plus `Query pk=CATALOG`.
 - Webhook: conditional `PutItem` on `STRIPE#<eventId>` (`attribute_not_exists(pk)`) then the entitlement put, in one transaction, for idempotency.
 - Bot: `GetItem DISCORD#<id>` to resolve `sub`, then the same slot access.
@@ -184,13 +236,23 @@ Page release in this world is an edge function that checks `entitlements`, reads
 - We commit to AWS (Cognito, DynamoDB, Lambda) and to owning ~6 small Lambdas and a CDK app. Those are the first things to exist outside `src/`.
 - The engine (and `normalizeState`, `sanitizeEntries`) must be importable from Node. That lines up with the planned `packages/engine` move; the Lambdas depend on it.
 - Notes need a size cap before cloud sync ships.
+- Accounts are optional forever. Every feature must keep working without sign-in, except cloud sync and purchases.
+- The privacy and terms pages must change before accounts ship. Their current text promises no accounts and no server.
 - Discord login (as opposed to linking) is deferred. A custom OIDC bridge is the work if we want it.
 - Decisions to revisit if usage proves different: reporting needs (Postgres), notes size (separate item), regional residency.
 
 ## Next steps (these become the #2 work)
 
 1. **Adopt the seam in the client (no behavior change).** Use `SaveStore` (`src/saveStore.ts`, already added with a localStorage implementation and tests) from `App.tsx`: async load on startup with a brief loading state, async saves. Add a 64 KB cap on `notes`. Engine logic stays synchronous.
-2. **Infra skeleton in CDK (`infra/`).** `dev` AWS account only: Cognito user pool with Google as IdP (Discord is link-only, later), single DynamoDB table with the key design above, PITR on, HTTP API with a JWT authorizer, AWS Budgets alarms. Verify with `cdk synth`; deploy only after review.
+2. **Infra skeleton in CDK (`infra/`).** `dev` AWS account only:
+   - Cognito user pool (Lite tier) with email + password sign-in, managed login, and Google as an optional IdP. Discord is link-only, later.
+   - A single DynamoDB table with the key design above, PITR on.
+   - An HTTP API with a JWT authorizer.
+   - 7-day log retention.
+   - AWS Budgets alarms at $1/$5/$10.
+
+   Verify with `cdk synth`; deploy only after review.
 3. **Slots/calendar/settings Lambdas plus shared types.** Repository module keyed by JWT `sub`, zod schemas in `packages/api-types`, gzip body, `rev` optimistic concurrency, server validation (size, schema, page-unlocked check by stored timezone). Tests against DynamoDB Local, including cross-user access attempts.
-4. **`CloudSaveStore` and sync layer.** localStorage stays the offline cache. Push on page advance and on a debounce, pull on load, last-write-wins by `SlotMeta.updated` with the server `rev` as the arbiter, first-sign-in merge (upload local-only, download cloud-only, `mergeEntries` for calendar), and a synced/offline/syncing indicator plus sign-in/out UI.
-5. **Then #3 on the same table.** Catalog and entitlements items, Stripe checkout and webhook Lambdas (signature check, idempotency item), the date-release endpoint reusing the engine, and the private S3 pack bucket. The Discord interactions Lambda (#1) follows once `DISCORD#` links exist.
+4. **Privacy and terms pages** updated per *Privacy page* above, merged before any account UI is visible in production.
+5. **`CloudSaveStore` and sync layer.** localStorage stays the offline cache. Push on page advance and on a debounce, pull on load, last-write-wins by `SlotMeta.updated` with the server `rev` as the arbiter, first-sign-in merge (upload local-only, download cloud-only, `mergeEntries` for calendar), and a synced/offline/syncing indicator plus sign-in/out UI.
+6. **Then #3 on the same table.** Catalog and entitlements items, Stripe checkout and webhook Lambdas (signature check, idempotency item), the date-release endpoint reusing the engine, and the private S3 pack bucket. The Discord interactions Lambda (#1) follows once `DISCORD#` links exist.
