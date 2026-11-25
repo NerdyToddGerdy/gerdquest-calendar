@@ -1,11 +1,16 @@
 // Save codes: a save (or the all-campaigns bundle) as one line of text.
-//   GQC1.<base64url of deflate-raw JSON>.<8 hex CRC-32 of those bytes>
-//   GQC1u.<base64url of plain UTF-8 JSON>.<crc>   (browsers without CompressionStream)
+//   GQC2.<base64url of deflate-raw JSON>.<8 hex CRC-32 of those bytes>
+//   GQC2u.<base64url of plain UTF-8 JSON>.<crc>   (browsers without CompressionStream)
+// GQC2 carries save format v2 (compact journal references); GQC1 codes (v1
+// payloads, copied journal text) still decode and are upgraded on import.
 // The payload is exactly the JSON the old file export held, so decoding gives
 // back text that parseSaves already understands. Pure: no storage, no DOM.
 
-export const CODE_PREFIX = 'GQC1.'
-export const CODE_PREFIX_PLAIN = 'GQC1u.'
+export const CODE_PREFIX = 'GQC2.'
+export const CODE_PREFIX_PLAIN = 'GQC2u.'
+/** Prefixes of codes written by 0.11.x (v1 payloads). */
+const OLD_PREFIX = 'GQC1.'
+const OLD_PREFIX_PLAIN = 'GQC1u.'
 export const BAD_CODE = 'This save code is incomplete or mistyped. Check that you copied all of it.'
 
 /** True for text that looks like a save code (so old JSON files take the other path). */
@@ -60,10 +65,11 @@ export async function encodeSave(payload: unknown): Promise<string> {
 /** Turn a code back into the JSON text it holds. Throws a player-readable Error. */
 export async function decodeSave(code: string): Promise<string> {
   const text = code.replace(/\s+/g, '')
-  const plain = text.startsWith(CODE_PREFIX_PLAIN)
-  if (!plain && !text.startsWith(CODE_PREFIX)) {
+  const plain = text.startsWith(CODE_PREFIX_PLAIN) || text.startsWith(OLD_PREFIX_PLAIN)
+  const packed = text.startsWith(CODE_PREFIX) || text.startsWith(OLD_PREFIX)
+  if (!plain && !packed) {
     if (/^GQC\d/i.test(text)) throw new Error('This save code is from a newer version of GerdQuest Calendar. Update the game, then try again.')
-    throw new Error('That does not look like a save code. Codes start with GQC1.')
+    throw new Error('That does not look like a save code. Codes start with GQC2.')
   }
   const parts = text.slice(plain ? CODE_PREFIX_PLAIN.length : CODE_PREFIX.length).split('.')
   if (parts.length !== 2 || !/^[A-Za-z0-9_-]+$/.test(parts[0]) || !/^[0-9a-f]{8}$/i.test(parts[1])) throw new Error(BAD_CODE)

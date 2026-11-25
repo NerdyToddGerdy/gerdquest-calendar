@@ -12,7 +12,7 @@ const payload = {
 describe('save codes', () => {
   it('round trips a payload, including unicode', async () => {
     const code = await encodeSave(payload)
-    expect(code.startsWith('GQC1.')).toBe(true)
+    expect(code.startsWith('GQC2.')).toBe(true)
     expect(code).not.toMatch(/\s/)
     expect(JSON.parse(await decodeSave(code))).toEqual(payload)
   })
@@ -34,7 +34,7 @@ describe('save codes', () => {
     await expect(decodeSave('GQC1.')).rejects.toThrow(BAD_CODE)
   })
   it('versions the prefix', async () => {
-    await expect(decodeSave('GQC2.abc.00000000')).rejects.toThrow(/newer version/)
+    await expect(decodeSave('GQC3.abc.00000000')).rejects.toThrow(/newer version/)
     await expect(decodeSave('hello')).rejects.toThrow(/does not look like a save code/)
     expect(looksLikeCode(' GQC1.abc')).toBe(true)
     expect(looksLikeCode('{"version":1}')).toBe(false)
@@ -45,7 +45,7 @@ describe('save codes', () => {
     globalThis.CompressionStream = undefined
     try {
       const code = await encodeSave(payload)
-      expect(code.startsWith('GQC1u.')).toBe(true)
+      expect(code.startsWith('GQC2u.')).toBe(true)
       expect(JSON.parse(await decodeSave(code))).toEqual(payload)
     } finally {
       globalThis.CompressionStream = real

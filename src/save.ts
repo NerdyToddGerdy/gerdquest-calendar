@@ -1,6 +1,8 @@
 // Multiple save slots: one per campaign run (campaign + start date).
 //   questender.slots          → SlotMeta[] index
 //   questender.slot.<slotId>  → GameState
+// Slots are stored in save format v2 (compact journal references, see engine/saveFormat.ts);
+// v1 slots are upgraded and rewritten on load.
 // The single-save format from v1 (questender.save.v1) is migrated on first load.
 import { toISO, type ISODate } from '@questender/engine/calendar'
 import { alignedOnOrBefore, campaign, campaignEntry, DEFAULT_CAMPAIGN, defaultStartDate, listCatalog, loadCampaigns, pageDate } from '@questender/engine/campaign'
@@ -8,6 +10,7 @@ import type { GameState, JournalEntry } from '@questender/engine/types'
 import { loadEntries, sanitizeEntries, type CalendarEntry } from './calendarNotes'
 import { sanitizeProgress, type Progress } from '@questender/engine/progress'
 import { loadProgress } from './progressStore'
+import { fromStored, isStored, SAVE_FORMAT, toStored, type StoredState } from '@questender/engine/saveFormat'
 import { decodeSave, looksLikeCode } from './saveCode'
 
 const INDEX_KEY = 'questender.slots'
@@ -61,8 +64,9 @@ type LegacyFields = { playYear?: number }
  * - Saves with neither start a week back from `today`, like a new campaign.
  * The journal is rebuilt from whatever log history survived.
  */
-export function normalizeState(raw: GameState, today: ISODate): GameState {
-  const s = { ...raw } as GameState & LegacyFields
+export function normalizeState(input: GameState | StoredState, today: ISODate): GameState {
+  const raw: GameState = isStored(input) ? fromStored(input) : input
+  const s = { ...raw, version: SAVE_FORMAT } as GameState & LegacyFields
   if (!s.campaignId) s.campaignId = DEFAULT_CAMPAIGN
   if (!s.startDate) {
     const c = campaignEntry(s.campaignId)
@@ -85,8 +89,8 @@ export function normalizeState(raw: GameState, today: ISODate): GameState {
   return s
 }
 
-function validState(s: GameState | null): s is GameState {
-  return !!s && s.version === 1 && !!s.hero
+function validState(s: GameState | StoredState | null): s is GameState | StoredState {
+  return !!s && (s.version === 1 || s.version === 2) && !!s.hero
 }
 
 /**
@@ -106,14 +110,18 @@ export function listSlots(): SlotMeta[] {
 }
 
 export function loadSlot(slotId: string, today: ISODate): GameState | null {
-  const s = read<GameState>(SLOT_PREFIX + slotId)
-  return validState(s) ? normalizeState(s, today) : null
+  const raw = read<GameState | StoredState>(SLOT_PREFIX + slotId)
+  if (!validState(raw)) return null
+  const s = normalizeState(raw, today)
+  // A v1 slot is upgraded in place the first time it is read (nothing is lost; idempotent).
+  if (raw.version !== SAVE_FORMAT) write(SLOT_PREFIX + slotId, toStored(s))
+  return s
 }
 
 export function saveSlot(s: GameState): string | null {
   if (!s.hero) return null
   const slotId = slotIdFor(s.campaignId, s.startDate)
-  write(SLOT_PREFIX + slotId, s)
+  write(SLOT_PREFIX + slotId, toStored(s))
   const meta: SlotMeta = { slotId, campaignId: s.campaignId, startDate: s.startDate, heroName: s.hero.name, updated: Date.now() }
   write(INDEX_KEY, [meta, ...listSlots().filter((m) => m.slotId !== slotId)])
   return slotId
@@ -151,25 +159,35 @@ export function migrateLegacySave(today: ISODate): string | null {
   return id
 }
 
+/** How many Chronicle entries a save code carries (the full log stays on the device). */
+export const CODE_LOG_KEEP = 50
+
+/** A state as a code carries it: stored v2 form with the play log cut to the newest entries. */
+function codeState(s: GameState): StoredState {
+  return toStored({ ...s, log: s.log.slice(0, CODE_LOG_KEEP) })
+}
+
 /** What a single-campaign export holds (encode it as a save code). */
-export function singlePayload(s: GameState): GameState {
-  return s
+export function singlePayload(s: GameState): StoredState {
+  return codeState(s)
 }
 
 /** One save holding every campaign on the desk. */
 export interface SaveBundle {
   format: 'questender.bundle'
-  version: 1
+  version: 1 | 2
   exportedOn: ISODate
-  campaigns: GameState[]
+  /** Stored saves (v2; bundles from older versions hold v1 states). */
+  campaigns: (GameState | StoredState)[]
   /** The player's desk-wide calendar entries (optional; older bundles lack it). */
   calendar?: CalendarEntry[]
   /** The desk-wide progress record: days played, achievements, chests (optional; older bundles lack it). */
   progress?: Progress
 }
 
-export function bundleSaves(states: GameState[], exportedOn: ISODate, calendar: CalendarEntry[] = [], progress?: Progress): SaveBundle {
-  const bundle: SaveBundle = { format: 'questender.bundle', version: 1, exportedOn, campaigns: states }
+export function bundleSaves(states: GameState[], exportedOn: ISODate, calendar: CalendarEntry[] = [], progress?: Progress, forCode = false): SaveBundle {
+  const campaigns = states.map((s) => (forCode ? codeState(s) : toStored(s)))
+  const bundle: SaveBundle = { format: 'questender.bundle', version: SAVE_FORMAT, exportedOn, campaigns }
   if (calendar.length) bundle.calendar = calendar
   if (progress) bundle.progress = progress
   return bundle
@@ -177,7 +195,7 @@ export function bundleSaves(states: GameState[], exportedOn: ISODate, calendar: 
 
 /** What Export all holds: every campaign plus the desk's calendar entries and progress. */
 export function allPayload(states: GameState[], today: ISODate): SaveBundle {
-  return bundleSaves(states, today, loadEntries(), loadProgress())
+  return bundleSaves(states, today, loadEntries(), loadProgress(), true)
 }
 
 /** Calendar entries carried by an export file (none for single-campaign files). */
@@ -212,7 +230,7 @@ export function parseSaves(text: string, today: ISODate): GameState[] {
     throw new Error('Not a GerdQuest Calendar save file.')
   }
   const bundle = raw as Partial<SaveBundle> | null
-  const list = bundle?.format === 'questender.bundle' && Array.isArray(bundle.campaigns) ? bundle.campaigns : [raw as GameState]
+  const list = bundle?.format === 'questender.bundle' && Array.isArray(bundle.campaigns) ? bundle.campaigns : [raw as GameState | StoredState]
   if (!list.length) throw new Error('This export has no campaigns in it.')
   return list.map((s) => {
     if (!validState(s)) throw new Error('Not a GerdQuest Calendar save file.')
