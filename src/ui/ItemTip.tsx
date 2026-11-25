@@ -9,13 +9,13 @@ import { itemEffect } from './itemEffect'
 export function ItemTip({ item, children }: { item: ItemDef; children?: ReactNode }) {
   const id = `tip-${item.id}`
   return (
-    <span className="item-tip" tabIndex={0} aria-describedby={id}>
+    <button type="button" className="item-tip linkish" aria-describedby={id}>
       {children ?? item.name}
       <span role="tooltip" id={id} className="item-tip-box">
         <b>{item.name}</b>
         <span>{item.text}</span>
         {itemEffect(item) && <span className="item-tip-effect">{itemEffect(item)}</span>}
       </span>
-    </span>
+    </button>
   )
 }

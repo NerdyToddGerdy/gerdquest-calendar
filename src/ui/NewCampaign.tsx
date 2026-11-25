@@ -111,8 +111,8 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
           const warmup = unlockedThrough(camp, d, today) + 1
           const ago = daysBetween(d, today)
           return (
-            <label key={d} className={`start-pick ${d === startDate ? 'selected' : ''}`}>
-              <input type="radio" name="start" checked={d === startDate} onChange={() => setPicked(d)} />
+            <label key={d} htmlFor={`start-${d}`} className={`start-pick ${d === startDate ? 'selected' : ''}`}>
+              <input id={`start-${d}`} type="radio" name="start" checked={d === startDate} onChange={() => setPicked(d)} />
               <span>
                 <b>{formatLong(d)}</b>
                 <span className="muted small">
