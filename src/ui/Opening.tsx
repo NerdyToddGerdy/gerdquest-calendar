@@ -6,7 +6,9 @@ import type { PackStatus } from '../useCampaignPacks'
  */
 export function Opening({ what, status, className = '' }: { what: string; status: Pick<PackStatus, 'error' | 'retry'>; className?: string }) {
   return (
-    <div className={`opening ${className}`} role="status" aria-live="polite">
+    <div className={`opening ${className}`}
+      // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a live region holding block content (headings, paragraphs, buttons); <output> only allows phrasing content
+      role="status" aria-live="polite">
       {status.error ? (
         <>
           <p className="error">We couldn’t open {what}. Check your connection and try again.</p>

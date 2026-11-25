@@ -25,7 +25,8 @@ import { Settings } from './Settings'
 import { Shelf } from './Shelf'
 import type { Progress } from '@questender/engine/progress'
 import { styleAttrs } from './styleAttrs'
-import { Token, TokenPicker, tokenLabel } from './Token'
+import { Token, TokenPicker } from './Token'
+import { tokenLabel } from './tokenNames'
 import { recordExport } from '../deviceStorage'
 import { readDevOverride, writeDevOverride } from './today'
 
@@ -222,7 +223,9 @@ export function Desk(p: Props) {
 
       {p.slots.length === 0 ? (
         <main className="title-screen">
-          <div className="sealed-page" role="img" aria-label={`A calendar page for ${formatLong(p.today)}, not yet opened`}>
+          <div className="sealed-page"
+            // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a labelled non-image (glyph or composed markup) with no image source
+            role="img" aria-label={`A calendar page for ${formatLong(p.today)}, not yet opened`}>
             <div className="sp-rings" aria-hidden="true"><i /><i /><i /></div>
             <div className="sp-month">{formatLong(p.today).split(', ')[1].split(' ')[0]}</div>
             <div className="sp-day">{formatLong(p.today).split(', ')[1].split(' ')[1]}</div>
@@ -353,7 +356,9 @@ export function Desk(p: Props) {
 /** Small status mark on each tab; the words live in the title and aria-label. */
 function TabMark({ view, state, owed }: { view: TabView; state: GameState; owed: number }) {
   const mark = (cls: string, glyph: string, label: string) => (
-    <span className={`mark ${cls}`} role="img" aria-label={label} title={label}>
+    <span className={`mark ${cls}`}
+      // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a labelled non-image (glyph or composed markup) with no image source
+      role="img" aria-label={label} title={label}>
       {glyph}
     </span>
   )

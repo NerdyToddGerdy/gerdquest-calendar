@@ -5,7 +5,6 @@ import {
   DEFAULT_AVATAR,
   DEFAULT_BORDER,
   TOKEN_REWARDS,
-  cosmeticDef,
   type TokenCosmetic,
 } from '@questender/engine/tokens'
 import type { Progress } from '@questender/engine/progress'
@@ -13,6 +12,7 @@ import { PORTRAIT_IMAGES } from './portraits/art'
 import { PortraitArt } from './portraits/draw'
 import { PORTRAITS } from './portraits/specs'
 import { BOX } from './portraits/spec'
+import { avatarName, borderName, tokenLabel } from './tokenNames'
 
 /** How each border looks: two colours (outer to inner) and a small motif repeated around the rim. */
 type Motif = 'dots' | 'stars' | 'snow' | 'leaf' | 'waves' | 'dash' | 'ticks' | 'diamond' | 'pearl'
@@ -34,28 +34,12 @@ const BORDERS: Record<string, { a: string; b: string; motif?: Motif }> = {
 /** The head-and-shoulders crop of a 120x140 portrait box. */
 const CROP = '34 18 52 52'
 
-function nameOf(heroId: string): string {
-  try {
-    return heroDef(heroId).name
-  } catch {
-    return 'a hero'
-  }
-}
-
 function colourOf(heroId: string): string {
   try {
     return heroDef(heroId).color
   } catch {
     return '#8796a3'
   }
-}
-
-export function avatarName(id: string): string {
-  if (id === DEFAULT_AVATAR) return 'Plain token'
-  return cosmeticDef(id)?.name ?? nameOf(id)
-}
-export function borderName(id: string): string {
-  return cosmeticDef(id)?.name ?? 'Plain rim'
 }
 
 function Emblem({ campaignId }: { campaignId: string }) {
@@ -197,11 +181,6 @@ export function Token({ avatar, border, size = 40, label, className = '' }: Toke
   )
 }
 
-/** The accessible name of the player's token. */
-export function tokenLabel(avatar: string, border: string): string {
-  const who = avatar === DEFAULT_AVATAR ? 'plain token' : (cosmeticDef(avatar)?.name ?? nameOf(avatar))
-  return `Your token: ${who}, ${border === DEFAULT_BORDER ? 'plain border' : borderName(border).toLowerCase().replace(' rim', ' border')}`
-}
 
 interface PickerProps {
   progress: Progress
@@ -236,7 +215,9 @@ export function TokenPicker({ progress, onChoose, onClose }: PickerProps) {
     // Backdrop click is a mouse convenience only; keyboard users close with Esc (handled above) or the Close button.
     // oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div className="hero-modal-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="hero-modal token-picker" role="dialog" aria-modal="true" aria-label="Your token">
+      <div className="hero-modal token-picker"
+        // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a modal with its own focus trap over a click-away backdrop; native <dialog> would need showModal() and a top-layer rewrite
+        role="dialog" aria-modal="true" aria-label="Your token">
         <div className="settings-bar">
           <h2>Your token</h2>
           <button onClick={onClose} aria-label="Close your token">
@@ -253,7 +234,9 @@ export function TokenPicker({ progress, onChoose, onClose }: PickerProps) {
           <ul className="token-grid" role="radiogroup" aria-label="Token">
             {ownedAvatars.map((id, i) => (
               <li key={id} className="token-opt">
-                <button ref={i === 0 ? first : undefined} role="radio" aria-checked={avatar === id} className={avatar === id ? 'active' : ''} onClick={() => onChoose({ avatar: id, border })}>
+                <button ref={i === 0 ? first : undefined}
+                  // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a styled button in a radiogroup; native radio inputs would need a hidden-input restructure and new CSS
+                  role="radio" aria-checked={avatar === id} className={avatar === id ? 'active' : ''} onClick={() => onChoose({ avatar: id, border })}>
                   <Token avatar={id} border={border} size={56} />
                   <span>{avatarName(id)}</span>
                 </button>
@@ -272,7 +255,9 @@ export function TokenPicker({ progress, onChoose, onClose }: PickerProps) {
           <ul className="token-grid" role="radiogroup" aria-label="Border">
             {ownedBorders.map((id) => (
               <li key={id} className="token-opt">
-                <button role="radio" aria-checked={border === id} className={border === id ? 'active' : ''} onClick={() => onChoose({ avatar, border: id })}>
+                <button
+                  // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a styled button in a radiogroup; native radio inputs would need a hidden-input restructure and new CSS
+                  role="radio" aria-checked={border === id} className={border === id ? 'active' : ''} onClick={() => onChoose({ avatar, border: id })}>
                   <Token avatar={avatar} border={id} size={56} />
                   <span>{borderName(id)}</span>
                 </button>

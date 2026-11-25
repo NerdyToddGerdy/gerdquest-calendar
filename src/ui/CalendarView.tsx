@@ -114,6 +114,7 @@ export function CalendarView({ slots, viewDate, today, onPick, view: viewProp, o
     return (
       <button
         key={d}
+        // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a CSS-grid calendar of buttons; td/th would need a real table restructure
         role="gridcell"
         aria-label={label}
         aria-selected={selected === d}

@@ -49,7 +49,9 @@ export function Settings({ theme, onTheme, campaigns, slots, onDispatch, onImpor
     // Backdrop click is a mouse convenience only; keyboard users close with Esc (handled above) or the Close button.
     // oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div className="hero-modal-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="hero-modal settings" role="dialog" aria-modal="true" aria-label="Settings">
+      <div className="hero-modal settings"
+        // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a modal with its own focus trap over a click-away backdrop; native <dialog> would need showModal() and a top-layer rewrite
+        role="dialog" aria-modal="true" aria-label="Settings">
         <div className="settings-bar">
           <h2>Settings</h2>
           <button onClick={onClose} aria-label="Close settings">
@@ -63,6 +65,7 @@ export function Settings({ theme, onTheme, campaigns, slots, onDispatch, onImpor
             {THEMES.map((t) => (
               <button
                 key={t.id}
+                // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a styled button in a radiogroup; native radio inputs would need a hidden-input restructure and new CSS
                 role="radio"
                 aria-checked={theme === t.id}
                 className={theme === t.id ? 'active' : ''}
@@ -104,7 +107,9 @@ export function Settings({ theme, onTheme, campaigns, slots, onDispatch, onImpor
                       <div key={cat} className="look-row">
                         <span className="look-label">{STYLE_LABELS[cat]}</span>
                         <div className="segmented" role="radiogroup" aria-label={`${STYLE_LABELS[cat]} for ${campaign(s.state.campaignId).title}`}>
-                          <button role="radio" aria-checked={current === ''} className={current === '' ? 'active' : ''} onClick={() => onDispatch(s.id, { type: 'SET_STYLE', category: cat, id: null })}>
+                          <button
+                            // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a styled button in a radiogroup; native radio inputs would need a hidden-input restructure and new CSS
+                            role="radio" aria-checked={current === ''} className={current === '' ? 'active' : ''} onClick={() => onDispatch(s.id, { type: 'SET_STYLE', category: cat, id: null })}>
                             Default
                           </button>
                           {options.map((o) => {
@@ -112,6 +117,7 @@ export function Settings({ theme, onTheme, campaigns, slots, onDispatch, onImpor
                             return (
                               <button
                                 key={o.id}
+                                // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a styled button in a radiogroup; native radio inputs would need a hidden-input restructure and new CSS
                                 role="radio"
                                 aria-checked={current === o.id}
                                 className={current === o.id ? 'active' : ''}

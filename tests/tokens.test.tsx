@@ -13,7 +13,8 @@ import { REWARDS } from '@questender/engine/rewards'
 import type { GameState } from '@questender/engine/types'
 import { bundleSaves, parseProgress } from '../src/save'
 import { PORTRAITS } from '../src/ui/portraits/specs'
-import { Token, TokenPicker, tokenLabel } from '../src/ui/Token'
+import { Token, TokenPicker } from '../src/ui/Token'
+import { tokenLabel } from '../src/ui/tokenNames'
 
 const TODAY = '2026-03-18'
 

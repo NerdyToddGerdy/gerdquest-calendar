@@ -17,7 +17,9 @@ const SHOW_MS = 7000
 export function Toasts({ items, onDismiss }: { items: ToastItem[]; onDismiss: (id: string) => void }) {
   const first = items[0]
   const dismiss = useRef(onDismiss)
-  dismiss.current = onDismiss
+  useEffect(() => {
+    dismiss.current = onDismiss
+  })
   const firstId = first?.id
   useEffect(() => {
     if (!firstId) return
@@ -25,7 +27,9 @@ export function Toasts({ items, onDismiss }: { items: ToastItem[]; onDismiss: (i
     return () => clearTimeout(t)
   }, [firstId])
   return (
-    <div className="toast-region" role="status" aria-live="polite" aria-atomic="true">
+    <div className="toast-region"
+      // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a live region holding block content (headings, paragraphs, buttons); <output> only allows phrasing content
+      role="status" aria-live="polite" aria-atomic="true">
       {first && (
         <div className="toast" key={first.id}>
           <div className="toast-body">
