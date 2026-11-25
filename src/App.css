@@ -1323,7 +1323,7 @@ fieldset.looks legend { font-family: var(--display); font-size: 1.1rem; padding:
 .toast { pointer-events: auto; display: flex; gap: 8px; align-items: flex-start; background: var(--panel); color: var(--text); border: 1px solid var(--accent); border-radius: var(--radius);
   padding: 12px 14px; box-shadow: 0 10px 30px -8px var(--shadow); animation: toast-in 0.3s ease-out; }
 .toast-body { flex: 1; min-width: 0; }
-.toast-label { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.toast-label { font-size: 0.72rem; color: var(--accent); }
 .toast-title { font-family: var(--display); font-size: 1.3rem; }
 .toast-text, .toast-more { margin: 2px 0 0; font-size: 0.9rem; }
 .toast-more { color: var(--muted); font-size: 0.8rem; }
