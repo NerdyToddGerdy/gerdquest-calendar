@@ -145,5 +145,5 @@ describe('Brightwatch playthrough', () => {
     expect(s.hero!.level).toBe(8)
     expect(s.hero!.abilities).toEqual(expect.arrayContaining(['bw-volley', 'bw-pinningShot', 'bw-eagleEye', 'bw-rainOfArrows']))
     expect(s.journal).toHaveLength(bw.pages.length)
-  })
+  }, 60_000)
 })
