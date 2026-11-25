@@ -3,7 +3,7 @@ import type { Campaign } from '../../../engine/types'
 import { VERDANT_CONTENT, VERDANT_LEGACY } from './content'
 import { DAYS } from './days/index'
 
-/** The Fernreach calendar: one in-world month per chapter. Chapters 9–12 come later. */
+/** The Fernreach calendar: one in-world month per chapter. Chapters 11–12 come later. */
 const MONTHS = ['Firstleaf', 'Rootmoon', 'Thawmoon', 'Blossomtide', 'Greenmoon', 'Fenmoon', 'Antlermoon', 'Emberleaf', 'Marrowmoon', 'Ledgermoon', 'Snowroot', 'Longnight']
 
 function inWorldDate(i: number): string {

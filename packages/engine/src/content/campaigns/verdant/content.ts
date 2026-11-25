@@ -1,5 +1,5 @@
 // The Verdant Accord — original heroes, abilities, items, enemies, followers
-// and legacy marks for a classic-rules forest campaign (Chapters 1–8 of 12).
+// and legacy marks for a classic-rules forest campaign (Chapters 1–10 of 12).
 import type { AbilityDef, ContentPack, EnemyDef, HeroDef, ItemDef, LegacyDef, LevelSpec, MemberDef } from '../../../engine/types'
 
 const abilities: AbilityDef[] = [
@@ -62,10 +62,12 @@ const abilities: AbilityDef[] = [
   { id: 'va_ab_turnip', name: 'Turnip’s Back', kind: 'passive', bonus: 2, tags: ['travel'], text: '+2 to travel checks (from Turnip).' },
   { id: 'va_ab_minnow', name: 'Minnow’s Shortcuts', kind: 'passive', bonus: 2, tags: ['stealth'], text: '+2 to sneaking (from Minnow).' },
   { id: 'va_ab_sedge', name: 'Lamplighter’s Lore', kind: 'passive', bonus: 2, tags: ['lore'], text: '+2 to lore checks (from Old Sedge).' },
+  { id: 'va_ab_hesper', name: 'Farmwife’s Know-How', kind: 'passive', bonus: 2, tags: ['physical', 'lore'], text: '+2 to rolls about crops, blight, tools and hard work (from Hesper Dunmoor).' },
+  { id: 'va_ab_russet', name: 'Russet’s Nose', kind: 'passive', bonus: 2, tags: ['travel', 'perception'], text: '+2 to tracking and spotting trouble on a trail (from Russet).' },
   { id: 'va_ab_juggle', name: 'Thrown Clubs', kind: 'addDie', per: 'rest', uses: 2, die: 4, slots: ['attack'], text: 'Twice per Rest (from Fennick): add d4 to an Attack roll.' },
 ]
 
-/** Levels 2–7: a level per chapter through Chapter 5, then Chapter 7 (level 7). Chapter 10 will add level 8; Chapters 6 and 8 reward signature gear instead. */
+/** Levels 2–8: a level per chapter through Chapter 5, then Chapter 7 (level 7) and Chapter 10 (level 8, the cap). Chapters 6, 8 and 9 reward signature gear instead. */
 const LEVELS: Record<string, Record<number, LevelSpec>> = {
   va_brannoc: {
     2: { maxHp: 4, atk: 1, traits: { con: 1 }, ability: 'va_ab_standfast' },
@@ -74,6 +76,7 @@ const LEVELS: Record<string, Record<number, LevelSpec>> = {
     5: { maxHp: 4, atk: 1, dmgDie: 10 },
     6: { maxHp: 4, def: 1, ability: 'va_ab_fellingblow' },
     7: { maxHp: 5, atk: 1, traits: { str: 1 }, dmgDie: 12 },
+    8: { maxHp: 5, def: 1, traits: { con: 1 } },
   },
   va_sorrel: {
     2: { maxHp: 3, def: 1, pools: { spell: 2 }, ability: 'va_ab_poultice' },
@@ -82,6 +85,7 @@ const LEVELS: Record<string, Record<number, LevelSpec>> = {
     5: { maxHp: 3, atk: 1, dmgDie: 8, pools: { spell: 1 } },
     6: { maxHp: 3, def: 1, pools: { spell: 2 }, ability: 'va_ab_rootsnare' },
     7: { maxHp: 3, atk: 1, dmgDie: 10, pools: { spell: 1 } },
+    8: { maxHp: 4, atk: 1, pools: { spell: 2 } },
   },
   va_pip: {
     2: { maxHp: 3, atk: 1, traits: { dex: 1 }, ability: 'va_ab_sling' },
@@ -90,6 +94,7 @@ const LEVELS: Record<string, Record<number, LevelSpec>> = {
     5: { maxHp: 3, atk: 1, dmgDie: 8 },
     6: { maxHp: 4, def: 1, ability: 'va_ab_cheapshot' },
     7: { maxHp: 4, atk: 1, traits: { dex: 1 }, dmgDie: 10 },
+    8: { maxHp: 4, def: 1, atk: 1 },
   },
   va_aldous: {
     2: { maxHp: 3, pools: { spell: 1 }, ability: 'va_ab_steadyhand' },
@@ -98,6 +103,7 @@ const LEVELS: Record<string, Record<number, LevelSpec>> = {
     5: { maxHp: 4, atk: 1, dmgDie: 8, pools: { spell: 1 } },
     6: { maxHp: 3, pools: { spell: 1 }, ability: 'va_ab_psalm' },
     7: { maxHp: 4, def: 1, dmgDie: 10, pools: { spell: 1 } },
+    8: { maxHp: 4, atk: 1, pools: { spell: 2 } },
   },
   va_kestrel: {
     2: { maxHp: 3, def: 1, ability: 'va_ab_fieldcraft' },
@@ -106,6 +112,7 @@ const LEVELS: Record<string, Record<number, LevelSpec>> = {
     5: { maxHp: 4, def: 1, dmgDie: 10 },
     6: { maxHp: 4, atk: 1, ability: 'va_ab_pinshot' },
     7: { maxHp: 4, def: 1, traits: { dex: 1 }, dmgDie: 12 },
+    8: { maxHp: 4, atk: 1, def: 1 },
   },
   va_odo: {
     2: { maxHp: 3, pools: { chi: 1 }, ability: 'va_ab_oakfist' },
@@ -114,6 +121,7 @@ const LEVELS: Record<string, Record<number, LevelSpec>> = {
     5: { maxHp: 4, atk: 1, dmgDie: 8, pools: { chi: 1 } },
     6: { maxHp: 4, def: 1, pools: { chi: 1 }, ability: 'va_ab_rootstance' },
     7: { maxHp: 4, atk: 1, dmgDie: 10, pools: { chi: 1 } },
+    8: { maxHp: 5, def: 1, pools: { chi: 1 } },
   },
 }
 
@@ -198,6 +206,7 @@ const items: ItemDef[] = [
   { id: 'va_glassshard', name: 'Black-Glass Shard-Blade', kind: 'gear', slot: 'hands', bonus: { atk: 1, dmg: 1 }, magical: true, price: 26, text: 'Magical. +1 Attack, +1 Damage. Volcanic glass, knapped so sharp it hums.' },
   { id: 'va_kindlelantern', name: 'Warden’s Kindling-Lantern', kind: 'gear', slot: 'hands', bonus: { atk: 1, def: 1, maxHp: 3 }, magical: true, price: 34, text: 'Magical. +1 Attack, +1 Defense, +3 max health. A coal of the Kindling in a horn lantern. Mountain Chapter’s signature prize.' },
   { id: 'va_embercharm', name: 'Ember-Seed Charm', kind: 'gear', slot: 'trinket', bonus: { atk: 1, maxHp: 4 }, magical: true, price: 30, text: 'Magical. +1 Attack, +4 max health. The ember-seed in a cage of black glass: warm, heavy, and not yours.' },
+  { id: 'va_dewdrop', name: 'Firstwater Dewdrop', kind: 'gear', slot: 'trinket', bonus: { def: 1, wis: 1, maxHp: 3 }, magical: true, price: 32, text: 'Magical. +1 Defense, +1 Wisdom, +3 max health. A bead of the Fernreach’s oldest spring, held in a loop of living root: cold, clean and never quite dry. The Blight Chapter’s signature prize.' },
   { id: 'va_clocklens', name: 'Spindle’s Loupe', kind: 'gear', slot: 'head', bonus: { def: 1, int: 2 }, magical: true, price: 26, text: 'Magical. +1 Defense, +2 Intellect. A clockmaker’s eyeglass with a dozen tiny lenses.' },
 ]
 
@@ -265,6 +274,26 @@ const enemies2: EnemyDef[] = [
   { id: 'va_gatewarden', name: 'Summit Gate Guardian', ac: 18, toughness: 13, hits: 19, dmg: 6, text: 'An antlered figure of ice and iron that guards the last gate of the Kindling. It has held it for four hundred years.' },
   { id: 'va_thornvanguard', name: 'Thornwake Vanguard', ac: 18, toughness: 11, hits: 19, dmg: 6, text: 'A veteran warrior of the forest’s vanguard: thorn-armour, a hooked spear, and the Elder’s own war-cry on her lips.' },
   { id: 'va_elder', name: 'The Elder of Thorns', ac: 18, toughness: 15, hits: 19, dmg: 8, text: 'The oldest voice of the Thornwake: a figure of black briar and white blossom, taller than a doorway, who remembers the theft.' },
+  // Chapter 9 — Blight on the Fernfields
+  { id: 'va_rothound', name: 'Rot-Hound', ac: 17, toughness: 10, hits: 18, dmg: 5, text: 'A farm dog gone grey and soft at the edges, with mildew in its coat and a rattle where its bark was.' },
+  { id: 'va_rotcrow', name: 'Rotwing Crow Flock', ac: 17, toughness: 8, hits: 17, dmg: 4, text: 'Crows that fed on the blighted barley and came up wrong: bald, blue-tongued and entirely without fear.' },
+  { id: 'va_hedgecutter', name: 'Thornwake Hedge-Cutter', ac: 18, toughness: 11, hits: 19, dmg: 5, text: 'A war-band footman in bark-plate with a billhook grown from his own forearm. He cuts fences, barns and people with equal calm.' },
+  { id: 'va_drummer', name: 'Thornwake War-Drummer', ac: 17, toughness: 10, hits: 18, dmg: 5, text: 'A drummer with a hollow-log drum and a bark mask. Every beat makes the briar warriors around it hit harder.' },
+  { id: 'va_sporearcher', name: 'Thornwake Spore-Archer', ac: 18, toughness: 10, hits: 19, dmg: 5, text: 'A skirmisher whose arrows are tipped with puffball spores that bloom in the wound.' },
+  { id: 'va_sporecap', name: 'Sporecap Shambler', ac: 17, toughness: 12, hits: 18, dmg: 5, text: 'A heap of rotted straw and toadstools that stands up when the blight is thick. It leaves a trail of grey dust.' },
+  { id: 'va_scarecrow', name: 'Hollow Scarecrow', ac: 18, toughness: 11, hits: 18, dmg: 5, text: 'A field scarecrow the blight has taught to walk. It carries its own pitchfork and it knows where the crows are.' },
+  { id: 'va_sloe', name: 'Marshal Sloe', ac: 18, toughness: 15, hits: 19, dmg: 7, text: 'Marshal of the Briar Host: a lean figure in blackthorn plate, with sloe-berries for eyes and a reaping-hook as long as a cart-shaft.' },
+  { id: 'va_twinbole_a', name: 'The Twinbole, Heartward Trunk', ac: 18, toughness: 12, hits: 19, dmg: 6, text: 'The first trunk of a two-headed treant warlord: green, broad, still leafed on one side, with a face like a grieving oak.' },
+  { id: 'va_twinbole_b', name: 'The Twinbole, Rotward Trunk', ac: 18, toughness: 12, hits: 19, dmg: 6, text: 'The second trunk: black with blight, hollow, dripping, with a branch-arm that drags a pool of grey water behind it.' },
+  // Chapter 10 — Up the Rootwater
+  { id: 'va_snapper', name: 'Rootwater Snapper', ac: 18, toughness: 11, hits: 19, dmg: 5, text: 'A snapping turtle the size of a dinghy, with a back grown over in water-moss. It mistakes boats for large, slow fish.' },
+  { id: 'va_mossgiant', name: 'The Moss Giant', ac: 18, toughness: 13, hits: 19, dmg: 6, text: 'A giant of river-boulders and moss who has been asleep at the narrows so long that the river learned to go round him.' },
+  { id: 'va_rivertroll', name: 'River-Troll', ac: 18, toughness: 12, hits: 19, dmg: 6, text: 'A grey-green troll who lives under the stone bridges and charges a toll in whatever you are least willing to give.' },
+  { id: 'va_werefox', name: 'Werefox Packrunner', ac: 18, toughness: 10, hits: 19, dmg: 5, text: 'A rust-red youth who runs on four legs by moonlight and two by day, and has strong opinions about trespass.' },
+  { id: 'va_foxalpha', name: 'Marrow-Eye, Alpha of the Pack', ac: 18, toughness: 13, hits: 19, dmg: 6, text: 'The pack’s old alpha: a big grey werefox with one white eye, who has not lost a dispute in twenty winters.' },
+  { id: 'va_riverwarden', name: 'Exchange River-Warden', ac: 18, toughness: 11, hits: 19, dmg: 5, text: 'A Copperleaf bargee in a good oilskin and a bad temper, with a boathook, a lantern and sealed orders from the Provost.' },
+  { id: 'va_reedraider', name: 'Thornwake Reed-Raider', ac: 18, toughness: 12, hits: 19, dmg: 5, text: 'A Thornwake river-warrior who comes out of the reed-beds in a hide canoe, with a barbed throwing-spear and a woven bark shield.' },
+  { id: 'va_rivermaster', name: 'Rivermaster Garrow Pellam', ac: 18, toughness: 14, hits: 19, dmg: 6, text: 'Crane’s master of the river-wardens: broad, bearded, sunburnt, and quite certain the Provost’s money makes him right.' },
 ]
 
 const follower = (m: Omit<MemberDef, 'kind' | 'maxHp' | 'abilities'>): MemberDef => ({ kind: 'critter', maxHp: 1, abilities: [], ...m })
@@ -277,6 +306,8 @@ const members: MemberDef[] = [
   follower({ id: 'va_f_ottoline', name: 'Ottoline Spindle', fee: 14, follower: { upkeep: 3, grants: ['va_ab_ottoline'] }, text: 'The clockmaker who carried the Seedcrown out of the city. She keeps a spring-wound lantern, a pocket of tools and no illusions.' }),
   follower({ id: 'va_f_pike', name: 'Bosun Pike', fee: 10, follower: { upkeep: 2, grants: ['va_ab_pike'] }, text: 'The Mudlark’s bosun: a stub-nosed bargewoman who can read the river by the colour of its mud.' }),
   follower({ id: 'va_f_agathe', name: 'Agathe Rook', fee: 12, follower: { upkeep: 3, grants: ['va_ab_roadwise'] }, text: 'Sixty years old, forty of them on the road, and not about to be left at the foot of a mountain.' }),
+  follower({ id: 'va_f_hesper', name: 'Hesper Dunmoor', fee: 12, follower: { upkeep: 3, grants: ['va_ab_hesper'] }, text: 'A Fernfields farmwife with a scythe, a ledger and a sour opinion of anything that spoils a harvest.' }),
+  follower({ id: 'va_f_russet', name: 'Russet', fee: 10, follower: { upkeep: 2, grants: ['va_ab_russet'] }, text: 'A young werefox who knows every riverbank trail and has not decided yet whether to be a person or a fox.' }),
   follower({ id: 'va_f_fennick', name: 'Fennick', fee: 12, follower: { upkeep: 3, grants: ['va_ab_juggle'] }, text: 'A Spring Fair juggler whose clubs are heavier than they look.' }),
 ]
 
@@ -298,6 +329,10 @@ export const VERDANT_LEGACY: LegacyDef[] = [
   { id: 'va_l7_loss', chapter: 7, name: 'The Seed Kept', text: 'You kept the ember-seed. The dryad keeps her silence, and a bargain broken follows a hero. Wilds let in.' },
   { id: 'va_l8_win', chapter: 8, name: 'The Kindling Kept', text: 'You fed the Kindling, and it burned on at the summit. The Wardens will answer a call. Accord kept.' },
   { id: 'va_l8_loss', chapter: 8, name: 'The Kindling Out', text: 'You let the Kindling go out, and the mountain went dark and quiet. The forest will not forget who chose. Wilds let in.' },
+  { id: 'va_l9_win', chapter: 9, name: 'The Wellspring Cleansed', text: 'The Twinbole fell and Firstwater ran clear. The Fernfields will harvest again, and the farmers will answer when you call. Accord kept.' },
+  { id: 'va_l9_loss', chapter: 9, name: 'The Wellspring Fouled', text: 'The Twinbole drove you from the hollow and the spring stayed poisoned. The blight seeps downriver, and the farmers remember who left. Wilds let in.' },
+  { id: 'va_l10_win', chapter: 10, name: 'The Fork Held', text: 'You held the fork outpost against two armies, and the Rootwater stayed open to Loamhallow. The river-folk keep a lamp lit for you. Accord kept.' },
+  { id: 'va_l10_loss', chapter: 10, name: 'The Fork Lost', text: 'The outpost fell and the Rootwater went to those who took it. You won through to the hall, but not clean. Wilds let in.' },
 ]
 
 /** The running tally from Chapter 5 on: marks that kept the Accord, and marks that let the Wilds in. */
