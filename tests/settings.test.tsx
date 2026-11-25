@@ -42,7 +42,7 @@ describe('Settings menu', () => {
 
   it('offers appearance, import/export and what’s new', () => {
     const out = html()
-    for (const label of ['System', 'Light', 'Dark', 'Export all campaigns', 'Import from file…', 'What’s new', `v${APP_VERSION}`]) expect(out).toContain(label)
+    for (const label of ['System', 'Light', 'Dark', 'Export all campaigns', 'Import a save…', 'What’s new', `v${APP_VERSION}`]) expect(out).toContain(label)
     expect(out).toMatch(/aria-checked="true"[^>]*>Light</)
     for (const r of CHANGELOG) expect(out).toContain(r.title)
   })

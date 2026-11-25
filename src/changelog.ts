@@ -14,6 +14,16 @@ export interface Release {
 
 export const CHANGELOG: Release[] = [
   {
+    version: '0.11.0',
+    date: '2026-11-24',
+    title: 'Save codes',
+    changes: [
+      'Export now gives you a save code: one line of text you can copy and paste somewhere safe, instead of a file. Use Copy code, or Save as text file for a very long one.',
+      'Import has a box to paste a save code into. You can also choose a code file, and your older .json export files still work.',
+      'A fresh campaign makes a code of about 1,000 characters; a full year of play is about 30,000.',
+    ],
+  },
+  {
     version: '0.10.0',
     date: '2026-11-24',
     title: 'A new name: GerdQuest Calendar',

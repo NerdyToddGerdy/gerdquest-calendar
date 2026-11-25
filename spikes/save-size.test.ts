@@ -3,16 +3,17 @@
 // Run: npx vitest run spikes/save-size.test.ts   (prints a table)
 import { gzipSync } from 'node:zlib'
 import { describe, expect, it } from 'vitest'
+import { encodeSave } from '../src/saveCode'
 import { listCampaigns } from '@questender/engine/campaign'
 import { canAdvance, initialState, reduce, type Action } from '@questender/engine/state'
 import type { GameState } from '@questender/engine/types'
 
 const DDB_LIMIT = 400 * 1024
 
-function playYear(campaignId: string, seed: number): GameState {
+function playYear(campaignId: string, seed: number, stopAtPage = Infinity): GameState {
   const camp = listCampaigns().find((c) => c.id === campaignId)!
   let s = reduce(initialState(), { type: 'NEW_GAME', seed, campaignId, startDate: '2026-01-03' })
-  for (let guard = 0; guard < 30000 && !s.finished; guard++) {
+  for (let guard = 0; guard < 30000 && !s.finished && s.dayIndex < stopAtPage; guard++) {
     if (s.pending) {
       s = s.pending.type === 'pickpocket' ? reduce(s, { type: 'PICKPOCKET', take: true }) : reduce(s, { type: 'CONFIRM' })
       continue
@@ -70,4 +71,16 @@ describe('save size after a full year', () => {
   it('summary', () => {
     console.log('\n' + rows.join('\n'))
   })
+})
+
+describe('save code length (GQC1) for one campaign', () => {
+  for (const c of listCampaigns()) {
+    it(c.id, async () => {
+      const len = async (s: GameState) => (await encodeSave(s)).length
+      const fresh = await len(playYear(c.id, 42, 0))
+      const mid = await len(playYear(c.id, 42, Math.floor(c.pages.length / 2)))
+      const full = await len(playYear(c.id, 42))
+      console.log(`CODELEN ${c.id.padEnd(12)} pages=${c.pages.length} fresh=${fresh} mid=${mid} full=${full}`)
+    }, 120_000)
+  }
 })
