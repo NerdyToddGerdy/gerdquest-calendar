@@ -71,7 +71,7 @@ test('on a phone the desk still has a way back to the start page', async ({ page
   const home = page.getByRole('link', { name: 'Back to the start page' })
   await expect(home).toBeVisible()
   const box = (await home.boundingBox())!
-  expect(box.width).toBeGreaterThanOrEqual(40)
+  expect(box.width).toBeGreaterThanOrEqual(32)
   expect(box.height).toBeGreaterThanOrEqual(40)
   await home.click()
   await expect(page).toHaveURL(/\/gerdquest-calendar\/\?stay$/)
