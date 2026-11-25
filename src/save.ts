@@ -8,6 +8,7 @@ import type { GameState, JournalEntry } from '@questender/engine/types'
 import { loadEntries, sanitizeEntries, type CalendarEntry } from './calendarNotes'
 import { sanitizeProgress, type Progress } from '@questender/engine/progress'
 import { loadProgress } from './progressStore'
+import { decodeSave, looksLikeCode } from './saveCode'
 
 const INDEX_KEY = 'questender.slots'
 const SLOT_PREFIX = 'questender.slot.'
@@ -150,20 +151,12 @@ export function migrateLegacySave(today: ISODate): string | null {
   return id
 }
 
-function download(data: unknown, filename: string) {
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
-  const a = document.createElement('a')
-  a.href = URL.createObjectURL(blob)
-  a.download = filename
-  a.click()
-  URL.revokeObjectURL(a.href)
+/** What a single-campaign export holds (encode it as a save code). */
+export function singlePayload(s: GameState): GameState {
+  return s
 }
 
-export function exportSave(s: GameState) {
-  download(s, `gerdquest-${s.campaignId}-${s.startDate}-page${s.dayIndex + 1}.json`)
-}
-
-/** One file holding every campaign on the desk. */
+/** One save holding every campaign on the desk. */
 export interface SaveBundle {
   format: 'questender.bundle'
   version: 1
@@ -182,8 +175,9 @@ export function bundleSaves(states: GameState[], exportedOn: ISODate, calendar: 
   return bundle
 }
 
-export function exportAll(states: GameState[], today: ISODate) {
-  download(bundleSaves(states, today, loadEntries(), loadProgress()), `gerdquest-all-${today}.json`)
+/** What Export all holds: every campaign plus the desk's calendar entries and progress. */
+export function allPayload(states: GameState[], today: ISODate): SaveBundle {
+  return bundleSaves(states, today, loadEntries(), loadProgress())
 }
 
 /** Calendar entries carried by an export file (none for single-campaign files). */
@@ -245,15 +239,17 @@ async function loadPacksFor(text: string) {
   await loadCampaigns(campaignIdsIn(text).filter((id) => known.has(id)))
 }
 
-export async function importSaves(file: File, today: ISODate): Promise<GameState[]> {
-  const text = await file.text()
-  await loadPacksFor(text)
-  return parseSaves(text, today)
+/**
+ * The text of an import: a pasted save code is decoded, anything else is taken
+ * as an old JSON export file.
+ */
+export async function importText(raw: string): Promise<string> {
+  return looksLikeCode(raw) ? decodeSave(raw) : raw
 }
 
-/** Read an export file: its campaigns plus any calendar entries. */
-export async function importFile(file: File, today: ISODate): Promise<{ states: GameState[]; calendar: CalendarEntry[]; progress: Progress | null }> {
-  const text = await file.text()
+/** Read an import (pasted code or JSON text): its campaigns plus any calendar entries. */
+export async function importSaveText(raw: string, today: ISODate): Promise<{ states: GameState[]; calendar: CalendarEntry[]; progress: Progress | null }> {
+  const text = await importText(raw)
   await loadPacksFor(text)
   return { states: parseSaves(text, today), calendar: parseCalendar(text), progress: parseProgress(text) }
 }
