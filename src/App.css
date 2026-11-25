@@ -425,6 +425,22 @@ button.active { border-color: var(--accent); }
   overflow-x: auto;
   border-bottom: 1px solid var(--line);
 }
+/* Wide screens: tabs wrap onto extra rows instead of running off screen. */
+@media (min-width: 601px) { .tabs { flex-wrap: wrap; overflow-x: visible; } }
+.tabs-bar { position: relative; }
+.tabs-scroll {
+  position: absolute; bottom: 0; z-index: 1; width: 32px; height: 36px; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 1.3rem; line-height: 1;
+  background: var(--panel-2); color: var(--text); border: 1px solid var(--line); border-radius: 8px;
+}
+.tabs-scroll[hidden] { display: none; }
+.tabs-scroll.left { left: 2px; }
+.tabs-scroll.right { right: 2px; }
+.tabs-scroll:focus-visible, .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.tabs-bar[data-more-right='true'] .tabs { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 44px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 44px), transparent); }
+.tabs-bar[data-more-left='true'] .tabs { -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 44px), transparent); mask-image: linear-gradient(to left, #000 calc(100% - 44px), transparent); }
+.tabs-bar[data-more-left='true'][data-more-right='true'] .tabs { -webkit-mask-image: linear-gradient(to right, transparent, #000 44px, #000 calc(100% - 44px), transparent); mask-image: linear-gradient(to right, transparent, #000 44px, #000 calc(100% - 44px), transparent); }
+.tab-title { max-width: 24ch; overflow: hidden; text-overflow: ellipsis; }
 .tab {
   border-radius: 8px 8px 0 0;
   border-bottom: none;
@@ -861,7 +877,7 @@ button:disabled { opacity: 1; color: var(--muted); background: transparent; bord
   .desk-head .datebar { margin-top: 10px; padding-top: 0; }
   .datebar { grid-template-columns: 44px 1fr 44px; gap: 6px; }
   .arrow { width: 44px; height: 44px; font-size: 1.7rem; }
-  .tabs {
+  .tabs-bar {
     position: sticky; top: var(--topbar-h); z-index: 9; background: var(--bg);
     margin-top: 10px; box-shadow: 0 6px 10px -8px var(--shadow);
   }
@@ -1174,7 +1190,7 @@ body {
 @media (max-width: 600px) {
   .topbar { height: calc(var(--topbar-h) + var(--safe-top)); }
   .topbar:has(.view-switch .segmented + .segmented) { height: auto; }
-  .tabs { top: calc(var(--topbar-h) + var(--safe-top)); }
+  .tabs-bar { top: calc(var(--topbar-h) + var(--safe-top)); }
   .hero-modal-backdrop { padding-left: 0; padding-right: 0; }
   .hero-modal { padding-left: max(10px, env(safe-area-inset-left, 0px)); padding-right: max(10px, env(safe-area-inset-right, 0px)); }
 }
@@ -1224,7 +1240,7 @@ body {
 
 /* Phone landscape: little height, so nothing sticks and the page is not squeezed. */
 @media (orientation: landscape) and (max-height: 500px) {
-  .topbar, .desk-head, .tabs { position: static; }
+  .topbar, .desk-head, .tabs-bar { position: static; }
   .scene { max-height: 45vh; }
   .layout { padding-top: 8px; }
   .datebar { margin-top: 8px; }
