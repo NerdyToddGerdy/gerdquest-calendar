@@ -114,7 +114,10 @@ export function Desk(p: Props) {
   return (
     <div className="desk">
       <nav className="topbar">
-        <span className="brand">GerdQuest Calendar</span>
+        {/* The game lives in play/; ?stay keeps the start page from sending a returning player straight back. */}
+        <a className="brand" href="../?stay" title="Back to the start page">
+          GerdQuest Calendar
+        </a>
         {p.slots.length > 0 && (
           <div className="view-switch">
             <div className="segmented" role="tablist" aria-label="View">

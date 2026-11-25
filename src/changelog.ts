@@ -14,6 +14,12 @@ export interface Release {
 
 export const CHANGELOG: Release[] = [
   {
+    version: '0.12.1',
+    date: '2026-11-25',
+    title: 'Home is one click away',
+    changes: ['Click the GerdQuest Calendar title at the top of your desk to go back to the start page.'],
+  },
+  {
     version: '0.12.0',
     date: '2026-11-24',
     title: 'Shorter save codes',
