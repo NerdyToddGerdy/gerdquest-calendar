@@ -9,6 +9,24 @@ Settings → What's new. Add every release to both, and bump `package.json`
 
 Versions before 0.5.0 were reconstructed after the fact from the code.
 
+## [0.12.0] — 2026-11-24
+
+### Changed
+- **Save format v2** (`packages/engine/src/engine/saveFormat.ts`, `packVersion.ts`). `GameState.version` is now `1 | 2`.
+  The in-memory state is unchanged (journal lines are text); at the storage boundary (localStorage slots, bundles,
+  codes) `journal` is replaced by `jrnl`: authored lines (option results, check results, combat/dogfight texts) are
+  content coordinates into the campaign pack, and engine-generated lines are number/name-abstracted templates stored
+  once per save. Every line is verified by decoding it again at encode time, so v1 text === render(v2) and anything
+  that does not round trip stays a literal.
+- **Content version stamp**: each save records the pack's version (FNV-1a hash of its pages, computed at pack
+  registration, plus the optional `version` field of the campaign entry). References that no longer resolve show
+  "(entry from an earlier version)" instead of failing. No per-reference fingerprint (see ADR 0004).
+- **Migration**: v1 slots are upgraded on load and rewritten as v2; v1 JSON files, v1 bundles (with calendar and
+  progress) and `GQC1` codes are upgraded on import. Idempotent. Old app versions cannot read v2 saves.
+- Save codes use the prefix `GQC2.` / `GQC2u.`; `GQC1` codes still decode. Codes carry only the newest 50 log entries
+  (`CODE_LOG_KEEP`); slots keep the full 300. Full-year codes dropped from ~27-30k to ~7k characters (halcyon ~9.5k).
+- `spikes/save-size.test.ts` reports v1 vs v2 raw, gzip and code sizes; ADR 0004 gains "Cloud save shape".
+
 ## [0.11.0] — 2026-11-24
 
 ### Changed

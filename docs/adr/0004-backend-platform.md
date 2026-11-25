@@ -179,6 +179,19 @@ create policy catalog_admin on catalog for all to authenticated
 
 Page release in this world is an edge function that checks `entitlements`, reads `start_date` and `settings.timezone`, and returns only pages with `pageDate() <= today`. The Discord bot uses the service role and `discord_links`.
 
+## Cloud save shape (decision for #2)
+
+Save format v2 (0.12.0, `engine/saveFormat.ts`) already stores the journal, 70-80% of a save, as references into the campaign pack instead of copied sentences (a full year is about 35-45 KB raw instead of 90-125 KB; save codes about 7k characters instead of 28k). Cloud storage should build on it rather than re-uploading the whole year on every page:
+
+- **Small snapshot item.** `SLOT#<slotId>` holds the current hero, party, progress, `rev`, the pack version stamp and the journal templates/names tables (all small and bounded). No journal pages in it.
+- **One append-only record per finished page.** `PAGE#<slotId>#<pageIndex>` holds that page's journal references and the choices made (a few hundred bytes). Finishing a page is one transaction: put the `PAGE#` item (condition `attribute_not_exists`) and update the snapshot with `rev = :expected`. Past pages are never rewritten, so write volume per day is constant instead of growing across the year, and a conflict can only be on the snapshot.
+- **Served against versioned campaign packs (#3).** Packs are immutable and addressed by version (`CATALOG` already has `version`); a slot pins the pack version it started on (the v2 `jrnl.v` stamp), so references always resolve. Editing a campaign publishes a new version for new runs and never changes pinned ones. This replaces the local best-effort drift handling (neutral "(entry from an earlier version)" line) with a guarantee.
+- **Full log stored separately.** The 300-entry Chronicle lives in its own item (`LOG#<slotId>`), written with the snapshot but excluded from slot listings and from codes (codes already carry only the newest 50).
+- **Codes become short references.** Once saves exist in the cloud, a share/transfer code can be a short pointer (slot id plus a one-time token) instead of the whole payload; the offline GQC2 code stays as the no-account backup.
+- **Deterministic replay** (seed plus the player's choices reproduces the state) becomes viable only with pinned pack versions, since any content or engine-rule edit changes the outcome. Not planned for #2; the `PAGE#` records keep the choices so it stays possible.
+
+Rejected: a per-reference text fingerprint in v2 saves. It would detect edited content without a pack stamp, but costs roughly a fifth of the size saving, and pinned versions make it unnecessary in the cloud.
+
 ## Consequences
 
 - We commit to AWS (Cognito, DynamoDB, Lambda) and to owning ~6 small Lambdas and a CDK app. Those are the first things to exist outside `src/`.

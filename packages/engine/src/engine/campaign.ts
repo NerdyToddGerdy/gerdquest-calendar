@@ -8,6 +8,7 @@
 // line up with the real calendar — no need to wait for January.
 import { registerContent } from './content'
 import { addDays, daysBetween, toISO, weekday, type ISODate } from './calendar'
+import { packVersion } from './packVersion'
 import { rulesFor } from './ruleset'
 import type { Campaign, CampaignEntry, Day } from './types'
 
@@ -15,6 +16,7 @@ const entries = new Map<string, CampaignEntry>()
 const loaded = new Map<string, Campaign>()
 const loaders = new Map<string, () => Promise<Campaign>>()
 const inFlight = new Map<string, Promise<Campaign>>()
+const versions = new Map<string, string>()
 
 /** Campaign a new game starts in when nothing else is chosen. */
 export const DEFAULT_CAMPAIGN = 'brightwatch'
@@ -40,6 +42,12 @@ export function registerCampaign(c: Campaign): void {
   if (!entries.has(c.id)) registerCatalog(c)
   registerContent(c.id, c.content ?? {})
   loaded.set(c.id, c)
+  versions.set(c.id, packVersion(c))
+}
+
+/** Content version stamp of a loaded campaign pack (see packVersion.ts); '' if it isn't loaded. */
+export function contentVersion(id: string): string {
+  return versions.get(id) ?? ''
 }
 
 /** Say how to fetch a campaign's pack later. The loader may import() it. */

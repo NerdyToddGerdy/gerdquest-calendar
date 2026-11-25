@@ -79,6 +79,16 @@ export const crewDef = lookup<CrewDef>('crew')
 export const upgradeDef = lookup<ShipUpgradeDef>('upgrades')
 export const craftDef = lookup<CraftDef>('craft')
 
+/** Display names of every registered definition (heroes, enemies, items…), for the save format's name table. */
+export function contentNames(): string[] {
+  const out = new Set<string>()
+  for (const t of tables.values()) for (const x of t.values()) {
+    const name = (x as { name?: unknown }).name
+    if (typeof name === 'string' && name.length >= 3) out.add(name)
+  }
+  return [...out]
+}
+
 /** The shared base heroes (registered under the key "base"): the default roster when a campaign names none. */
 export function baseHeroIds(): string[] {
   return (packs.get('base')?.heroes ?? []).map((h) => h.id)

@@ -93,7 +93,7 @@ export function newProgress(day: Day | undefined): DayProgress {
 
 export function initialState(seed = 1): GameState {
   return {
-    version: 1,
+    version: 2,
     rng: seed,
     hero: null,
     party: [],

@@ -314,7 +314,8 @@ export interface LogEntry {
 }
 
 export interface GameState {
-  version: 1
+  /** Save format: 1 = journal lines stored as copied text; 2 = compact references (see engine/saveFormat.ts). */
+  version: 1 | 2
   rng: number
   hero: Hero | null
   party: PartyMember[]
@@ -402,6 +403,12 @@ export interface CampaignEntry {
    * `afterPrologue` don't offer it on those pages.
    */
   prologuePages?: number
+  /**
+   * Optional explicit content version. Bump it when pages are edited in a way
+   * that changes what saved journal references resolve to; it is combined with
+   * the automatic content hash (see engine/packVersion.ts).
+   */
+  version?: string
 }
 
 /** A loaded campaign: its catalog entry plus pages and content. */

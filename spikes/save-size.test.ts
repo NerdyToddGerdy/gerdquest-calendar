@@ -1,44 +1,16 @@
-// Spike (#26): how big is a GameState after a full campaign year?
+// Spike (#26, updated for save format v2): how big is a GameState after a full campaign year?
 // Plays every page with the real reducer, then reports JSON bytes raw/gzipped.
 // Run: npx vitest run spikes/save-size.test.ts   (prints a table)
 import { gzipSync } from 'node:zlib'
 import { describe, expect, it } from 'vitest'
 import { encodeSave } from '../src/saveCode'
 import { listCampaigns } from '@questender/engine/campaign'
-import { canAdvance, initialState, reduce, type Action } from '@questender/engine/state'
+import { playYear } from '../tests/helpers/playYear'
+import { fromStored, toStored } from '@questender/engine/saveFormat'
+import { singlePayload } from '../src/save'
 import type { GameState } from '@questender/engine/types'
 
 const DDB_LIMIT = 400 * 1024
-
-function playYear(campaignId: string, seed: number, stopAtPage = Infinity): GameState {
-  const camp = listCampaigns().find((c) => c.id === campaignId)!
-  let s = reduce(initialState(), { type: 'NEW_GAME', seed, campaignId, startDate: '2026-01-03' })
-  for (let guard = 0; guard < 30000 && !s.finished && s.dayIndex < stopAtPage; guard++) {
-    if (s.pending) {
-      s = s.pending.type === 'pickpocket' ? reduce(s, { type: 'PICKPOCKET', take: true }) : reduce(s, { type: 'CONFIRM' })
-      continue
-    }
-    const next = s.progress.steps.findIndex((x) => x === null)
-    if (next >= 0) {
-      s = reduce(s, { type: 'CHOOSE', step: next, option: 0 })
-      continue
-    }
-    if (!canAdvance(s)) {
-      // Combat rounds / dogfight volleys: try each roll action until one changes state.
-      const tries: Action[] = [{ type: 'ROLL_ROUND' }, { type: 'ROLL_VOLLEY' } as Action]
-      const moved = tries.map((a) => reduce(s, a)).find((r) => r !== s)
-      if (!moved) throw new Error(`stuck on ${campaignId} page ${s.dayIndex}`)
-      s = moved
-      continue
-    }
-    if (camp.pages[s.dayIndex].rest && !s.progress.rested) {
-      s = reduce(s, { type: 'REST' })
-      continue
-    }
-    s = reduce(s, { type: 'NEXT_DAY', today: '2030-01-01' })
-  }
-  return s
-}
 
 const size = (v: unknown) => {
   const raw = Buffer.from(JSON.stringify(v))
@@ -73,14 +45,21 @@ describe('save size after a full year', () => {
   })
 })
 
-describe('save code length (GQC1) for one campaign', () => {
+describe('save size, v1 vs v2 (raw JSON / gzip / code length)', () => {
+  const row = async (s: GameState) => {
+    const v1 = { ...s, version: 1 }
+    const v2 = toStored(s)
+    const code1 = await encodeSave(v1)
+    const code2 = await encodeSave(singlePayload(s))
+    return `raw ${kb(size(v1).raw)}->${kb(size(v2).raw)}KB  journal ${kb(size(s.journal).raw)}->${kb(size(v2.jrnl).raw)}KB  gzip ${kb(size(v1).gz)}->${kb(size(v2).gz)}KB  code ${code1.length}->${code2.length}`
+  }
   for (const c of listCampaigns()) {
     it(c.id, async () => {
-      const len = async (s: GameState) => (await encodeSave(s)).length
-      const fresh = await len(playYear(c.id, 42, 0))
-      const mid = await len(playYear(c.id, 42, Math.floor(c.pages.length / 2)))
-      const full = await len(playYear(c.id, 42))
-      console.log(`CODELEN ${c.id.padEnd(12)} pages=${c.pages.length} fresh=${fresh} mid=${mid} full=${full}`)
+      const fresh = playYear(c.id, 42, 0)
+      const mid = playYear(c.id, 42, Math.floor(c.pages.length / 2))
+      const full = playYear(c.id, 42)
+      expect(fromStored(toStored(full)).journal).toEqual(full.journal)
+      console.log(`SIZES ${c.id.padEnd(12)} fresh: ${await row(fresh)}\nSIZES ${c.id.padEnd(12)} mid:   ${await row(mid)}\nSIZES ${c.id.padEnd(12)} full:  ${await row(full)}`)
     }, 120_000)
   }
 })
