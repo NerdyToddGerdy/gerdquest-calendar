@@ -9,6 +9,18 @@ Settings → What's new. Add every release to both, and bump `package.json`
 
 Versions before 0.5.0 were reconstructed after the fact from the code.
 
+## [0.11.0] — 2026-11-24
+
+### Changed
+- Export produces a **save code** instead of a `.json` file. Format `GQC1.<base64url(deflate-raw(JSON))>.<CRC-32 hex>`
+  (`GQC1u.` = uncompressed fallback when `CompressionStream` is missing); the JSON is exactly what the old export held
+  (single state or the `questender.bundle`). Typos and truncation are caught by the checksum and reported as
+  "incomplete or mistyped". Pure module `src/saveCode.ts` (`encodeSave`/`decodeSave`).
+- Export dialog (per-campaign Export and Export all): read-only code field, Copy code, length in words, and
+  Save as text file (`gerdquest-<name>-<date>.txt`). The backup reminder records an export on Copy or Save.
+- Import dialog: paste a code or choose a file. Old `.json` exports (and `.txt` code files) still import.
+- Privacy page describes export as a code, not a file.
+
 ## [0.10.0] — 2026-11-24
 
 ### Changed

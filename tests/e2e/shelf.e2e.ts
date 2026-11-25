@@ -1,9 +1,8 @@
-import { readFile } from 'node:fs/promises'
-import { expect, finishPage, openDesk, startCampaign, test } from './fixtures'
+import { exportAllCode, expect, finishPage, importCode, openDesk, startCampaign, test } from './fixtures'
 
 const shelfTab = (page: import('@playwright/test').Page) => page.getByRole('tab', { name: 'Shelf', exact: true })
 
-test('finishing a page earns First light, shown by a toast and on the shelf, and survives export and import', async ({ page, browser, baseURL }, testInfo) => {
+test('finishing a page earns First light, shown by a toast and on the shelf, and survives export and import', async ({ page, browser, baseURL }) => {
   await openDesk(page)
   await startCampaign(page, 'The Lamp at Brightwatch')
 
@@ -20,13 +19,7 @@ test('finishing a page earns First light, shown by a toast and on the shelf, and
   await expect(first).toContainText('Your first page is done')
   await expect(page.getByText('Finish a page.')).toHaveCount(0)
 
-  await page.getByRole('button', { name: /^Settings/ }).click()
-  const download = page.waitForEvent('download')
-  await page.getByRole('button', { name: 'Export all campaigns' }).click()
-  const file = testInfo.outputPath('gerdquest-all.json')
-  await (await download).saveAs(file)
-  const bundle = JSON.parse(await readFile(file, 'utf8'))
-  expect(bundle.progress.achievements.map((a: { id: string }) => a.id)).toContain('first-light')
+  const code = await exportAllCode(page)
 
   const fresh = await browser.newContext({ baseURL })
   try {
@@ -36,7 +29,7 @@ test('finishing a page earns First light, shown by a toast and on the shelf, and
     other.on('console', (m) => m.type() === 'error' && problems.push(m.text()))
     other.on('pageerror', (e) => problems.push(e.message))
     await openDesk(other)
-    await other.locator('input[type="file"]').setInputFiles(file)
+    await importCode(other, code)
     await expect(other.getByRole('tab', { name: /Brightwatch/ })).toBeVisible()
     await shelfTab(other).click()
     await expect(other.getByRole('listitem').filter({ hasText: 'First light' })).toContainText('Your first page is done')

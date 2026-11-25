@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { defaultStartDate, campaign } from '@questender/engine/campaign'
 import { initialState, reduce } from '@questender/engine/state'
-import { bundleSaves, parseSaves } from '../src/save'
+import { emptyProgress } from '@questender/engine/progress'
+import { bundleSaves, importSaveText, parseSaves, singlePayload } from '../src/save'
+import { encodeSave } from '../src/saveCode'
 
 const today = '2026-11-23'
 const start = (campaignId: string) => {
@@ -48,5 +50,34 @@ describe('note dates', () => {
     s = reduce(s, { type: 'SET_NOTES', text: 'ab', date: '2026-11-20' })
     s = reduce(s, { type: 'SET_NOTES', text: 'abc', date: '2026-11-18' })
     expect(s.noteDates).toEqual(['2026-11-18', '2026-11-20'])
+  })
+})
+
+describe('save codes through import', () => {
+  it('round-trips a single campaign and a full bundle with calendar and progress', async () => {
+    const s = start('emberroad')
+    const single = await importSaveText(await encodeSave(singlePayload(s)), today)
+    expect(single.states).toHaveLength(1)
+    expect(single.states[0].hero?.name).toBe(s.hero?.name)
+
+    const calendar = [{ id: 'a', date: '2026-11-24', text: 'dentist' }] as never
+    const progress = { ...emptyProgress(), days: ['2026-11-20'] }
+    const bundle = bundleSaves(['brightwatch', 'halcyon'].map(start), today, calendar, progress)
+    const back = await importSaveText(await encodeSave(bundle), today)
+    expect(back.states.map((x) => x.campaignId)).toEqual(['brightwatch', 'halcyon'])
+    expect(back.calendar).toHaveLength(1)
+    expect(back.progress?.days).toEqual(['2026-11-20'])
+  })
+
+  it('still imports old pretty-printed JSON text', async () => {
+    const text = JSON.stringify(bundleSaves([start('emberroad')], today), null, 2)
+    expect((await importSaveText(text, today)).states).toHaveLength(1)
+    expect((await importSaveText(JSON.stringify(start('emberroad'), null, 2), today)).states).toHaveLength(1)
+  })
+
+  it('reports damaged codes and non-saves clearly', async () => {
+    const code = await encodeSave(singlePayload(start('emberroad')))
+    await expect(importSaveText(code.slice(0, -25), today)).rejects.toThrow(/incomplete or mistyped/)
+    await expect(importSaveText('not a save', today)).rejects.toThrow(/Not a GerdQuest Calendar save/)
   })
 })
