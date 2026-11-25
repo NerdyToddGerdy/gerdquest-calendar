@@ -14,6 +14,17 @@ export interface Release {
 
 export const CHANGELOG: Release[] = [
   {
+    version: '0.12.0',
+    date: '2026-11-24',
+    title: 'Shorter save codes',
+    changes: [
+      'Save codes are much shorter: a full year of play is now about 7,000 to 10,000 characters instead of about 28,000.',
+      'Your saves upgrade themselves the first time they load. Nothing changes in your Journal.',
+      'Codes carry your most recent 50 Chronicle entries; the full Chronicle stays on this device.',
+      'Old codes and export files still import. New codes start with GQC2 and need this version or newer.',
+    ],
+  },
+  {
     version: '0.11.0',
     date: '2026-11-24',
     title: 'Save codes',

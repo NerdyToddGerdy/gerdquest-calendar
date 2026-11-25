@@ -12,7 +12,7 @@ test('Export all, then Import in a fresh context restores the same tabs', async 
   expect(original).toHaveLength(2)
 
   const code = await exportAllCode(page)
-  expect(code.startsWith('GQC1')).toBe(true)
+  expect(code.startsWith('GQC2')).toBe(true)
   expect(code).not.toMatch(/\s/)
 
   const fresh = await browser.newContext({ baseURL })
@@ -43,7 +43,7 @@ test('Export code dialog: copy and save work, Esc closes and returns focus', asy
   await exportBtn.click()
   const dialog = page.getByRole('dialog', { name: /^Export / })
   const field = dialog.getByRole('textbox', { name: 'Save code' })
-  await expect(field).toHaveValue(/^GQC1u?\./)
+  await expect(field).toHaveValue(/^GQC2u?\./)
   const code = await field.inputValue()
   await expect(dialog).toContainText(/about [\d,]+ characters/)
   await page.bringToFront()
@@ -95,7 +95,7 @@ test('Import dialog still opens an old .json export file', async ({ page, browse
   const code = await exportAllCode(page)
   const json = await page.evaluate(async (c) => {
     // Rebuild the old-style file from the code, as the previous export wrote it.
-    const text = c.replace(/^GQC1u?\./, '').split('.')[0].replace(/-/g, '+').replace(/_/g, '/')
+    const text = c.replace(/^GQC2u?\./, '').split('.')[0].replace(/-/g, '+').replace(/_/g, '/')
     const bin = Uint8Array.from(atob(text), (ch) => ch.charCodeAt(0))
     const out = await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text()
     return JSON.stringify(JSON.parse(out), null, 2)

@@ -34,7 +34,7 @@ export function ImportDialog({ onImport, onClose }: Props) {
           className="code-field"
           rows={4}
           value={text}
-          placeholder="GQC1.…"
+          placeholder="GQC2.…"
           spellCheck={false}
           autoCapitalize="off"
           autoCorrect="off"

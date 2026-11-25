@@ -82,7 +82,7 @@ export async function exportAllCode(page: Page): Promise<string> {
   await page.getByRole('button', { name: 'Export all campaigns' }).click()
   const dialog = page.getByRole('dialog', { name: 'Export all campaigns' })
   const field = dialog.getByRole('textbox', { name: 'Save code' })
-  await expect(field).toHaveValue(/^GQC1u?\./)
+  await expect(field).toHaveValue(/^GQC2u?\./)
   const code = await field.inputValue()
   await dialog.getByRole('button', { name: 'Done' }).click()
   return code
