@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { legacyLabel } from './legacyLabel'
 import { WEEKDAY_NAMES, daysBetween, formatShort, parseISO, weekday } from '@questender/engine/calendar'
 import type { ISODate } from '@questender/engine/calendar'
@@ -9,6 +10,7 @@ import { canAdvance, maxRounds, meetsRequirement, stepAvailable, stepLocked, ste
 import { TRAIT_NAMES } from '@questender/engine/types'
 import type { Day, GameState } from '@questender/engine/types'
 import { HeroPreviewButton } from './HeroPreview'
+import { ConfirmHero } from './ConfirmHero'
 import { BandScale } from './BandScale'
 import { RollPanel } from './RollPanel'
 import { Scene } from './Scene'
@@ -55,6 +57,7 @@ export function DayView({ state, day, dispatch, today, onNext, nextHint }: Props
   const pend = state.pending
   const sheet = sheetParts(realDate, realEnd)
   const letters = 'ABCDEFG'
+  const [handoff, setHandoff] = useState<{ step: number; option: number; heroId: string } | null>(null)
 
   return (
     <article className="day">
@@ -125,7 +128,11 @@ export function DayView({ state, day, dispatch, today, onNext, nextHint }: Props
                     <button
                       className="option-btn"
                       disabled={!available || locked}
-                      onClick={() => dispatch({ type: 'CHOOSE', step: si, option: oi })}
+                      onClick={() => {
+                        const hand = opt.effects?.find((e) => e.type === 'setHero')
+                        if (hand?.type === 'setHero') setHandoff({ step: si, option: oi, heroId: hand.heroId })
+                        else dispatch({ type: 'CHOOSE', step: si, option: oi })
+                      }}
                     >
                       <span>{pickOne && !/^[A-Z]\)/.test(opt.label) ? `${letters[oi]}) ` : ''}{opt.label}</span>
                       {opt.check && (
@@ -158,6 +165,18 @@ export function DayView({ state, day, dispatch, today, onNext, nextHint }: Props
           </section>
         )
       })}
+
+      {handoff && (
+        <ConfirmHero
+          heroId={handoff.heroId}
+          replacesId={state.hero?.defId}
+          onCancel={() => setHandoff(null)}
+          onConfirm={() => {
+            dispatch({ type: 'CHOOSE', step: handoff.step, option: handoff.option })
+            setHandoff(null)
+          }}
+        />
+      )}
 
       {day.dogfight && <DogfightView state={state} day={day} dispatch={dispatch} />}
 

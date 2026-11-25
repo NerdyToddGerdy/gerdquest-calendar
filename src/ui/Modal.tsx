@@ -17,7 +17,8 @@ export function Modal({ label, onClose, children }: Props) {
   useEffect(() => {
     const before = document.activeElement as HTMLElement | null
     const root = box.current
-    root?.querySelector<HTMLElement>('[data-autofocus]')?.focus() ?? root?.querySelector<HTMLElement>(FOCUSABLE)?.focus()
+    // focus() returns undefined, so pick the target first (the old `a?.focus() ?? b?.focus()` always ran both).
+    ;(root?.querySelector<HTMLElement>('[data-autofocus]') ?? root?.querySelector<HTMLElement>(FOCUSABLE))?.focus()
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.stopPropagation()

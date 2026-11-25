@@ -11,6 +11,7 @@ import { slotExists } from '../save'
 import { useCampaignPacks } from '../useCampaignPacks'
 import { Opening } from './Opening'
 import { Portrait } from './Portrait'
+import { ConfirmHero } from './ConfirmHero'
 
 interface Props {
   today: ISODate
@@ -35,6 +36,8 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
   const startDate = picked && options.includes(picked) ? picked : defaultStartDate(entry, today)
   const taken = slotExists(campaignId, startDate)
   const [previewId, setPreviewId] = useState<string | null>(null)
+  // The hero awaiting an "are you sure?"; null for the fixed start hero is handled by `confirming`.
+  const [confirming, setConfirming] = useState<{ heroId?: string } | null>(null)
   const ruleset = rulesFor(entry.rulesetId)
 
   return (
@@ -136,7 +139,7 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
               : "You'll meet the other heroes as the story goes on."}
           </p>
           <HeroPreviewButton heroId={camp.startHero} label={`Preview ${heroDef(camp.startHero).name.split(' ')[0]}`} />{' '}
-          <button className="primary big" disabled={taken} onClick={() => onStart(campaignId, startDate)}>
+          <button className="primary big" disabled={taken} onClick={() => setConfirming({})}>
             Begin
           </button>
         </div>
@@ -172,7 +175,7 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
               ))}
             </ul>
             <div className="hero-pick-actions">
-              <button className="primary" disabled={taken} onClick={() => onStart(campaignId, startDate, h.id)}>
+              <button className="primary" disabled={taken} onClick={() => setConfirming({ heroId: h.id })}>
                 Choose {h.name.split(' ')[0]}
               </button>
               <button onClick={() => setPreviewId(h.id)}>Preview</button>
@@ -185,7 +188,7 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
           heroId={previewId}
           onClose={() => setPreviewId(null)}
           chooseDisabled={taken}
-          onChoose={() => onStart(campaignId, startDate, previewId)}
+          onChoose={() => setConfirming({ heroId: previewId })}
         />
       )}
       </>
@@ -193,6 +196,13 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
         </>
       ) : (
         <Opening what={entry.title} status={packs} />
+      )}
+      {confirming && camp && (
+        <ConfirmHero
+          heroId={confirming.heroId ?? camp.startHero!}
+          onCancel={() => setConfirming(null)}
+          onConfirm={() => onStart(campaignId, startDate, confirming.heroId)}
+        />
       )}
       <button onClick={onCancel}>Back</button>
     </main>

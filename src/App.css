@@ -1416,3 +1416,5 @@ fieldset.looks legend { font-family: var(--display); font-size: 1.1rem; padding:
   resize: vertical;
   max-height: 40vh;
 }
+.confirm-hero { display: grid; gap: 6px; justify-items: center; text-align: center; }
+.confirm-hero-actions { position: static; justify-content: center; flex-wrap: wrap; }

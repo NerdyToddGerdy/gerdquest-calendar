@@ -20,3 +20,24 @@ for (const { id, title } of CAMPAIGNS) {
     await expect(page.getByText(/page 1 of \d+, begun/)).toBeVisible()
   })
 }
+
+test('picking a hero asks first; Go back and Esc start nothing', async ({ page }) => {
+  await openDesk(page)
+  await page.getByRole('button', { name: 'New campaign' }).click()
+  await page.getByRole('button', { name: /^The Lamp at Brightwatch/ }).click()
+  const choose = page.getByRole('button', { name: /^Choose / }).first()
+  const begin = page.getByRole('button', { name: 'Begin', exact: true })
+  const pick = (await begin.isVisible()) ? begin : choose
+  await pick.click()
+  const confirm = page.getByRole('button', { name: /^Yes, play as / })
+  await expect(confirm).toBeFocused()
+  await page.getByRole('button', { name: 'Go back' }).click()
+  await expect(confirm).toHaveCount(0)
+  await pick.click()
+  await page.keyboard.press('Escape')
+  await expect(confirm).toHaveCount(0)
+  await expect(page.getByRole('tab', { name: /Lamp at Brightwatch/ })).toHaveCount(0)
+  await pick.click()
+  await confirm.click()
+  await expect(page.getByRole('tab', { name: /Lamp at Brightwatch/ })).toBeVisible()
+})
