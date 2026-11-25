@@ -69,6 +69,8 @@
 }
 .brand { font-family: var(--display); font-size: 1.5rem; font-weight: 700; color: var(--accent); text-decoration: none; }
 a.brand:hover { text-decoration: underline; text-underline-offset: 4px; }
+/* Compact home link: shown only on phones, where the brand is hidden. */
+.home-link { display: none; }
 .layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 340px;
@@ -862,6 +864,15 @@ button:disabled { opacity: 1; color: var(--muted); background: transparent; bord
   :root { --topbar-h: 52px; }
   .topbar { flex-wrap: nowrap; gap: 8px; padding: 6px 12px; height: var(--topbar-h); }
   .topbar .brand { display: none; }
+  .topbar .home-link {
+    display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
+    width: 32px; height: 44px; margin: 0 -2px 0 -4px; border-radius: 8px; color: var(--accent);
+  }
+  .topbar .home-link ~ .view-switch .segmented button { padding: 0 8px; }
+  .topbar .home-link ~ .row { gap: 4px; }
+  .topbar .home-link ~ .row .icon-btn, .topbar .home-link ~ .row .new-btn { width: 36px; }
+  .topbar .home-link:hover { background: var(--line); }
+  .topbar .home-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
   .view-switch { flex: 1 1 auto; min-width: 0; gap: 6px; flex-wrap: nowrap; overflow-x: auto; }
   .topbar > .row { flex: 0 0 auto; flex-wrap: nowrap; gap: 6px; margin-left: auto; }
   .topbar > .row button { padding: 0; font-size: inherit; }
