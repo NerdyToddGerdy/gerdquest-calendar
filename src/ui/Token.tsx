@@ -233,8 +233,10 @@ export function TokenPicker({ progress, onChoose, onClose }: PickerProps) {
   )
 
   return (
-    <div className="hero-modal-backdrop" onClick={onClose}>
-      <div className="hero-modal token-picker" role="dialog" aria-modal="true" aria-label="Your token" onClick={(e) => e.stopPropagation()}>
+    // Backdrop click is a mouse convenience only; keyboard users close with Esc (handled above) or the Close button.
+    // oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+    <div className="hero-modal-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="hero-modal token-picker" role="dialog" aria-modal="true" aria-label="Your token">
         <div className="settings-bar">
           <h2>Your token</h2>
           <button onClick={onClose} aria-label="Close your token">

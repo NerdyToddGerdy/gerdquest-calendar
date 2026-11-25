@@ -653,7 +653,9 @@ button.active { border-color: var(--accent); }
 }
 
 /* Item tooltips (pack and gear): hover, keyboard focus or tap */
-.item-tip { position: relative; cursor: help; border-bottom: 1px dotted var(--muted); outline-offset: 2px; }
+.item-tip { position: relative; cursor: help; border: 0; border-bottom: 1px dotted var(--muted); border-radius: 0; background: none; color: inherit; font: inherit; text-align: inherit; text-decoration: none; padding: 0; outline-offset: 2px; }
+.item-tip:hover:not(:disabled) { border-color: transparent; border-bottom-color: var(--muted); }
+.item-tip:focus-visible { outline: 2px solid var(--accent); }
 .item-tip-box {
   display: none; position: absolute; left: 0; top: calc(100% + 6px); z-index: 30;
   width: max-content; max-width: min(280px, 80vw); padding: 8px 10px; border-radius: 8px;
