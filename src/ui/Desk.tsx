@@ -119,6 +119,13 @@ export function Desk(p: Props) {
         <a className="brand" href="../?stay" title="Back to the start page">
           GerdQuest Calendar
         </a>
+        <a className="home-link" href="../?stay" aria-label="Back to the start page" title="Back to the start page">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 11.5 12 4l9 7.5" />
+            <path d="M5.5 10v9.5h13V10" />
+            <path d="M10 19.5v-5h4v5" />
+          </svg>
+        </a>
         {p.slots.length > 0 && (
           <div className="view-switch">
             <div className="segmented" role="tablist" aria-label="View">
