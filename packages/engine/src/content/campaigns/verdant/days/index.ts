@@ -1,6 +1,6 @@
-// The Verdant Accord — every page of Chapters 1–8, in order, dated against 2022
+// The Verdant Accord — every page of Chapters 1–10, in order, dated against 2022
 // (Jan 1 was a Saturday, so the year opens on a Sat/Sun weekend page).
-// Chapters 9–12 are added here as they are written.
+// Chapters 11–12 are added here as they are written.
 import type { Day } from '../../../../engine/types'
 import { datePages } from './build'
 import { M1 } from './m1'
@@ -11,6 +11,8 @@ import { M5 } from './m5'
 import { M6 } from './m6'
 import { M7 } from './m7'
 import { M8 } from './m8'
+import { M9 } from './m9'
+import { M10 } from './m10'
 
 export const DAYS: Day[] = datePages('2022-01-01', [
   [1, M1],
@@ -21,4 +23,6 @@ export const DAYS: Day[] = datePages('2022-01-01', [
   [6, M6],
   [7, M7],
   [8, M8],
+  [9, M9],
+  [10, M10],
 ])

@@ -95,3 +95,35 @@ export const SHOP_ALPINE: Stock = [
   { id: 'va_grip', price: 9 },
   { id: 'va_ironbark', price: 20 },
 ]
+
+/** Farmsteads and a mill-town market in the Fernfields: honest stock, dear in a blight year. */
+export const SHOP_FARM: Stock = [
+  { id: 'ration', price: 3 },
+  { id: 'va_fernleaf', price: 7 },
+  { id: 'va_heartsap', price: 11 },
+  { id: 'va_stagbrew', price: 13 },
+  { id: 'va_firepot', price: 5 },
+  { id: 'va_jerky', price: 4 },
+  { id: 'va_honeycake', price: 4 },
+  { id: 'va_mossbalm', price: 7 },
+  { id: 'va_wasp', price: 7 },
+  { id: 'va_whetstone', price: 8 },
+  { id: 'va_grip', price: 9 },
+  { id: 'va_ironbark', price: 20 },
+]
+
+/** River-landings and stilt-villages up the Rootwater: little on the shelf, and the best of it is smoked fish. */
+export const SHOP_RIVER: Stock = [
+  { id: 'ration', price: 3 },
+  { id: 'va_fernleaf', price: 7 },
+  { id: 'va_heartsap', price: 11 },
+  { id: 'va_stagbrew', price: 13 },
+  { id: 'va_thornseed', price: 8 },
+  { id: 'va_blastjar', price: 10 },
+  { id: 'va_lanternoil', price: 9 },
+  { id: 'va_bitterroot', price: 5 },
+  { id: 'va_mossbalm', price: 7 },
+  { id: 'va_whetstone', price: 8 },
+  { id: 'va_grip', price: 9 },
+  { id: 'va_reedboots', price: 16 },
+]
