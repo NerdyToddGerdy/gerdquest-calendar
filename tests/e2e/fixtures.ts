@@ -75,3 +75,23 @@ export async function pageLines(page: Page): Promise<string[]> {
     return [...document.body.innerText.split('\n'), ...attrs].map((l) => l.trim()).filter(Boolean)
   })
 }
+
+/** Open Settings, press Export all campaigns, and return the code shown in the dialog. */
+export async function exportAllCode(page: Page): Promise<string> {
+  await page.getByRole('button', { name: /^Settings/ }).click()
+  await page.getByRole('button', { name: 'Export all campaigns' }).click()
+  const dialog = page.getByRole('dialog', { name: 'Export all campaigns' })
+  const field = dialog.getByRole('textbox', { name: 'Save code' })
+  await expect(field).toHaveValue(/^GQC1u?\./)
+  const code = await field.inputValue()
+  await dialog.getByRole('button', { name: 'Done' }).click()
+  return code
+}
+
+/** Paste a code (or JSON text) into the Import dialog opened from the title screen. */
+export async function importCode(page: Page, code: string) {
+  await page.getByRole('button', { name: /^or import a save/ }).click()
+  const dialog = page.getByRole('dialog', { name: 'Import a save' })
+  await dialog.getByRole('textbox', { name: 'Paste a save code' }).fill(code)
+  await dialog.getByRole('button', { name: 'Open this code' }).click()
+}

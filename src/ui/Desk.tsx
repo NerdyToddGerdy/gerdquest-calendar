@@ -4,7 +4,8 @@ import { campaign } from '@questender/engine/campaign'
 import { canGoForward, deskSpanEnd, earliestDate, pagesOwed, prevDeskDate, startingDate, tabView, type TabView } from '@questender/engine/desk'
 import { canAdvance, currentDay, type Action } from '@questender/engine/state'
 import type { GameState } from '@questender/engine/types'
-import { exportSave } from '../save'
+import { allPayload, singlePayload } from '../save'
+import { ExportDialog } from './ExportDialog'
 import { markSeen, seenLatest } from '../changelog'
 import { CAL_VIEWS, shortDate, type CalView } from '@questender/engine/calview'
 import type { ThemePref } from '../theme'
@@ -43,7 +44,6 @@ interface Props {
   onDispatch: (id: string, a: Action) => void
   onNew: () => void
   onImport: () => void
-  onExportAll: () => void
   theme: ThemePref
   onTheme: (t: ThemePref) => void
   sound: boolean
@@ -72,8 +72,14 @@ export function Desk(p: Props) {
     setNews(false)
   }
   const [exportedAt, setExportedAt] = useState(0)
+  const [exporting, setExporting] = useState<{ title: string; name: string; payload: unknown } | null>(null)
   const exportAll = () => {
-    p.onExportAll()
+    setSettings(false)
+    setExporting({ title: 'Export all campaigns', name: 'all', payload: allPayload(p.slots.map((s) => s.state), p.today) })
+  }
+  const exportOne = (state: GameState) =>
+    setExporting({ title: `Export ${campaign(state.campaignId).title}`, name: `${state.campaignId}-${state.startDate}`, payload: singlePayload(state) })
+  const exported = () => {
     recordExport(p.today)
     setExportedAt((n) => n + 1)
   }
@@ -175,6 +181,8 @@ export function Desk(p: Props) {
 
       {tokenOpen && <TokenPicker progress={p.progress} onChoose={p.onToken} onClose={() => setTokenOpen(false)} />}
 
+      {exporting && <ExportDialog {...exporting} date={p.today} onExported={exported} onClose={() => setExporting(null)} />}
+
       {settings && (
         <Settings
           theme={p.theme}
@@ -216,7 +224,7 @@ export function Desk(p: Props) {
             Start your first campaign
           </button>
           <button className="linkish" onClick={p.onImport}>
-            or import a saved file
+            or import a save code or file
           </button>
         </main>
       ) : mode === 'shelf' ? (
@@ -317,6 +325,7 @@ export function Desk(p: Props) {
             dispatch={(a) => p.onDispatch(active.id, a)}
             onDate={p.onDate}
             onDelete={() => p.onDelete(active.id)}
+            onExport={() => exportOne(active.state)}
             onNext={forward ? goForward : undefined}
             nextHint={forwardHint}
           />
@@ -353,6 +362,7 @@ interface PanelProps {
   dispatch: (a: Action) => void
   onDate: (d: ISODate) => void
   onDelete: () => void
+  onExport: () => void
   /** Turn to the next page (undefined when › is unavailable). */
   onNext?: () => void
   /** Why › is unavailable, or a note about other campaigns. */
@@ -360,7 +370,7 @@ interface PanelProps {
 }
 
 /** One campaign's page for the viewed date, plus its hero sheet. */
-export function CampaignPanel({ slot, viewDate, today, dispatch, onDate, onDelete, onNext, nextHint }: PanelProps) {
+export function CampaignPanel({ slot, viewDate, today, dispatch, onDate, onDelete, onExport, onNext, nextHint }: PanelProps) {
   const [panel, setPanel] = useState<'page' | 'journal' | 'notes'>('page')
   const state = slot.state
   const c = campaign(state.campaignId)
@@ -441,7 +451,7 @@ export function CampaignPanel({ slot, viewDate, today, dispatch, onDate, onDelet
           <button className={panel === 'notes' ? 'active' : ''} aria-pressed={panel === 'notes'} onClick={() => setPanel(panel === 'notes' ? 'page' : 'notes')}>
             Notes{state.notes?.trim() ? ' •' : ''}
           </button>
-          <button onClick={() => exportSave(state)}>Export</button>
+          <button onClick={onExport}>Export</button>
           <button
             onClick={() => {
               if (confirm(`Delete this ${c.title} save? This can't be undone.`)) onDelete()

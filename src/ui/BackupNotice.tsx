@@ -22,7 +22,7 @@ export function BackupNotice({ campaigns, playedDays, today, exportedAt, onExpor
   return (
     <aside className="backup-notice" role="status" aria-label="Backup reminder">
       <p>
-        <strong>Back up your progress.</strong> Export all saves one file you can import on any device.
+        <strong>Back up your progress.</strong> Export all makes one save code you can paste into Import on any device.
       </p>
       <div className="row">
         <button className="primary" onClick={onExportAll}>

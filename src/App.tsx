@@ -11,11 +11,12 @@ import { newSeed } from '@questender/engine/rng'
 import { canWelcomeBack, initialState, playedDates, reduce, type Action } from '@questender/engine/state'
 import { importEntries } from './calendarNotes'
 import { requestPersistence } from './deviceStorage'
-import { deleteSlot, exportAll, importFile, listSlots, loadSlot, migrateLegacySave, saveSlot, savedCampaignIds, slotIdFor } from './save'
+import { deleteSlot, importSaveText, listSlots, loadSlot, migrateLegacySave, saveSlot, savedCampaignIds, slotIdFor } from './save'
 import { useCampaignPacks } from './useCampaignPacks'
 import { loadProgress, saveProgress } from './progressStore'
 import { Toasts, type ToastItem } from './ui/Toasts'
 import { avatarName, borderName } from './ui/Token'
+import { ImportDialog, type ImportResult } from './ui/ImportDialog'
 import { Opening } from './ui/Opening'
 import { Desk, type DeskSlot } from './ui/Desk'
 import { NewCampaign } from './ui/NewCampaign'
@@ -64,9 +65,7 @@ function Game() {
   const viewDate = pickedDate > today ? today : pickedDate
   const [selected, setSelected] = useState<string | null>(() => pickTab(slots, viewDate, readTab()))
   const [screen, setScreen] = useState<'desk' | 'new'>('desk')
-  const [error, setError] = useState<string | null>(null)
-  const [importing, setImporting] = useState(false)
-  const fileRef = useRef<HTMLInputElement>(null)
+  const [importOpen, setImportOpen] = useState(false)
   const dirty = useRef(new Set<string>())
 
   // Desk-wide progress: days played, achievements, weekly chests. Local to this device.
@@ -217,16 +216,14 @@ function Game() {
     setScreen('desk')
   }
 
-  const onImport = async (file: File | undefined) => {
-    if (!file) return
-    setImporting(true)
+  const onImport = async (raw: string): Promise<ImportResult> => {
     try {
-      const { states, calendar, progress: incomingProgress } = await importFile(file, today)
+      const { states, calendar, progress: incomingProgress } = await importSaveText(raw, today)
       const incoming = new Set(states.map((s) => slotIdFor(s.campaignId, s.startDate)))
       const existing = listSlots().filter((m) => incoming.has(m.slotId))
       if (existing.length) {
         const names = existing.map((m) => `${m.campaignId} from ${m.startDate}`).join(', ')
-        if (!confirm(`Replace your existing run${existing.length > 1 ? 's' : ''} (${names}) with this file?`)) return
+        if (!confirm(`Replace your existing run${existing.length > 1 ? 's' : ''} (${names}) with this save?`)) return 'cancelled'
       }
       existing.forEach((m) => deleteSlot(m.slotId))
       if (calendar.length) importEntries(calendar)
@@ -235,32 +232,15 @@ function Game() {
         states,
         existing.map((m) => m.slotId),
       )
-      setError(null)
+      return 'done'
     } catch (e) {
-      setError((e as Error).message)
-    } finally {
-      setImporting(false)
+      return (e as Error).message
     }
   }
 
   return (
     <>
-      <input
-        ref={fileRef}
-        type="file"
-        accept="application/json"
-        hidden
-        onChange={(e) => {
-          onImport(e.target.files?.[0])
-          e.target.value = ''
-        }}
-      />
-      {importing && (
-        <p className="muted" role="status">
-          Opening your import…
-        </p>
-      )}
-      {error && <p className="error">{error}</p>}
+      {importOpen && <ImportDialog onImport={onImport} onClose={() => setImportOpen(false)} />}
       <Toasts items={toasts} onDismiss={(id) => setToasts((q) => q.filter((x) => x.id !== id))} />
       {screen === 'new' ? (
         <NewCampaign
@@ -281,12 +261,11 @@ function Game() {
           onForward={forward}
           onDispatch={dispatch}
           onNew={() => setScreen('new')}
-          onImport={() => fileRef.current?.click()}
+          onImport={() => setImportOpen(true)}
           theme={theme}
           onTheme={changeTheme}
           sound={sound}
           onToggleSound={toggleSound}
-          onExportAll={() => exportAll(slots.map((s) => s.state), today)}
           onDelete={(id) => {
             deleteSlot(id)
             setSlots((prev) => prev.filter((s) => s.id !== id))

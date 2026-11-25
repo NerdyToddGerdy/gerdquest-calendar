@@ -1399,3 +1399,19 @@ fieldset.looks legend { font-family: var(--display); font-size: 1.1rem; padding:
 .tour-title { display: block; font-family: var(--display); font-size: 1.1rem; color: var(--accent); margin-bottom: 4px; }
 .tour-tip p { margin: 0 0 10px; line-height: 1.45; }
 .tour-actions { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+
+/* Save code dialogs (export and import). */
+.code-dialog { max-width: 560px; }
+.code-dialog .row { margin: 10px 0; }
+.code-label { display: grid; gap: 4px; margin-bottom: 8px; }
+.code-field {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  resize: vertical;
+  max-height: 40vh;
+}

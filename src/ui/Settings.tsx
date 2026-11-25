@@ -135,14 +135,14 @@ export function Settings({ theme, onTheme, campaigns, slots, onDispatch, onImpor
         <section className="settings-section">
           <h3>Your data</h3>
           <p className="muted small">
-            Progress, achievements and keepsakes are saved in this browser. Export a file to keep a backup or to carry your campaigns to another device, then Import it there.
+            Progress, achievements and keepsakes are saved in this browser. Export a save code to keep a backup or to carry your campaigns to another device, then paste it into Import there.
           </p>
           <div className="row">
-            <button onClick={onExportAll} disabled={campaigns === 0} title="Download one file with every campaign">
+            <button onClick={onExportAll} disabled={campaigns === 0} title="Get one save code with every campaign">
               Export all campaigns
             </button>
-            <button onClick={onImport} title="Load a single-campaign or Export all file">
-              Import from file…
+            <button onClick={onImport} title="Paste a save code, or choose a code file or older .json export">
+              Import a save…
             </button>
           </div>
           <p className="muted small">{persistenceMessage(persisted)}</p>
