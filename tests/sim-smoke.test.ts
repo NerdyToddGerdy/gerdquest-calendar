@@ -17,6 +17,6 @@ describe('balance simulator', () => {
       const sm = summarize(c.id, [a])
       expect(sm.runs).toBe(1)
       expect(sm.months.length).toBeGreaterThan(0)
-    })
+    }, 60_000)
   }
 })

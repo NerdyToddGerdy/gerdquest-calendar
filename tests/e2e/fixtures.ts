@@ -52,6 +52,7 @@ export async function startCampaign(page: Page, title: string) {
   const choose = page.getByRole('button', { name: /^Choose / }).first()
   await expect(begin.or(choose)).toBeVisible()
   await (await begin.isVisible() ? begin : choose).click()
+  await page.getByRole('button', { name: /^Yes, play as / }).click()
   await expect(page.getByRole('tab', { name: new RegExp(title) })).toBeVisible()
 }
 

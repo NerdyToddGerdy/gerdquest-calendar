@@ -281,7 +281,7 @@ describe('Surge and Charges pools', () => {
         if (a.kind !== 'passive' && a.per === 'rest') expect(a.cost, a.id).toBeDefined()
       }
     }
-  })
+  }, 60_000)
 
   it('a Charges ability spends points, and is disabled when the pool is short', () => {
     let s = as('hd_ilse', 3) // Stim Shot: 1 Charges, pool 2

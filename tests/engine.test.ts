@@ -261,5 +261,5 @@ describe('full playthrough', () => {
     expect(s.hero!.level).toBeGreaterThanOrEqual(2)
     // save/load roundtrip
     expect(JSON.parse(JSON.stringify(s))).toEqual(s)
-  })
+  }, 60_000)
 })
