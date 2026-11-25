@@ -56,3 +56,10 @@ test('privacy and terms pages load', async ({ page }) => {
   await page.goto('terms.html')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Terms of use')
 })
+
+test('the game title in the desk links back to the start page', async ({ page }) => {
+  await page.goto('play/')
+  await page.getByRole('link', { name: 'GerdQuest Calendar' }).first().click()
+  await expect(page).toHaveURL(/\/gerdquest-calendar\/\?stay$/)
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+})

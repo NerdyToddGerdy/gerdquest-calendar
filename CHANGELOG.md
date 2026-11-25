@@ -9,6 +9,12 @@ Settings → What's new. Add every release to both, and bump `package.json`
 
 Versions before 0.5.0 were reconstructed after the fact from the code.
 
+## [0.12.1] — 2026-11-25
+
+### Changed
+- The game title in the desk's top bar links back to the start page (`../?stay`, so returning
+  players aren't redirected straight back into the game).
+
 ## [0.12.0] — 2026-11-24
 
 ### Changed
