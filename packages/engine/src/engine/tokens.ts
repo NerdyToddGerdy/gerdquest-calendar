@@ -37,6 +37,7 @@ const LOOKS: Record<string, { title: string; borders: [string, string]; emblem: 
   halcyon: { title: 'The Halcyon Debt', borders: ['Neon rim', 'Starfield rim'], emblem: 'Ringed-planet emblem' },
   starwake: { title: 'The Starwake', borders: ['Tide-pearl rim', 'Star-gold rim'], emblem: 'Constellation emblem' },
   verdant: { title: 'The Verdant Accord', borders: ['Moss rim', 'Bark rim'], emblem: 'Green-leaf emblem' },
+  santa: { title: 'Saving Santa', borders: ['Holly rim', 'Candy-stripe rim'], emblem: 'Star-topper emblem' },
 }
 
 export const BORDER_IDS: Record<string, [string, string]> = Object.fromEntries(Object.keys(LOOKS).map((c) => [c, [`${c}-border1`, `${c}-border2`]]))

@@ -111,6 +111,18 @@ export const PORTRAITS: Record<string, PortraitSpec> = {
   va_kestrel: fig({ build: 'slim', skin: SKIN.deep, hair: HAIR.black, hairStyle: 'braid', outfit: '#3f6a4a', trim: '#8a6a3a', prop: 'bow', cloak: '#2a4a30', head: 'hood', headColor: '#2f5a3a' }),
   va_odo: fig({ build: 'slim', skin: SKIN.tan, hair: HAIR.black, hairStyle: 'bald', outfit: '#8aa04a', trim: '#4a3a26', prop: 'fists', head: 'headband', headColor: '#c9b06a' }),
 
+  // ---------- Saving Santa: heroes ----------
+  ss_juniper: fig({ build: 'slim', skin: SKIN.fair, hair: HAIR.auburn, hairStyle: 'bun', outfit: '#b8342e', trim: '#2f7a4a', prop: 'hammer', head: 'cap', headColor: '#2f7a4a' }),
+  ss_rowan: fig({ build: 'broad', skin: SKIN.olive, hair: HAIR.brown, hairStyle: 'short', beard: true, outfit: '#7a4a2a', trim: '#e8e0d0', prop: 'staff', cloak: '#5a3a22', head: 'hat', headColor: '#a33a3a' }),
+  ss_marigold: fig({ build: 'robed', skin: SKIN.brown, hair: HAIR.white, hairStyle: 'bun', outfit: '#c98a2a', trim: '#7a2a2a', prop: 'wand', glow: '#ffd0a0', head: 'hood', headColor: '#8a2a2a' }),
+  ss_nell: fig({ build: 'slim', skin: SKIN.deep, hair: HAIR.black, hairStyle: 'long', outfit: '#2f7a5a', trim: '#e8c060', prop: 'bell', cloak: '#a33a3a' }),
+
+  // ---------- Saving Santa: bosses ----------
+  ss_gingerbrute: fig({ build: 'broad', skin: '#b06a32', hair: '#b06a32', hairStyle: 'bald', outfit: '#b06a32', trim: '#f4f0e8', prop: 'fists', scale: 1.2 }),
+  ss_nutgeneral: fig({ build: 'armored', skin: '#e8c8a8', hair: HAIR.white, hairStyle: 'short', beard: true, outfit: '#a33a3a', trim: '#e8c060', prop: 'sword', head: 'helmet', headColor: '#1f2a4a', scale: 1.15 }),
+  ss_snowwyrm: beast({ shape: 'serpent', body: '#e6eef5', accent: '#8fc4e8', eye: '#4fa3e8' }),
+  ss_hush: beast({ shape: 'ghost', body: '#dfe8f2', accent: '#ffffff', eye: '#bfe6ff', crown: true }),
+
   // ---------- Verdant Accord: bosses ----------
   va_knucklebark: fig({ build: 'broad', skin: '#6a5a3a', hair: '#4f6a3a', hairStyle: 'wild', beard: true, outfit: '#4a3a26', trim: '#2a2a2a', prop: 'fists', scale: 1.15 }),
   va_sluicemother: beast({ shape: 'serpent', body: '#3a4a3a', accent: '#7a8a5a', eye: '#e8d07a' }),

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { daysBetween, formatLong, WEEKDAY_NAMES, type ISODate } from '@questender/engine/calendar'
 import { CAMPAIGN_THEMES } from './campaignThemes'
 import { Scene } from './Scene'
-import { anchorWeekday, campaign, defaultStartDate, listCatalog, startDateOptions, unlockedThrough } from '@questender/engine/campaign'
+import { anchorWeekday, availableCatalog, campaign, defaultStartDate, seasonDaysLeft, seasonalEvents, startDateOptions, unlockedThrough } from '@questender/engine/campaign'
 import { ability, campaignHeroes, heroDef } from '@questender/engine/content'
 import { HeroPreviewButton, HeroPreviewModal } from './HeroPreview'
 import { TRAITS } from '@questender/engine/types'
@@ -23,10 +23,14 @@ interface Props {
  * Choose a campaign, when it begins, then a hero. Campaigns begin about a
  * week back on the weekday their first page was written for, so the warm-up
  * pages double as a tutorial and weekend pages land on real weekends.
+ * Seasonal campaigns (e.g. the December advent) are offered only in their
+ * month, in a highlight at the top, and always begin on the 1st.
  */
 export function NewCampaign({ today, onStart, onCancel }: Props) {
-  const campaigns = listCatalog()
-  const [campaignId, setCampaignId] = useState(campaigns[0].id)
+  const campaigns = availableCatalog(today)
+  const events = seasonalEvents(today)
+  const yearRound = campaigns.filter((c) => !c.season)
+  const [campaignId, setCampaignId] = useState(yearRound[0].id)
   const entry = campaigns.find((c) => c.id === campaignId)!
   const packs = useCampaignPacks([campaignId])
   // The pages (and heroes) arrive with the pack; everything below the cards waits for it.
@@ -48,8 +52,37 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
         the <b>+ New campaign</b> button at the top of the desk, and play several side by side. Each one saves separately.
       </p>
 
+      {events.map((c) => {
+        const theme = CAMPAIGN_THEMES[c.id]
+        const left = seasonDaysLeft(c, today)
+        const selected = c.id === campaignId
+        return (
+          <section key={c.id} className={`event-highlight ${theme?.className ?? ''} ${selected ? 'selected' : ''}`} aria-label={`${c.season!.label}: ${c.title}`}>
+            {theme && (
+              <div className="campaign-banner" aria-hidden="true">
+                <Scene scene={theme.scene} icons={[]} found={[]} disabled onFind={() => {}} />
+                <span className="campaign-ambient" />
+              </div>
+            )}
+            <div>
+              <span className="event-kicker">{c.season!.label} · this month only</span>
+              <h2>{c.title}</h2>
+              <p className="small">{c.blurb}</p>
+              <div className="event-actions">
+                <button className="primary" aria-pressed={selected} onClick={() => { setCampaignId(c.id); setPicked(null) }}>
+                  {selected ? 'Selected' : 'Play this event'}
+                </button>
+                <span className="muted small">
+                  {c.pageCount} pages · {left === 1 ? 'last day to start' : `${left} days left to start`} · comes back every year
+                </span>
+              </div>
+            </div>
+          </section>
+        )
+      })}
+
       <div className="campaign-picks">
-        {campaigns.map((c) => {
+        {yearRound.map((c) => {
           const theme = CAMPAIGN_THEMES[c.id]
           return (
             <button
@@ -105,7 +138,10 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
         <>
       <fieldset className="start-picks">
         <legend>
-          When does your story begin? <span className="muted small">(always a {WEEKDAY_NAMES[anchorWeekday(entry)]}, like page one)</span>
+          When does your story begin?{' '}
+          <span className="muted small">
+            {entry.season ? '(always on the 1st: one door a day)' : `(always a ${WEEKDAY_NAMES[anchorWeekday(entry)]}, like page one)`}
+          </span>
         </legend>
         {options.map((d) => {
           const warmup = unlockedThrough(camp, d, today) + 1
@@ -117,15 +153,21 @@ export function NewCampaign({ today, onStart, onCancel }: Props) {
                 <b>{formatLong(d)}</b>
                 <span className="muted small">
                   {' '}
-                  · {ago === 0 ? 'today' : `${ago} days ago`} · {warmup} page{warmup === 1 ? '' : 's'} to warm up with
-                  {d === defaultStartDate(entry, today) ? ' · recommended' : ''}
+                  · {ago === 0 ? 'today' : `${ago} days ago`} · {warmup} page{warmup === 1 ? '' : 's'} {entry.season ? 'open already' : 'to warm up with'}
+                  {!entry.season && d === defaultStartDate(entry, today) ? ' · recommended' : ''}
                 </span>
               </span>
             </label>
           )
         })}
       </fieldset>
-      {taken && <p className="error">You already have {camp.title} starting on that date. Pick another start date, or delete that run first.</p>}
+      {taken && (
+        <p className="error">
+          {entry.season
+            ? `You already have this year’s ${camp.title} on your desk. It comes back next year.`
+            : `You already have ${camp.title} starting on that date. Pick another start date, or delete that run first.`}
+        </p>
+      )}
 
       {camp.startHero ? (
         <div className="prologue-start">

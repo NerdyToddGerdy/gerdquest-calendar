@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { formatLong, formatShort, formatSpan, parseISO, type ISODate } from '@questender/engine/calendar'
-import { campaign } from '@questender/engine/campaign'
+import { campaign, eventsToStart } from '@questender/engine/campaign'
 import { canGoForward, deskSpanEnd, earliestDate, pagesOwed, prevDeskDate, startingDate, tabView, type TabView } from '@questender/engine/desk'
 import { canAdvance, currentDay, type Action } from '@questender/engine/state'
 import type { GameState } from '@questender/engine/types'
@@ -60,6 +60,8 @@ export function Desk(p: Props) {
   const [mode, setMode] = useState<'day' | 'calendar' | 'shelf'>('day')
   const [calView, setCalView] = useState<CalView>('month')
   const [settings, setSettings] = useState(false)
+  // In an event's month (e.g. December), until this year's run is on the desk.
+  const festive = eventsToStart(p.today, p.slots.map((s) => s.state))[0]
   const [tokenOpen, setTokenOpen] = useState(false)
   const [news, setNews] = useState(() => !seenLatest())
   const openSettings = () => {
@@ -165,7 +167,19 @@ export function Desk(p: Props) {
               )}
             </svg>
           </button>
-          <button className="new-btn" onClick={p.onNew} aria-label="New campaign" title="New campaign">
+          <button
+            className={`new-btn ${festive ? 'festive' : ''}`}
+            onClick={p.onNew}
+            aria-label={festive ? `New campaign (${festive.title} is here)` : 'New campaign'}
+            title={festive ? `New campaign · ${festive.title} is here` : 'New campaign'}
+          >
+            {festive && (
+              <svg className="festive-hat" viewBox="0 0 14 12" aria-hidden="true">
+                <path d="M1 11 Q4 2 12 2 Q9 6 10 11 Z" fill="#c8262e" stroke="#fff" strokeWidth="0.6" />
+                <rect x="0" y="9.5" width="11" height="2.5" rx="1.2" fill="#fff" />
+                <circle cx="12" cy="2" r="1.8" fill="#fff" />
+              </svg>
+            )}
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
               <path d="M12 5v14M5 12h14" />
             </svg>

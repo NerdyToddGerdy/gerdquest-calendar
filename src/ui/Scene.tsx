@@ -3,6 +3,7 @@ import type { HiddenIcon, Scene as SceneKind } from '@questender/engine/types'
 import { EMBER_SKIES, EMBER_ART } from './scenes/emberroad'
 import { STARWAKE_SKIES, STARWAKE_ART } from './scenes/starwake'
 import { VERDANT_SKIES, VERDANT_ART } from './scenes/verdant'
+import { SANTA_SKIES, SANTA_ART } from './scenes/santa'
 import { SceneActor } from './Portrait'
 
 interface Props {
@@ -19,6 +20,7 @@ const SKIES: Record<SceneKind, [string, string]> = {
   ...EMBER_SKIES,
   ...STARWAKE_SKIES,
   ...VERDANT_SKIES,
+  ...SANTA_SKIES,
   harbor: ['#1d3149', '#7b6a62'],
   tower: ['#22324a', '#c08a52'],
   cellar: ['#14110f', '#3a2d24'],
@@ -117,6 +119,7 @@ const SCENES: Record<SceneKind, ReactNode> = {
   ...EMBER_ART,
   ...STARWAKE_ART,
   ...VERDANT_ART,
+  ...SANTA_ART,
   harbor: (
     <>
       <path d="M0 120 L60 105 L110 115 L150 100 L190 118 L400 112 V200 H0 Z" fill="#2c3440" opacity="0.6" />

@@ -5,7 +5,9 @@ import type { GameState } from '@questender/engine/types'
 
 export function playYear(campaignId: string, seed: number, stopAtPage = Infinity): GameState {
   const camp = listCampaigns().find((c) => c.id === campaignId)!
-  let s = reduce(initialState(), { type: 'NEW_GAME', seed, campaignId, startDate: '2026-01-03' })
+  // Campaigns without a fixed opening hero get their first listed hero.
+  const heroId = camp.startHero ? undefined : camp.heroIds?.[0]
+  let s = reduce(initialState(), { type: 'NEW_GAME', seed, campaignId, heroId, startDate: '2026-01-03' })
   for (let guard = 0; guard < 30000 && !s.finished && s.dayIndex < stopAtPage; guard++) {
     if (s.pending) {
       s = s.pending.type === 'pickpocket' ? reduce(s, { type: 'PICKPOCKET', take: true }) : reduce(s, { type: 'CONFIRM' })

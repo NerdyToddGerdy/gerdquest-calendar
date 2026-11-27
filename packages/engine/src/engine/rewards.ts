@@ -44,6 +44,8 @@ export interface RewardTheme {
 const STANDARD = [7, 30, 100, 200, 365]
 /** Verdant is a partial year (260 pages, chapters 1–10), so its milestones stop at 200. Switch it to STANDARD when all 12 chapters exist. */
 const SHORT = [7, 30, 100, 150, 200]
+/** Saving Santa is 25 doors (one page a day), so its milestones fit inside one December. */
+const ADVENT = [3, 7, 12, 18, 25]
 
 function theme(
   cid: string,
@@ -130,6 +132,18 @@ export const REWARDS: Record<string, RewardTheme> = {
       ['Seal of the green road', 'A wax seal pressed with a leaf. Doors open a little easier for it.'],
     ],
     { paper: 'Leaf-pressed paper', dice: 'Acorn dice', edge: 'Moss edge' },
+  ),
+  santa: theme(
+    'santa',
+    ADVENT,
+    [
+      ['Paper snowflake', 'Cut from the corner of a letter. No two are the same, and this one is yours.'],
+      ['Jingle bell', 'It came off the sleigh’s harness. Once a week, give it a shake and try again.'],
+      ['Glass icicle ornament', 'It catches the firelight and throws it back in little blue sparks.'],
+      ['Sixpence’s harness tag', 'Dented, silver, and still faintly smelling of carrots.'],
+      ['Star from the top of the tree', 'A gold paper star with a note on the back in silver ink: Thank you. See you next year.'],
+    ],
+    { paper: 'Wrapping paper', dice: 'Candy-cane dice', edge: 'Tinsel edge' },
   ),
 }
 

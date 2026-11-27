@@ -73,7 +73,7 @@ describe('milestone borders', () => {
       expect(tokenUnlocksFor(cid, days[2])).toEqual([`${cid}-border1`, `${cid}-border2`])
       expect(tokenUnlocksFor(cid, days[4])).toEqual([`${cid}-border1`, `${cid}-border2`, emblemId(cid)])
     }
-    expect(TOKEN_REWARDS).toHaveLength(15)
+    expect(TOKEN_REWARDS).toHaveLength(18)
   })
 
   it('a run unlocks only its own campaign’s rims, recorded desk-wide', () => {

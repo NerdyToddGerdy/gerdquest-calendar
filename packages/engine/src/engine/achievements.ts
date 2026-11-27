@@ -63,7 +63,29 @@ const FINISHES: [string, string, string, string][] = [
   ['halcyon', 'The Halcyon Debt', 'Paid in full', 'The Halcyon Debt is closed.'],
   ['starwake', 'The Starwake', 'Followed the wake', 'You sailed the Starwake to its last page.'],
   ['verdant', 'The Verdant Accord', 'Green to the end', 'You finished every page of the Verdant Accord.'],
+  ['santa', 'Saving Santa', 'Santa saved', 'Christmas morning came, and the bells rang all over the North.'],
 ]
+
+/** Virtue a Saving Santa run needs at the end to make the Nice List. */
+export const NICE_LIST_VIRTUE = 6
+
+/** Every date from December 1 to 25 of the year this run began in. */
+function adventDates(s: GameState): ISODate[] {
+  const year = Number(s.startDate.slice(0, 4))
+  return Array.from({ length: 25 }, (_, i) => `${year}-12-${String(i + 1).padStart(2, '0')}`)
+}
+
+/** A finished Saving Santa run whose every door was opened on its own day (no catching up). */
+export function everyDoorOnItsDay(s: GameState, days: ISODate[]): boolean {
+  if (s.campaignId !== 'santa' || !s.finished) return false
+  const played = new Set(days)
+  return adventDates(s).every((d) => played.has(d))
+}
+
+/** Saving Santa runs begun in at least two different Decembers. */
+export function adventYears(states: GameState[]): number {
+  return new Set(states.filter((s) => s.campaignId === 'santa').map((s) => s.startDate.slice(0, 4))).size
+}
 
 export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'first-light', name: 'First light', hint: 'Finish a page.', text: 'Your first page is done. The calendar has begun to fill.', check: (c) => c.progress.days.length >= 1 },
@@ -92,6 +114,27 @@ export const ACHIEVEMENTS: AchievementDef[] = [
   { id: 'completionist', name: 'Completionist', hint: 'Finish any campaign.', text: 'You reached the last page of a campaign.', check: (c) => anyRun(c, (s) => s.finished) },
   { id: 'homecoming', name: 'Homecoming', hint: 'Come back after a few days away.', text: 'You were away a while, and the pages kept your place.', check: (c) => anyRun(c, (s) => !!s.welcomedOn) },
   { id: 'first-chest', name: 'First chest', hint: 'Play on five days in one week and open the chest.', text: 'A week of showing up, and a small reward for it.', check: (c) => c.progress.chests.length >= 1 },
+  {
+    id: 'every-door',
+    name: 'Every door on its day',
+    hint: 'In Saving Santa, open each of the 25 doors on its own day.',
+    text: 'Twenty-five mornings in a row, one door each. Not one opened early, not one left for later.',
+    check: (c) => anyRun(c, (s) => everyDoorOnItsDay(s, c.progress.days)),
+  },
+  {
+    id: 'nice-list',
+    name: 'On the Nice List',
+    hint: `Reach Christmas morning in Saving Santa with ${NICE_LIST_VIRTUE} or more virtue.`,
+    text: 'Somewhere in the North, a name has been written down twice, in silver ink, and underlined.',
+    check: (c) => anyRun(c, (s) => s.campaignId === 'santa' && s.finished && (s.hero?.virtue ?? 0) >= NICE_LIST_VIRTUE),
+  },
+  {
+    id: 'back-next-year',
+    name: 'Back next December',
+    hint: 'Play Saving Santa in two different Decembers.',
+    text: 'The doors opened again this year, and so did you.',
+    check: (c) => adventYears(c.states) >= 2,
+  },
   ...FINISHES.map(([id, title, name, text]): AchievementDef => ({
     id: `finish-${id}`,
     name,
