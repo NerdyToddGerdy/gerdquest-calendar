@@ -678,3 +678,53 @@ Run with `SIM_RUNS=300 SIM_CAMPAIGNS=verdant,starwake npm run sim` (seeds 1000..
 | 9 | 300 | 50 | 13.3% | 7 (7–7) | 55 (13–70) | 59 (45–84) | 11 |
 | 10 | 300 | 67 | 22.0% | 8 (8–8) | 43 (11–58) | 100 (100–100) | 13 |
 
+
+### Hero spread pass (Verdant Accord, 300 runs, 50 per hero)
+
+The Verdant heroes (`va_*`) are defined only in `packages/engine/src/content/campaigns/verdant/content.ts` and used only by Verdant; no other campaign shares them. Run with `SIM_RUNS=300 SIM_CAMPAIGNS=verdant npm run sim` before and after.
+
+Starting-stat changes (numbers only; levels, abilities and story text untouched):
+
+| Hero | Before (HP / Atk / Def / dmg die) | After |
+|---|---|---|
+| Brannoc Tull | 14 / 2 / 4 / d8 | 13 / 2 / 3 / d6 |
+| Kestrel Moss | 12 / 3 / 2 / d8 | 10 / 3 / 2 / d6 |
+| Sorrel Vey | 10 / 3 / 2 / d6 | 11 / 3 / 3 / d6 |
+| Odo Brindle | 12 / 3 / 3 / d6 | 14 / 3 / 3 / d6 |
+| Pip Larkspur | 12 / 3 / 3 / d6 | 13 / 3 / 3 / d6 |
+| Aldous Fenn | 11 / 2 / 3 / d6 | 12 / 2 / 3 / d6 |
+
+Findings: the starting damage die and defense are the dominant levers. Giving Sorrel and Odo a d8 alone dropped them to 0.5 and 1.5 hits per run, so the d8 was what made Brannoc and Kestrel near-immortal. Brannoc and Kestrel were brought to d6 (the shared baseline) and the soft heroes got extra HP or Defense, which kept their distinct identities.
+
+Deaths per hero (death-table hits per run):
+
+| Hero | Before | After |
+|---|---|---|
+| Kestrel | 0.32 | 1.10 |
+| Brannoc | 0.22 | 1.38 |
+| Sorrel | 3.36 | 1.04 |
+| Odo | 3.34 | 2.20 |
+| Pip | 2.80 | 2.34 |
+| Aldous | 2.86 | 2.32 |
+
+Weakest-to-strongest ratio is now about 2.2x (was about 15x). Campaign-wide chapter death rate, before then after: 20.0/21.7/14.7/11.0/27.0/24.0/13.0/18.7/13.3/22.0 versus 12.0/11.0/12.0/11.7/25.0/20.0/13.7/21.0/14.0/16.7. Chapters 1 and 2 are a little gentler; the mid and late chapters are where they were. Starwake's Bram and Reyna were not touched in this pass.
+
+## Starwake December pass
+
+December was a wall: 41.7% of runs hit the death table that month against 3–23% in every other month, with The Hollow Needle (sw-304) alone at 37.7% and Ashe Calloway (sw-300) at 22.7%. Only numbers in the two December boss stat lines changed (`content.ts`); no story, names, checks, or rewards were touched. Run with `SIM_RUNS=300 SIM_CAMPAIGNS=starwake npm run sim` (seeds 1000..1299).
+
+| Foe | Before (toughness / hits / dmg) | After |
+|---|---|---|
+| Ashe Calloway | 17 / 21 / 8 | 16 / 20 / 7 |
+| The Hollow Needle | 18 / 22 / 9 | 18 / 22 / 8 |
+
+| Measure | Before | After |
+|---|---|---|
+| December: % runs with a death | 41.7% (186 deaths) | 27.3% (121 deaths) |
+| sw-304 The Hollow Needle: % runs with a death | 37.7% | 23.7% |
+| sw-300 Ashe Calloway: % runs with a death | 22.7% | 15.0% |
+| sw-304 fights lost | 88.3% | 87.0% |
+| sw-300 fights lost | 88.3% | 79.7% |
+| Mean deaths per run, Tanu / Kip | 3.92 / 5.44 | 3.56 / 4.94 |
+
+Months 1–11 are byte-identical to the baseline (same seeds, same rows). The Hollow Needle is still the most lethal page of the year (the Gilt Gull is next at 23.0%). Intermediate tries: lowering the Needle to 16 toughness / 7 dmg gave December 16% and the Needle 12% (too soft); 17 toughness / 8 dmg gave 25% and 22%, tying the Gilt Gull. The Needle's `hits` value had no measurable effect.
