@@ -4,6 +4,7 @@ import { campaign, defaultStartDate } from '@questender/engine/campaign'
 import { initialState, reduce } from '@questender/engine/state'
 import { rules } from '@questender/engine/ruleset'
 import { DayView } from '../src/ui/DayView'
+import { Shop } from '../src/ui/Shop'
 
 const today = '2026-11-23'
 
@@ -17,6 +18,17 @@ describe('currency names on the page', () => {
       const name = rules(s).currencyName
       expect(html).toContain(`3 ${name}`)
       if (name !== 'glint') expect(html.toLowerCase()).not.toContain('glint')
+    })
+  }
+
+  for (const id of ['brightwatch', 'emberroad', 'halcyon']) {
+    it(`${id}: market buttons show the currency's first letter`, () => {
+      const c = campaign(id)
+      const s = reduce(initialState(), { type: 'NEW_GAME', seed: 9, campaignId: id, startDate: defaultStartDate(c, today), heroId: c.heroIds?.[0] })
+      const html = renderToStaticMarkup(<Shop state={s} shop={{ items: [{ id: 'ration', price: 10 }] }} dispatch={() => {}} />).replace(/<!--.*?-->/g, '')
+      const letter = rules(s).currencyName.charAt(0)
+      expect(html).toContain(`Buy 10${letter}<`)
+      if (letter !== 'g') expect(html).not.toMatch(/\dg</)
     })
   }
 })

@@ -13,7 +13,7 @@ export const CAMPAIGNS = [
 
 /**
  * `test` with two guarantees on every spec: nothing leaves the machine (the
- * Google Fonts links get an empty answer), and the page logs no console
+ * any off-site request gets an empty answer; fonts are self-hosted), and the page logs no console
  * errors, page errors or failed requests.
  */
 export const test = base.extend<{ problems: string[] }>({

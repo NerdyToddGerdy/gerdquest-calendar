@@ -9,6 +9,27 @@ Settings → What's new. Add every release to both, and bump `package.json`
 
 Versions before 0.5.0 were reconstructed after the fact from the code.
 
+## [0.14.0] — 2026-11-27
+
+### Added
+- Regression test: Shop Buy/Sell buttons use the campaign's currency letter (`c` for Halcyon's credits, `g` otherwise).
+
+### Changed
+- **Faster phone load** (#82): Cormorant Garamond and Inter self-hosted from `public/fonts` (Latin subsets, OFL 1.1),
+  replacing the render-blocking Google Fonts stylesheet on all five pages; the privacy page says no font request leaves
+  the site. Shelf, Settings, Export/Import, Calendar, Tutorial, Journal, Notes and New campaign load lazily
+  (`src/ui/lazyScreens.tsx`). Mobile Lighthouse FCP 1.5 s → 0.9 s on landing and play.
+- **Verdant hero spread** (#83): starting HP, Defense and damage die retuned; per-hero death-table hits now within
+  about 2.2x (was about 15x). See `docs/balance/REPORT.md`, Hero spread pass.
+- **Starwake December** (#84): Ashe Calloway and The Hollow Needle stat lines softened; December runs with a death
+  41.7% → 27.3%, months 1–11 unchanged.
+- Lint: jsx-a11y keyboard rules (#80) and react / prefer-tag-over-role rules (#81) cleared and set to error.
+  ItemTip is a real button; modal backdrops close on a target check; `role="status"` became `<output>`;
+  token name helpers moved to `src/ui/tokenNames.ts`.
+
+### Fixed
+- Halcyon market showed `Buy 10g` / `Sell 5g` for credits; it now shows `c` (#85).
+
 ## [0.13.1] — 2026-11-25
 
 ### Added

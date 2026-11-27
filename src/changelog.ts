@@ -14,6 +14,18 @@ export interface Release {
 
 export const CHANGELOG: Release[] = [
   {
+    version: '0.14.0',
+    date: '2026-11-27',
+    title: 'Quicker on phones, fairer fights',
+    changes: [
+      'The game opens faster, especially on phones: fonts now come from this site, and rarely used screens load only when you open them.',
+      'The Halcyon Debt\'s market now marks amounts with "c" for credits (like "10c") instead of "g".',
+      'The Verdant Accord heroes are closer in toughness: the sturdiest two are a little softer, and the most fragile have more health or Defense.',
+      'The Starwake\'s December bosses hit a little less hard, so the last month is a climax instead of a wall.',
+      'Item tips can be opened from the keyboard, and pop-up windows behave the same with keyboard and mouse.',
+    ],
+  },
+  {
     version: '0.13.1',
     date: '2026-11-25',
     title: 'A way home on phones',
