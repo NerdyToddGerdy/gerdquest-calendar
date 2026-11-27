@@ -134,8 +134,12 @@ export function HeroPreviewModal({ heroId, onClose, onChoose, chooseDisabled }: 
     }
   }, [onClose])
   return (
-    <div className="hero-modal-backdrop" onClick={onClose}>
-      <div className="hero-modal" role="dialog" aria-modal="true" aria-label={`${hero.name} preview`} onClick={(e) => e.stopPropagation()}>
+    // Backdrop click is a mouse convenience only; keyboard users close with Esc (handled above) or the Close button.
+    // oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+    <div className="hero-modal-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="hero-modal"
+        // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a modal with its own focus trap over a click-away backdrop; native <dialog> would need showModal() and a top-layer rewrite
+        role="dialog" aria-modal="true" aria-label={`${hero.name} preview`}>
         <div className="hero-modal-bar">
           {onChoose && (
             <button className="primary" disabled={chooseDisabled} onClick={onChoose}>

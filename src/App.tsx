@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { playDiceSound, setSoundEnabled, soundEnabled } from './sound/audio'
 import { diceSoundFor } from './sound/diceEvents'
 import type { ISODate } from '@questender/engine/calendar'
 import { nextDeskDate, pickTab, startingDate, tabView, turnThrough } from '@questender/engine/desk'
 import { achievementDef, newlyEarned } from '@questender/engine/achievements'
+import type { Progress } from '@questender/engine/progress'
 import { mergeProgress, recordAchievements, recordChest, recordVisit, syncProgress, welcomeDue } from '@questender/engine/progress'
 import { keepsakesEarned, stylesUnlocked } from '@questender/engine/rewards'
 import { campaign } from '@questender/engine/campaign'
@@ -15,7 +16,7 @@ import { deleteSlot, importSaveText, listSlots, loadSlot, migrateLegacySave, sav
 import { useCampaignPacks } from './useCampaignPacks'
 import { loadProgress, saveProgress } from './progressStore'
 import { Toasts, type ToastItem } from './ui/Toasts'
-import { avatarName, borderName } from './ui/Token'
+import { avatarName, borderName } from './ui/tokenNames'
 import { ImportDialog, type ImportResult } from './ui/ImportDialog'
 import { Opening } from './ui/Opening'
 import { Desk, type DeskSlot } from './ui/Desk'
@@ -44,6 +45,22 @@ function readTab(): string | null {
 }
 
 /**
+ * Fold the campaigns' days, achievements and token unlocks into the progress
+ * record. Pure: returns the settled record plus a notice for everything newly
+ * earned. `next` is the same object when there is nothing to record.
+ */
+function settleProgress(progress: Progress, slots: DeskSlot[], today: ISODate): { next: Progress; fresh: ToastItem[] } {
+  const states = slots.map((s) => s.state)
+  const synced = syncProgress(progress, states, today)
+  const earned = newlyEarned({ states, progress: synced, today })
+  const next = earned.length ? recordAchievements(synced, earned, today) : synced
+  const fresh: ToastItem[] = earned.map((id) => ({ id: `a-${id}`, title: achievementDef(id)!.name, text: achievementDef(id)!.text, label: 'Achievement earned' }))
+  for (const a of synced.avatars) if (!progress.avatars.some((x) => x.id === a.id)) fresh.push({ id: `t-${a.id}`, title: avatarName(a.id), text: 'A new token for your corner of the desk. Pick it from the token button, top right.', label: 'New token' })
+  for (const b of synced.borders) if (!progress.borders.some((x) => x.id === b.id)) fresh.push({ id: `b-${b.id}`, title: borderName(b.id), text: 'A new border for your token. Pick it from the token button, top right.', label: 'New border' })
+  return { next, fresh }
+}
+
+/**
  * Loading boundary: the campaigns on this device load their packs first, so
  * everything below (reducer, desk, calendar) can use the engine synchronously.
  */
@@ -69,43 +86,41 @@ function Game() {
   const dirty = useRef(new Set<string>())
 
   // Desk-wide progress: days played, achievements, weekly chests. Local to this device.
-  const [progress, setProgress] = useState(() => recordVisit(loadProgress(), today))
+  // Starts already synced, so what was earned before this page opened is not announced again.
+  const [progress, setProgress] = useState(() => syncProgress(recordVisit(loadProgress(), today), slots.map((s) => s.state), today))
   const [toasts, setToasts] = useState<ToastItem[]>([])
-  const milestones = useRef<Map<string, { keepsakes: Set<string>; looks: Set<string> }> | null>(null)
-  useEffect(() => setProgress((p) => recordVisit(p, today)), [today])
+  // A new day (the page left open past midnight) is a new visit.
+  const [visitDay, setVisitDay] = useState(today)
+  if (visitDay !== today) {
+    setVisitDay(today)
+    setProgress((p) => recordVisit(p, today))
+  }
+  // After every change: fold in days played and achievements; announce what was just earned.
+  const settled = settleProgress(progress, slots, today)
+  if (settled.next !== progress) {
+    setProgress(settled.next)
+    if (settled.fresh.length) setToasts((q) => [...q, ...settled.fresh.filter((f) => !q.some((x) => x.id === f.id))])
+  }
   useEffect(() => saveProgress(progress), [progress])
 
-  // After every change: fold in days played, check achievements and per-campaign milestones.
-  useEffect(() => {
-    const states = slots.map((s) => s.state)
-    const synced = syncProgress(progress, states, today)
-    const earned = newlyEarned({ states, progress: synced, today })
-    const next = earned.length ? recordAchievements(synced, earned, today) : synced
-    if (next !== progress) setProgress(next)
-    const fresh: ToastItem[] = earned.map((id) => ({ id: `a-${id}`, title: achievementDef(id)!.name, text: achievementDef(id)!.text, label: 'Achievement earned' }))
-    const prev = milestones.current
-    const cur = new Map(
-      slots.map((s) => {
-        const days = playedDates(s.state).length
-        return [s.id, { keepsakes: new Set(keepsakesEarned(s.state.campaignId, days).map((k) => k.id)), looks: new Set(stylesUnlocked(s.state.campaignId, days).map((x) => x.id)) }] as const
-      }),
-    )
-    if (prev)
-      for (const s of slots) {
-        const before = prev.get(s.id)
-        if (!before) continue
-        const days = playedDates(s.state).length
-        const title = campaign(s.state.campaignId).title
-        for (const k of keepsakesEarned(s.state.campaignId, days)) if (!before.keepsakes.has(k.id)) fresh.push({ id: `k-${s.id}-${k.id}`, title: k.name, text: k.text, label: `New keepsake in ${title}` })
-        for (const x of stylesUnlocked(s.state.campaignId, days)) if (!before.looks.has(x.id)) fresh.push({ id: `s-${s.id}-${x.id}`, title: x.name, text: 'Unlocked. Choose it in Settings.', label: `New look in ${title}` })
-      }
-    if (prev) {
-      for (const a of synced.avatars) if (!progress.avatars.some((x) => x.id === a.id)) fresh.push({ id: `t-${a.id}`, title: avatarName(a.id), text: 'A new token for your corner of the desk. Pick it from the token button, top right.', label: 'New token' })
-      for (const b of synced.borders) if (!progress.borders.some((x) => x.id === b.id)) fresh.push({ id: `b-${b.id}`, title: borderName(b.id), text: 'A new border for your token. Pick it from the token button, top right.', label: 'New border' })
+  // Per-campaign milestones (keepsakes and looks): announce the ones that appeared since the last list of campaigns.
+  const [seenSlots, setSeenSlots] = useState(slots)
+  if (seenSlots !== slots) {
+    setSeenSlots(slots)
+    const fresh: ToastItem[] = []
+    for (const s of slots) {
+      const old = seenSlots.find((o) => o.id === s.id)
+      if (!old) continue
+      const days = playedDates(s.state).length
+      const oldDays = playedDates(old.state).length
+      const title = campaign(s.state.campaignId).title
+      const had = new Set(keepsakesEarned(old.state.campaignId, oldDays).map((k) => k.id))
+      for (const k of keepsakesEarned(s.state.campaignId, days)) if (!had.has(k.id)) fresh.push({ id: `k-${s.id}-${k.id}`, title: k.name, text: k.text, label: `New keepsake in ${title}` })
+      const looked = new Set(stylesUnlocked(old.state.campaignId, oldDays).map((x) => x.id))
+      for (const x of stylesUnlocked(s.state.campaignId, days)) if (!looked.has(x.id)) fresh.push({ id: `s-${s.id}-${x.id}`, title: x.name, text: 'Unlocked. Choose it in Settings.', label: `New look in ${title}` })
     }
-    milestones.current = cur
     if (fresh.length) setToasts((q) => [...q, ...fresh.filter((f) => !q.some((x) => x.id === f.id))])
-  }, [slots, today, progress])
+  }
 
   // Autosave whichever campaigns changed.
   useEffect(() => {
@@ -131,14 +146,14 @@ function Game() {
   }
 
   /** Apply a change to the campaign list, marking changed campaigns for autosave. */
-  const update = (fn: (prev: DeskSlot[]) => DeskSlot[]) =>
+  const update = useCallback((fn: (prev: DeskSlot[]) => DeskSlot[]) =>
     setSlots((prev) => {
       const next = fn(prev)
       next.forEach((s, i) => {
         if (s.state !== prev[i]?.state) dirty.current.add(s.id)
       })
       return next
-    })
+    }), [])
 
   const [theme, setTheme] = useState<ThemePref>(readTheme)
   const changeTheme = (t: ThemePref) => {
@@ -163,18 +178,21 @@ function Game() {
     if (sfx) playDiceSound(sfx)
   }, [slots])
 
-  const dispatch = (id: string, a: Action) => {
-    const before = slots.find((s) => s.id === id)?.state
-    if (before) acted.current = { id, before }
-    update((prev) => prev.map((s) => (s.id === id ? { ...s, state: reduce(s.state, a) } : s)))
-  }
+  const dispatch = useCallback(
+    (id: string, a: Action) => {
+      const before = slots.find((s) => s.id === id)?.state
+      if (before) acted.current = { id, before }
+      update((prev) => prev.map((s) => (s.id === id ? { ...s, state: reduce(s.state, a) } : s)))
+    },
+    [slots, update],
+  )
 
   // Well rested: on the first page opened in a campaign after a return from 3+ days away.
   useEffect(() => {
     if (!welcomeDue(progress, today)) return
     const sel = slots.find((s) => s.id === selected)
     if (sel && tabView(sel.state, viewDate).kind === 'play' && canWelcomeBack(sel.state, today)) dispatch(sel.id, { type: 'WELCOME_BACK', date: today })
-  }, [slots, selected, viewDate, progress, today])
+  }, [slots, selected, viewDate, progress, today, dispatch])
 
   const openChest = (week: string, slotId: string) => {
     const slot = slots.find((s) => s.id === slotId)

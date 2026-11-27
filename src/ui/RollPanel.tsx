@@ -36,7 +36,9 @@ const SHAPES: Record<number, string> = {
 function DieFace({ slot }: { slot: RollSlot }) {
   const pts = SHAPES[slot.die] ?? SHAPES[20]
   return (
-    <span className={`die-face ${isNat20(slot) ? 'nat20' : ''} ${isNat1(slot) ? 'nat1' : ''}`} data-die={`d${slot.die}`} role="img" aria-label={`d${slot.die} showing ${slot.natural}`} key={`${slot.id}-${slot.natural}`}>
+    <span className={`die-face ${isNat20(slot) ? 'nat20' : ''} ${isNat1(slot) ? 'nat1' : ''}`} data-die={`d${slot.die}`}
+      // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a labelled non-image (glyph or composed markup) with no image source
+      role="img" aria-label={`d${slot.die} showing ${slot.natural}`} key={`${slot.id}-${slot.natural}`}>
       <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
         <polygon points={pts} className="die-body" strokeLinejoin="round" />
         {slot.die === 20 && <polygon points="50,24 74,66 26,66" className="die-facet" strokeLinejoin="round" />}

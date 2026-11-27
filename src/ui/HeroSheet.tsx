@@ -35,7 +35,9 @@ export function HeroSheet({ state, dispatch }: { state: GameState; dispatch: (a:
       </div>
 
       <div className={`hp ${hero.hp / max <= 0.25 ? 'low' : hero.hp / max < 0.5 ? 'mid' : 'high'}`}>
-        <div className="hp-bar" role="progressbar" aria-valuemin={0} aria-valuemax={max} aria-valuenow={hero.hp} aria-label="Health">
+        <div className="hp-bar"
+          // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a styled bar; <progress> cannot be styled to match across browsers
+          role="progressbar" aria-valuemin={0} aria-valuemax={max} aria-valuenow={hero.hp} aria-label="Health">
           <div style={{ width: `${Math.max(0, Math.min(100, (hero.hp / max) * 100))}%` }} />
         </div>
         <span>

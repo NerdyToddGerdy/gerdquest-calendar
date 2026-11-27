@@ -138,9 +138,11 @@ const samePos = (a: Pos | null, b: Pos | null) => a === b || (!!a && !!b && a.le
 export function Tutorial({ today, veteran }: { today: string; veteran: boolean }) {
   const prefs = useSyncExternalStore(subscribeTutorial, readTutorial, readTutorial)
   const active = tutorialActive(prefs, today)
-  const [placed, setPlaced] = useState<Placed | null>(null)
+  const [trackedTip, setPlaced] = useState<Placed | null>(null)
+  // Nothing is shown while tips are off (derived, so no reset is needed).
+  const placed = active ? trackedTip : null
   const [pos, setPos] = useState<Pos | null>(null)
-  const boxRef = useRef<HTMLDivElement>(null)
+  const boxRef = useRef<HTMLDialogElement>(null)
 
   useEffect(() => initTutorial(veteran), [veteran])
   useEffect(() => {
@@ -151,10 +153,7 @@ export function Tutorial({ today, veteran }: { today: string; veteran: boolean }
   // (rolls, fights, page turns) and the pointer should follow. State only
   // changes when the tip or its position does.
   useEffect(() => {
-    if (!active) {
-      setPlaced(null)
-      return
-    }
+    if (!active) return
     let raf = 0
     const loop = () => {
       let next: Placed | null = null
@@ -194,10 +193,10 @@ export function Tutorial({ today, veteran }: { today: string; veteran: boolean }
   if (!placed) return null
   const { tip } = placed
   return createPortal(
-    <div
+    <dialog
+      open
       ref={boxRef}
       className={`tour-tip ${pos?.above ? 'above' : 'below'}`}
-      role="dialog"
       aria-label={`Tip: ${tip.title}`}
       style={pos ? { left: pos.left, top: pos.top, ['--arrow' as string]: `${pos.arrow}px` } : { visibility: 'hidden', left: 0, top: 0 }}
     >
@@ -211,7 +210,7 @@ export function Tutorial({ today, veteran }: { today: string; veteran: boolean }
           Got it
         </button>
       </div>
-    </div>,
+    </dialog>,
     document.body,
   )
 }

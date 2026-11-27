@@ -20,7 +20,9 @@ export function BackupNotice({ campaigns, playedDays, today, exportedAt, onExpor
   const show = shouldRemindBackup({ campaigns, playedDays, lastExport: lastExportDate(), snoozedUntil: snoozedUntilDate(), today })
   if (!show) return null
   return (
-    <aside className="backup-notice" role="status" aria-label="Backup reminder">
+    <aside className="backup-notice"
+      // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a live region holding block content (headings, paragraphs, buttons); <output> only allows phrasing content
+      role="status" aria-label="Backup reminder">
       <p>
         <strong>Back up your progress.</strong> Export all makes one save code you can paste into Import on any device.
       </p>

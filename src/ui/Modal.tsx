@@ -12,7 +12,9 @@ interface Props {
 export function Modal({ label, onClose, children }: Props) {
   const box = useRef<HTMLDivElement>(null)
   const close = useRef(onClose)
-  close.current = onClose
+  useEffect(() => {
+    close.current = onClose
+  })
 
   useEffect(() => {
     const before = document.activeElement as HTMLElement | null
@@ -45,8 +47,12 @@ export function Modal({ label, onClose, children }: Props) {
   }, [])
 
   return (
-    <div className="hero-modal-backdrop" onClick={onClose}>
-      <div ref={box} className="hero-modal code-dialog" role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.stopPropagation()}>
+    // Backdrop click is a mouse convenience only; keyboard users close with Esc (handled above) or the Close button.
+    // oxlint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+    <div className="hero-modal-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div ref={box} className="hero-modal code-dialog"
+        // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role -- a modal with its own focus trap over a click-away backdrop; native <dialog> would need showModal() and a top-layer rewrite
+        role="dialog" aria-modal="true" aria-label={label}>
         <div className="settings-bar">
           <h2>{label}</h2>
           <button onClick={onClose} aria-label={`Close ${label.toLowerCase()}`}>
