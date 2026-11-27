@@ -17,6 +17,7 @@ export function Shop({ state, shop, dispatch }: Props) {
   const busy = !!state.pending
   const rate = rules(state).shop.sellRate
   const cur = rules(state).currencyName
+  const curShort = cur.charAt(0) // "g" for glint/gold, "c" for credits
   return (
     <section className="step shop">
       <h3>Market</h3>
@@ -38,7 +39,7 @@ export function Shop({ state, shop, dispatch }: Props) {
                     title={hero.glint < price ? `Not enough ${cur}` : `Buy for ${price} ${cur}`}
                     onClick={() => dispatch({ type: 'BUY', item: id })}
                   >
-                    Buy {price}g
+                    Buy {price}{curShort}
                   </button>
                   {sell > 0 && (
                     <button
@@ -46,7 +47,7 @@ export function Shop({ state, shop, dispatch }: Props) {
                       onClick={() => dispatch({ type: 'SELL', item: id })}
                       title={have <= 0 ? 'You have none to sell' : `Sell for ${sell} ${cur}`}
                     >
-                      Sell {sell}g
+                      Sell {sell}{curShort}
                     </button>
                   )}
                 </td>
