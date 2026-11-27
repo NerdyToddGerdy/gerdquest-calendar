@@ -1,0 +1,9 @@
+{
+  "app": "npx tsx bin/app.ts",
+  "watch": { "include": ["bin/**", "lib/**"] },
+  "context": {
+    "stage": "dev",
+    "@aws-cdk/core:checkSecretUsage": true,
+    "@aws-cdk/aws-iam:minimizePolicies": true
+  }
+}
