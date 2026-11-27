@@ -289,8 +289,8 @@ const enemies: EnemyDef[] = [
   { id: 'sw_gildduelist', name: 'Gilt Duelist', ac: 18, toughness: 11, hits: 19, dmg: 7, text: 'The Gilt Gull’s best blades: they fence as if every fight were being watched.' },
   { id: 'sw_hollowshade', name: 'Hollow Shade', ac: 18, toughness: 10, hits: 20, dmg: 7, text: 'A shape cut out of the light, with nothing inside it.' },
   { id: 'sw_longnightwisp', name: 'Longnight Wisp', ac: 18, toughness: 9, hits: 19, dmg: 7, text: 'A cold flicker that follows climbers up the stair and tries to snuff their lamps.' },
-  { id: 'sw_ashe', name: 'Ashe Calloway', ac: 20, toughness: 17, hits: 21, dmg: 8, text: 'The Corsair-Prince at the stair’s last gate, rapier in one hand and the Hollow Needle in the other, still smiling.' },
-  { id: 'sw_hollowneedle', name: 'The Hollow Needle', ac: 20, toughness: 18, hits: 22, dmg: 9, text: 'The keystone of the stair, cut hollow long ago. It wants to be filled, and it is not particular with what.' },
+  { id: 'sw_ashe', name: 'Ashe Calloway', ac: 20, toughness: 16, hits: 20, dmg: 7, text: 'The Corsair-Prince at the stair’s last gate, rapier in one hand and the Hollow Needle in the other, still smiling.' },
+  { id: 'sw_hollowneedle', name: 'The Hollow Needle', ac: 20, toughness: 18, hits: 22, dmg: 8, text: 'The keystone of the stair, cut hollow long ago. It wants to be filled, and it is not particular with what.' },
 ]
 
 const follower = (m: Omit<MemberDef, 'kind' | 'maxHp' | 'abilities'>): MemberDef => ({ kind: 'critter', maxHp: 1, abilities: [], ...m })
