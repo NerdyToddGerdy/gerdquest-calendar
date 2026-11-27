@@ -1,4 +1,6 @@
 .muted { color: var(--muted); }
+/* An <output> standing in for a paragraph. */
+.status-note { display: block; margin: 1em 0; }
 .small, small { font-size: 0.82rem; }
 .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .row.center { justify-content: center; }
@@ -1403,6 +1405,13 @@ fieldset.looks legend { font-family: var(--display); font-size: 1.1rem; padding:
 @keyframes tour-pulse { 50% { outline-color: color-mix(in srgb, var(--accent) 35%, transparent); } }
 @media (prefers-reduced-motion: reduce) { .tour-target { animation: none; } }
 .tour-tip {
+  /* A <dialog open>: undo the browser's centred, scrolling dialog box. */
+  inset-inline-end: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  overflow: visible;
   position: absolute;
   z-index: 60;
   width: min(320px, calc(100vw - 32px));

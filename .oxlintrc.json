@@ -11,6 +11,10 @@
     "jsx-a11y/no-noninteractive-tabindex": "error",
     "jsx-a11y/label-has-associated-control": ["error", { "depth": 4 }],
     "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+    "react/only-export-components": ["error", { "allowConstantExport": true }],
+    "react/set-state-in-effect": "error",
+    "react/refs": "error",
+    "react/exhaustive-deps": "error",
+    "jsx-a11y/prefer-tag-over-role": "error"
   }
 }

@@ -90,9 +90,9 @@ export function ExportDialog({ title, name, date, payload, onExported, onClose }
         </button>
         <button onClick={onClose}>Done</button>
       </div>
-      <p className="muted small" role="status">
+      <output className="muted small status-note">
         {note}
-      </p>
+      </output>
     </Modal>
   )
 }
