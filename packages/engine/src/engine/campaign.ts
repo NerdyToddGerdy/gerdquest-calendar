@@ -7,7 +7,7 @@
 // same number of days, so weekdays, weekend pages and the Sunday lottery all
 // line up with the real calendar — no need to wait for January.
 import { registerContent } from './content'
-import { addDays, daysBetween, toISO, weekday, type ISODate } from './calendar'
+import { addDays, daysBetween, parseISO, toISO, weekday, type ISODate } from './calendar'
 import { packVersion } from './packVersion'
 import { rulesFor } from './ruleset'
 import type { Campaign, CampaignEntry, Day } from './types'
@@ -182,11 +182,51 @@ export function alignedOnOrBefore(c: CampaignEntry, date: ISODate): ISODate {
   return addDays(date, -((weekday(date) - anchorWeekday(c) + 7) % 7))
 }
 
+// ---------- seasonal campaigns ----------
+
+/** Is a seasonal campaign's month the month `today` is in? (Always true for year-round campaigns.) */
+export function isInSeason(c: CampaignEntry, today: ISODate): boolean {
+  return !c.season || parseISO(today).month === c.season.month
+}
+
+/** Day 1 of the campaign's season in `today`'s year (only for seasonal campaigns). */
+export function seasonStart(c: CampaignEntry & { season: NonNullable<CampaignEntry['season']> }, today: ISODate): ISODate {
+  return toISO(parseISO(today).year, c.season.month, 1)
+}
+
+/** Campaigns that can be started today: every year-round campaign, plus seasonal ones in their month. */
+export function availableCatalog(today: ISODate): CampaignEntry[] {
+  return listCatalog().filter((c) => isInSeason(c, today))
+}
+
+/** Seasonal campaigns in season today, for the New Campaign highlight. */
+export function seasonalEvents(today: ISODate): CampaignEntry[] {
+  return listCatalog().filter((c) => !!c.season && isInSeason(c, today))
+}
+
+/**
+ * Seasonal campaigns in season today that have no run started this season
+ * among `runs` (e.g. the desk's campaigns). Drives the festive New Campaign button.
+ */
+export function eventsToStart(today: ISODate, runs: { campaignId: string; startDate: ISODate }[]): CampaignEntry[] {
+  return seasonalEvents(today).filter((c) => !runs.some((r) => r.campaignId === c.id && r.startDate === defaultStartDate(c, today)))
+}
+
+/** Days left in a seasonal campaign's month, counting today (0 out of season). */
+export function seasonDaysLeft(c: CampaignEntry, today: ISODate): number {
+  if (!c.season || !isInSeason(c, today)) return 0
+  const { year, month } = parseISO(today)
+  const last = toISO(month === 12 ? year + 1 : year, month === 12 ? 1 : month + 1, 1)
+  return daysBetween(today, last)
+}
+
 /**
  * Start date for a new campaign: the anchor-weekday date nearest to
- * WARMUP_DAYS ago, so there are 4–10 warm-up pages to catch up on.
+ * WARMUP_DAYS ago, so there are 4–10 warm-up pages to catch up on. A seasonal
+ * campaign always starts on day 1 of its month this year.
  */
 export function defaultStartDate(c: CampaignEntry, today: ISODate): ISODate {
+  if (c.season) return seasonStart(c as CampaignEntry & { season: NonNullable<CampaignEntry['season']> }, today)
   const target = addDays(today, -WARMUP_DAYS)
   const before = alignedOnOrBefore(c, target)
   const after = addDays(before, 7)
@@ -195,6 +235,7 @@ export function defaultStartDate(c: CampaignEntry, today: ISODate): ISODate {
 
 /** Start dates to offer: the default plus a week earlier / later (never after today). */
 export function startDateOptions(c: CampaignEntry, today: ISODate): ISODate[] {
+  if (c.season) return isInSeason(c, today) ? [defaultStartDate(c, today)] : []
   const d = defaultStartDate(c, today)
   return [addDays(d, 7), d, addDays(d, -7)].filter((x) => x <= today)
 }

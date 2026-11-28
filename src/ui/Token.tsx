@@ -28,6 +28,8 @@ const BORDERS: Record<string, { a: string; b: string; motif?: Motif }> = {
   'starwake-border2': { a: '#f3cf62', b: '#c79a22', motif: 'stars' },
   'verdant-border1': { a: '#9fd069', b: '#4a7a1e', motif: 'leaf' },
   'verdant-border2': { a: '#a6743c', b: '#5f3d1c', motif: 'ticks' },
+  'santa-border1': { a: '#3f9a5a', b: '#c8342e', motif: 'leaf' },
+  'santa-border2': { a: '#f4f0f0', b: '#d02a32', motif: 'dash' },
   gilded: { a: '#fff0a6', b: '#c6911f', motif: 'stars' },
 }
 
@@ -71,6 +73,14 @@ function Emblem({ campaignId }: { campaignId: string }) {
       return (
         <g {...s}>
           <path d="M50 24 L56 44 L76 50 L56 56 L50 76 L44 56 L24 50 L44 44 Z" />
+        </g>
+      )
+    case 'santa':
+      // A star on top of a little tree.
+      return (
+        <g {...s}>
+          <path d="M50 22 L53 30 L61 30 L55 35 L57 43 L50 38 L43 43 L45 35 L39 30 L47 30 Z" />
+          <path d="M50 44 L36 60 H44 L32 74 H68 L56 60 H64 Z" />
         </g>
       )
     default:

@@ -236,7 +236,11 @@ export const VERDANT_SCENES = [
 ] as const
 export type VerdantScene = (typeof VERDANT_SCENES)[number]
 
-export type Scene = ClassicScene | EmberScene | StarwakeScene | VerdantScene
+/** Backgrounds drawn for Saving Santa, the December advent campaign (see src/ui/scenes/santa.tsx). */
+export const SANTA_SCENES = ['ss_village', 'ss_snowwood', 'ss_workshop', 'ss_cocoa', 'ss_frozenlake', 'ss_belltower', 'ss_aurora', 'ss_palace'] as const
+export type SantaScene = (typeof SANTA_SCENES)[number]
+
+export type Scene = ClassicScene | EmberScene | StarwakeScene | VerdantScene | SantaScene
 
 export interface HiddenIcon {
   kind: 'pickpocket' | 'loot'
@@ -404,11 +408,25 @@ export interface CampaignEntry {
    */
   prologuePages?: number
   /**
+   * A seasonal campaign can only be started during one month of the year, and
+   * comes back every year. A run always begins on day 1 of that month in the
+   * current year (no weekday alignment, no warm-up week): page 1 is the 1st.
+   * Runs already started stay playable after the month ends.
+   */
+  season?: CampaignSeason
+  /**
    * Optional explicit content version. Bump it when pages are edited in a way
    * that changes what saved journal references resolve to; it is combined with
    * the automatic content hash (see engine/packVersion.ts).
    */
   version?: string
+}
+
+export interface CampaignSeason {
+  /** Calendar month (1–12) the campaign can be started in. */
+  month: number
+  /** Short label for the highlight on the New Campaign screen, e.g. "Holiday event". */
+  label: string
 }
 
 /** A loaded campaign: its catalog entry plus pages and content. */

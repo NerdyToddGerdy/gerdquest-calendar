@@ -3,7 +3,7 @@
  * light and a dark value). A second run of the same campaign on the desk gets
  * a lighter variant so the two can still be told apart.
  */
-const KNOWN = new Set(['brightwatch', 'emberroad', 'halcyon', 'starwake', 'verdant'])
+const KNOWN = new Set(['brightwatch', 'emberroad', 'halcyon', 'starwake', 'verdant', 'santa'])
 
 interface SlotLike {
   id: string

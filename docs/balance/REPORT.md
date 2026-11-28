@@ -728,3 +728,16 @@ December was a wall: 41.7% of runs hit the death table that month against 3–23
 | Mean deaths per run, Tanu / Kip | 3.92 / 5.44 | 3.56 / 4.94 |
 
 Months 1–11 are byte-identical to the baseline (same seeds, same rows). The Hollow Needle is still the most lethal page of the year (the Gilt Gull is next at 23.0%). Intermediate tries: lowering the Needle to 16 toughness / 7 dmg gave December 16% and the Needle 12% (too soft); 17 toughness / 8 dmg gave 25% and 22%, tying the Gilt Gull. The Needle's `hits` value had no measurable effect.
+
+## Saving Santa (December advent, 25 pages)
+
+`SIM_RUNS=200 SIM_CAMPAIGNS=santa npm run sim`. The bosses started too soft (1.5% of runs hit the death table), so the last three were raised: Nutcracker General toughness 6 → 7, hits 13 → 14, damage 3 → 4; Snow Wyrm Attack threshold 13 → 14, toughness 7 → 8, hits 13 → 16, damage 3 → 5; the Hush Attack threshold 14 → 15, toughness 7 → 9, hits 14 → 17, damage 4 → 5.
+
+| | Before | After |
+|---|---|---|
+| % runs with a death (the whole campaign is one month) | 1.5% | 11.0% |
+| Christmas Eve (the Hush): % runs with a death | 1.0% | 10.0% |
+| Christmas Eve: fights lost | 20.5% | 48.5% |
+| Snow Wyrm: fights lost | 9.5% | 18.5% |
+
+A deliberately gentle target for a short holiday story: the final fight is a real threat, almost nothing else kills. Every run reaches level 3 and finishes. Marigold (the healer) had no deaths in 50 runs; Nell had the most (0.20 per run).
