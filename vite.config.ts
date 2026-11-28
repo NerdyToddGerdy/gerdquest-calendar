@@ -49,5 +49,5 @@ export default defineConfig(({ command }) => ({
       },
     },
   },
-  test: { setupFiles: ['./tests/setup.ts'], exclude: [...configDefaults.exclude, 'tests/e2e/**'] },
+  test: { setupFiles: ['./tests/setup.ts'], exclude: [...configDefaults.exclude, 'tests/e2e/**', 'infra/**'] },
 }))

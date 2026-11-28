@@ -1,0 +1,23 @@
+{
+  "name": "@gerdquest/infra",
+  "private": true,
+  "type": "module",
+  "description": "AWS CDK app for the GerdQuest Calendar backend (ADR 0004, ADR 0005). Synth only; nothing is deployed from CI.",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "synth": "cdk synth --quiet",
+    "synth:prod": "cdk synth --quiet -c stage=prod"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164",
+    "@types/node": "^24.19.4",
+    "aws-cdk": "^2.1149.0",
+    "aws-cdk-lib": "^2.278.0",
+    "constructs": "^10.8.1",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "~7.0.2",
+    "vitest": "^5.1.1"
+  }
+}

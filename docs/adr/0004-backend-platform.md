@@ -145,6 +145,8 @@ The terms page (`terms.html`) needs a matching update for accounts (one per pers
 
 ## DynamoDB design (single table `questender`)
 
+> Refined by ADR 0005: the same keys, split into one table per service (saves, commerce, discord). The `ENTITLEMENT#`, `CATALOG` and `STRIPE#` items move to the commerce table and `DISCORD#`/`LINK#` to the discord table.
+
 Key: `pk` (S), `sk` (S). On-demand billing, PITR on, TTL attribute `ttl`.
 
 | Entity | pk | sk | Attributes |
