@@ -68,6 +68,28 @@ jobs:
         with:
           path: dist
 
+  # Backend infrastructure (infra/cdk): its own package and lockfile, so the
+  # game's install stays small. Typecheck, guardrail tests and `cdk synth` for
+  # both stages. Never deploys and needs no AWS credentials.
+  infra:
+    name: infra
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra/cdk
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: infra/cdk/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run synth
+      - run: npm run synth:prod
+
   # End-to-end: builds once with the test-only date pin and drives the
   # production bundle (served under /gerdquest-calendar/) in Chromium. Runs in parallel
   # with the jobs above. See tests/e2e/ and the README.
